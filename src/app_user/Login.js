@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import '../App.css'; // Crie um arquivo CSS separado para os estilos
+import { TemplateStatic } from '../app/components/Carrossel';
+import { Button } from '../app/components/Button';
+import { Input } from '../app/components/Input';
+import { FiChevronRight, FiEye, FiEyeOff } from 'react-icons/fi';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -8,7 +11,6 @@ function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Adicione a lógica de autenticação aqui
     };
 
     return (
@@ -35,26 +37,9 @@ function Login() {
                         </ul>
                         <h4 className="mt-4 tag-azul" style={{ fontSize: '1.0rem', color: '#fff' }}>Novidade:</h4>
                         <p style={{ fontSize: '1rem', color: 'black' }}>Templates prontos para você começar a usar.</p>
-                        <div id="carouselExampleCaption" className="carousel slide" data-bs-ride="carousel">
-                            <div className="carousel-inner" role="listbox">
-                                <div className="carousel-item active position-relative">
-                                    <img src="/static/assets/images/templates/vendasenegociacoes.png" alt="Template de Vendas e Negociações" className="d-block img-fluid" />
-                                </div>
-                                <div className="carousel-item position-relative">
-                                    <img src="/static/assets/images/templates/ordemdeservicos.png" alt="Template de Ordem de Serviços" className="d-block img-fluid" />
-                                </div>
-                                <div className="carousel-item position-relative">
-                                    <img src="/static/assets/images/templates/legalizacao.png" alt="Template de Legalização" className="d-block img-fluid" />
-                                </div>
-                            </div>
-                            <a className="carousel-control-prev" href="#carouselExampleCaption" role="button">
-                                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span className="visually-hidden">Anterior</span>
-                            </a>
-                            <a className="carousel-control-next" href="#carouselExampleCaption" role="button">
-                                <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span className="visually-hidden">Próximo</span>
-                            </a>
+                        
+                        <div className="mt-4">
+                            <TemplateStatic />
                         </div>
                     </div>
                     <div className="auth-right">
@@ -68,53 +53,63 @@ function Login() {
                         </div>
                         <form id="loginForm" onSubmit={handleSubmit} style={{ margin: '10px' }}>
                             <p style={{ fontSize: '1rem', color: 'black' }}>Informe seu login e senha</p>
+                            
+                            <Input
+                                id="email"
+                                type="text"
+                                label="Login"
+                                required
+                                placeholder="Entre com seu e-mail"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                            
                             <div className="mb-3">
-                                <label htmlFor="email" className="form-label">*&nbsp;Login:</label>
-                                <input
-                                    className="form-control"
-                                    type="text"
-                                    name="email"
-                                    required
-                                    id="email"
-                                    placeholder="Entre com seu e-mail"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <label htmlFor="password" className="form-label">*&nbsp;Senha:</label>
-                                <div className="input-group">
-                                    <input
-                                        className="form-control"
-                                        type={showPassword ? 'text' : 'password'}
-                                        name="password"
-                                        required
+                                <label htmlFor="password" className="block font-medium text-gray-700 mb-1">Senha:</label>
+                                <div className="relative">
+                                    <Input
                                         id="password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        required
                                         placeholder="Entre com sua senha"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
+                                        className="pr-10" 
                                     />
                                     <button
-                                        className="btn search-button"
+                                        className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-gray-800"
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
+                                        tabIndex="-1"
                                     >
-                                        <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`} id="icon"></i>
+                                        {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
                                     </button>
                                 </div>
                             </div>
+                            
                             <div className="mb-3">
-                                <div className="form-check">
-                                    <input type="checkbox" className="form-check-input" id="checkbox-signin" name="remember" />
-                                    <label className="form-check-label" htmlFor="checkbox-signin">Continuar conectado</label>
+                                <div className="flex items-center">
+                                    <input 
+                                        type="checkbox" 
+                                        className="h-4 w-4 text-blue-500 focus:ring-blue-400 border-gray-300 rounded" 
+                                        id="checkbox-signin" 
+                                        name="remember" 
+                                    />
+                                    <label className="ml-2 block text-sm text-gray-700" htmlFor="checkbox-signin">
+                                        Continuar conectado
+                                    </label>
                                 </div>
                             </div>
-                            <div className="d-grid text-center mt-4">
-                                <button className="btn-sequence-enter" type="submit">Acessar
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-chevron-right" viewBox="0 0 16 16">
-                                        <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708" />
-                                    </svg>
-                                </button>
+                            
+                            <div className="text-center mt-4">
+                                <Button 
+                                    type="submit" 
+                                    variant="primary" 
+                                    className="w-full py-2 px-4"
+                                    icon={<FiChevronRight size={18} color="white" />}
+                                >
+                                    Acessar
+                                </Button>
                             </div>
                         </form>
                     </div>
