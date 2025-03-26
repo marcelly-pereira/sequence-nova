@@ -1,0 +1,33 @@
+
+    /* Pode separar e linkar depois <link rel="stylesheet" type="text/css" href="stylesheet.css" media="screen" /> */
+    .tooltip-text {
+        position: absolute;
+        bottom: -25px; /* Posiciona abaixo do ícone */
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #1526ff; 
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+    }
+
+    /* Mostra a tooltip ao passar o mouse */
+    .icon-hover-effect:hover .tooltip-text {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Ajuste para o botão */
+    .icon-hover-effect {
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    .icon-hover-effect:hover {
+        transform: scale(1.1);
+    }
