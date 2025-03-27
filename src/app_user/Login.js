@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TemplateStatic } from '../app/components/Carrossel';
 import { Button } from '../app/components/Button';
 import { Input } from '../app/components/Input';
-import { FiChevronRight, FiEye, FiEyeOff } from 'react-icons/fi';
+import { FiChevronRight, FiEye, FiEyeOff, FiCheckCircle } from 'react-icons/fi';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -23,15 +23,15 @@ function Login() {
                         <hr style={{ height: '1px', border: 'none', width: '100%', margin: 'auto', background: 'linear-gradient(to right, #1526ff, #9c00bc)', borderRadius: '5px' }} />
                         <ul style={{ listStyle: 'none', padding: '0', marginTop: '20px', fontSize: 'clamp(0.9rem, 1.5vw, 1rem)', color: '#333', lineHeight: '1.8' }}>
                             <li className="d-flex align-items-center mb-2">
-                                <i className="mdi mdi-check-circle-outline text-primary me-2" style={{ fontSize: '1.1rem' }}></i>
+                                <FiCheckCircle className="text-primary me-2" style={{ fontSize: '1.1rem', marginRight: '8px', color: '#1526ff' }} />
                                 <span>Aumentar produtividade</span>
                             </li>
                             <li className="d-flex align-items-center mb-2">
-                                <i className="mdi mdi-check-circle-outline text-primary me-2" style={{ fontSize: '1.1rem' }}></i>
+                                <FiCheckCircle className="text-primary me-2" style={{ fontSize: '1.1rem', marginRight: '8px', color: '#1526ff' }} />
                                 <span>Integrar setores</span>
                             </li>
                             <li className="d-flex align-items-center mb-2">
-                                <i className="mdi mdi-check-circle-outline text-primary me-2" style={{ fontSize: '1.1rem' }}></i>
+                                <FiCheckCircle className="text-primary me-2" style={{ fontSize: '1.1rem', marginRight: '8px', color: '#1526ff' }} />
                                 <span>Gerenciar informações de maneira fácil</span>
                             </li>
                         </ul>
@@ -52,11 +52,12 @@ function Login() {
                             </a>
                         </div>
                         <form id="loginForm" onSubmit={handleSubmit} style={{ margin: '10px' }}>
-                            <p style={{ fontSize: 'clamp(0.9rem, 1.5vw, 1rem)', color: 'black' }}>Informe seu e-mail e senha</p>
-                            <label htmlFor="password" className="block font-medium text-gray-700 mb-1">e-mail:</label>
+                            <p style={{ fontSize: 'clamp(0.9rem, 1.5vw, 1rem)', color: 'black' }}>Informe seu login e senha</p>
+                            
                             <Input
                                 id="email"
                                 type="text"
+                                label="Login"
                                 required
                                 placeholder="Entre com seu e-mail"
                                 value={email}
