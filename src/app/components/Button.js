@@ -10,12 +10,12 @@ export const Button = ({
     icon = null 
 }) => {
     const getButtonClasses = () => {
-        const baseClasses = "flex items-center justify-center gap-2 rounded-md font-medium transition-all duration-200 text-white";
+        const baseClasses = "flex items-center justify-center gap-2 rounded-md transition-all duration-200";
         
         const variantClasses = {
-            primary: "bg-[#1526ff] hover:opacity-90",
+            primary: "bg-[#1526ff] hover:opacity-90 text-white",
             secondary: "bg-gray-500 hover:bg-gray-600",
-            outline: "bg-transparent border border-[#1526ff] text-[#1526ff] hover:bg-blue-50"
+            outline: "border-[1.5px] border-[#1526ff] text-[#1526ff] hover:bg-blue-50 font-bold"
         };
         
         return `${baseClasses} ${variantClasses[variant]} ${className}`;
