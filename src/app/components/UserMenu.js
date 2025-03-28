@@ -2,9 +2,13 @@ import React from 'react';
 import { FaUser } from "react-icons/fa";
 import { FiSettings } from "react-icons/fi";
 import { FiLogOut } from "react-icons/fi";
+import { useNavigate } from 'react-router-dom';
 
 const MenuUsuario = ({ onItemClick }) => {
+    const navigate = useNavigate();
+
     const handleMinhaConta = () => {
+        navigate('/user');
         onItemClick();
     };
 

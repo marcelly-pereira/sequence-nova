@@ -10,6 +10,7 @@ import Recurrent from '../src/app_user/pages/tasks/Recurrent';
 import Companies from '../src/app_user/pages/companies/ActiveClients';
 import Automations from '../src/app_user/pages/personalization/Automations';
 import Registrations from '../src/app_user/pages/personalization/Registrations';
+import User from '../src/app_user/User';
 
 function App() {
     return (
@@ -61,6 +62,7 @@ function App() {
                         <Registrations />
                     }
                 />
+                <Route path="/user" element={<User />} />
             </Routes>
         </Router>
     );
