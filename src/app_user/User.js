@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import BaseLayout from '../app/BaseLayout';
 import Input from '../app/components/Input';
 
@@ -32,6 +32,56 @@ const User = () => {
         console.log('Dados salvos:', userData);
     };
 
+    // Componente para selects estilizados com ícone clicável
+    const StyledSelect = ({ id, name, value, onChange, options }) => {
+        const selectRef = useRef(null);
+        
+        const handleIconClick = () => {
+            if (selectRef.current) {
+                // Foca no select primeiro
+                selectRef.current.focus();
+                
+                // Simula um clique para abrir o dropdown
+                // Criamos e disparamos um evento do mouse para garantir que as opções apareçam
+                const event = new MouseEvent('mousedown', {
+                    view: window,
+                    bubbles: true,
+                    cancelable: true
+                });
+                selectRef.current.dispatchEvent(event);
+            }
+        };
+        
+        return (
+            <div className="w-full border border-gray-300 rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-blue-500/25 focus-within:border-blue-700">
+                <div className="flex items-center">
+                    <select
+                        ref={selectRef}
+                        id={id}
+                        name={name}
+                        value={value}
+                        onChange={onChange}
+                        className="w-full px-4 py-2 outline-none border-none appearance-none"
+                    >
+                        {options.map(option => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </select>
+                    <div 
+                        className="pr-4 cursor-pointer" 
+                        onClick={handleIconClick}
+                    >
+                        <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
     return (
         <BaseLayout>
             <div className="flex justify-between items-center mb-6">
@@ -60,7 +110,7 @@ const User = () => {
                 <form onSubmit={handleSubmit}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label htmlFor="nivel" className="block font-medium text-gray-700 mb-1">
+                            <label htmlFor="nome" className="block font-medium text-gray-700 mb-1">
                                 Nome Completo:
                             </label>
                             <Input
@@ -73,8 +123,8 @@ const User = () => {
                         </div>
 
                         <div>
-                            <label htmlFor="nivel" className="block font-medium text-gray-700 mb-1">
-                                E-mail Corporativo
+                            <label htmlFor="email" className="block font-medium text-gray-700 mb-1">
+                                E-mail Corporativo:
                             </label>
                             <Input
                                 id="email"
@@ -92,55 +142,37 @@ const User = () => {
                             <label htmlFor="nivel" className="block font-medium text-gray-700 mb-1">
                                 Nível Hierárquico:
                             </label>
-                            <div className="relative">
-                                <select
-                                    id="nivel"
-                                    name="nivel"
-                                    value={userData.nivel}
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md appearance-none pr-10
-                                             focus:outline-none focus:ring-1 focus:ring-blue-500/25 focus:border-blue-700 
-                                             transition-colors"
-                                >
-                                    <option value="Estagiário">Estagiário</option>
-                                    <option value="Assistente">Assistente</option>
-                                    <option value="Analista">Analista</option>
-                                    <option value="Gerente">Gerente</option>
-                                    <option value="Diretor">Diretor</option>
-                                </select>
-                                <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                                    <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                                    </svg>
-                                </div>
-                            </div>
+                            <StyledSelect
+                                id="nivel"
+                                name="nivel"
+                                value={userData.nivel}
+                                onChange={handleChange}
+                                options={[
+                                    { value: 'Estagiário', label: 'Estagiário' },
+                                    { value: 'Assistente', label: 'Assistente' },
+                                    { value: 'Analista', label: 'Analista' },
+                                    { value: 'Gerente', label: 'Gerente' },
+                                    { value: 'Diretor', label: 'Diretor' }
+                                ]}
+                            />
                         </div>
 
                         <div className="mb-3">
                             <label htmlFor="setor" className="block font-medium text-gray-700 mb-1">
                                 Setor:
                             </label>
-                            <div className="relative">
-                                <select
-                                    id="setor"
-                                    name="setor"
-                                    value={userData.setor}
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md appearance-none pr-10
-                                             focus:outline-none focus:ring-1 focus:ring-blue-500/25 focus:border-blue-700 
-                                             transition-colors"
-                                >
-                                    <option value="Controladoria">Controladoria</option>
-                                    <option value="Contabilidade">Marketing</option>
-                                    <option value="Financeiro">Desenvolvimento</option>
-                                    <option value="RH">Deploy e Testes</option>
-                                </select>
-                                <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                                    <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                                    </svg>
-                                </div>
-                            </div>
+                            <StyledSelect
+                                id="setor"
+                                name="setor"
+                                value={userData.setor}
+                                onChange={handleChange}
+                                options={[
+                                    { value: 'Controladoria', label: 'Controladoria' },
+                                    { value: 'Contabilidade', label: 'Marketing' },
+                                    { value: 'Financeiro', label: 'Desenvolvimento' },
+                                    { value: 'RH', label: 'Deploy e Testes' }
+                                ]}
+                            />
                         </div>
                     </div>
 
