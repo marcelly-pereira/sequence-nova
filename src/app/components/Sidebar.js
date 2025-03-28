@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Icon = ({ children }) => (
   <div className="w-10 h-10 flex items-center justify-center transition-colors duration-200 text-white">
@@ -8,12 +8,11 @@ const Icon = ({ children }) => (
 );
 
 const Sidebar = () => {
-  const location = useLocation();
   const [activeSubmenu, setActiveSubmenu] = useState(null);
   const menuRefs = useRef({});
   const submenuRef = useRef(null);
   const timeoutRef = useRef(null);
-  
+
   const menuItems = [
     {
       key: 'sequencias',
@@ -26,10 +25,10 @@ const Sidebar = () => {
           <rect x="3" y="14" width="7" height="7"></rect>
         </svg>
       ),
-      path: '/tarefas',
+      path: '/sequences',
       submenu: [
-        { name: 'Minhas Sequências', link: '/minhas-sequencias' },
-        { name: 'Templates de Sequências', link: '/templates-sequencia' }
+        { name: 'Minhas Sequências', link: '/sequences/my-sequences' },
+        { name: 'Templates de Sequências', link: '/sequences/templates' }
       ]
     },
     {
@@ -37,18 +36,18 @@ const Sidebar = () => {
       title: 'Tarefas',
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="8" y1="6" x2="21" y2="6"/>
-          <line x1="8" y1="12" x2="21" y2="12"/>
-          <line x1="8" y1="18" x2="21" y2="18"/>
-          <line x1="3" y1="6" x2="3.01" y2="6"/>
-          <line x1="3" y1="12" x2="3.01" y2="12"/>
-          <line x1="3" y1="18" x2="3.01" y2="18"/>
+          <line x1="8" y1="6" x2="21" y2="6" />
+          <line x1="8" y1="12" x2="21" y2="12" />
+          <line x1="8" y1="18" x2="21" y2="18" />
+          <line x1="3" y1="6" x2="3.01" y2="6" />
+          <line x1="3" y1="12" x2="3.01" y2="12" />
+          <line x1="3" y1="18" x2="3.01" y2="18" />
         </svg>
       ),
       path: '/tarefas',
       submenu: [
-        { name: 'Tarefas', link: '/tarefas' },
-        { name: 'Recorrentes', link: '/recorrentes' }
+        { name: 'Listas', link: '/tasks-lists' },
+        { name: 'Recorrentes', link: '/tasks-recurrent' }
       ]
     },
     {
@@ -65,7 +64,7 @@ const Sidebar = () => {
       ),
       path: '/empresas',
       submenu: [
-        { name: 'Clientes Ativos', link: '/clientes-ativos' },
+        { name: 'Clientes Ativos', link: '/actives-clients' },
       ]
     },
     {
@@ -73,14 +72,14 @@ const Sidebar = () => {
       title: 'Personalizações',
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="3"/>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
         </svg>
       ),
       path: '/configuracoes',
       submenu: [
-        { name: 'Cadastros', link: '/cadastros' },
-        { name: 'Automações', link: '/automacoes' }
+        { name: 'Cadastros', link: '/personalization-registrations' },
+        { name: 'Automações', link: '/personalization-automations' }
       ]
     }
   ];
@@ -117,26 +116,26 @@ const Sidebar = () => {
 
   const renderSubmenu = (menuKey) => {
     if (!menuKey) return null;
-    
+
     const menu = menuItems.find(item => item.key === menuKey);
     if (!menu || !menu.submenu) return null;
-    
+
     const ref = menuRefs.current[menuKey];
     if (!ref) return null;
-    
+
     const rect = ref.getBoundingClientRect();
-    
+
     const lastItemRef = menuRefs.current[menuItems[menuItems.length - 1].key];
     let lastBottom = 0;
     if (lastItemRef) {
       const lastRect = lastItemRef.getBoundingClientRect();
-      lastBottom = lastRect.bottom + 10; 
+      lastBottom = lastRect.bottom + 10;
     }
-    
+
     const heightToLastItem = lastBottom - rect.top + 150;
-    
+
     return (
-      <div 
+      <div
         ref={submenuRef}
         className="fixed left-16 z-50 shadow-lg"
         style={{ top: rect.top, width: '180px' }}
@@ -152,16 +151,16 @@ const Sidebar = () => {
           <div className="bg-indigo-800 text-white text-base px-2 py-2 font-medium flex items-center h-10 w-full">
             {menu.title}
           </div>
-          
-          <div 
+
+          <div
             className="bg-[#252563] w-full"
             style={{ height: `${heightToLastItem}px` }}
           >
             <ul className="py-2 w-full">
               {menu.submenu.map((item, index) => (
                 <li key={index} className="w-full text-left">
-                  <Link 
-                    to={item.link} 
+                  <Link
+                    to={item.link}
                     className="block py-2 text-gray-300 hover:text-white text-sm transition-colors w-full text-left px-2"
                   >
                     {item.name}
@@ -176,7 +175,7 @@ const Sidebar = () => {
   };
 
   const MenuItem = ({ item }) => (
-    <div 
+    <div
       className={`relative w-16 h-10 flex justify-center ${activeSubmenu === item.key ? 'bg-indigo-800' : ''}`}
       ref={ref => menuRefs.current[item.key] = ref}
       onMouseEnter={() => handleMenuHover(item.key)}
@@ -195,13 +194,13 @@ const Sidebar = () => {
           <img src='/static/assets/images/favicon.ico' alt='Logo' className='w-6 h-6' />
         </Link>
       </div>
-      
+
       <nav className="flex flex-col items-center space-y-6 relative">
         {menuItems.map((menuItem) => (
           <MenuItem key={menuItem.key} item={menuItem} />
         ))}
       </nav>
-      
+
       {renderSubmenu(activeSubmenu)}
     </div>
   );
