@@ -38,7 +38,7 @@ const TemplateCard = ({
       {isCreateTemplate ? (
         <>
           <p className="text-sm text-gray-600 text-left my-4">
-            Clique aqui para começar a criar uma nova sequência.
+            Criar uma nova sequência.
           </p>
           
           <Button 
