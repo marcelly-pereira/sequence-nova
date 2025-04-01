@@ -13,7 +13,7 @@ const Accordion = ({ sections, onToggleSection, emptyStateMessage, emptyStateSub
         return (
           <div key={section.id} className={index > 0 ? "border-t border-gray-200" : ""}>
             <div 
-              className="flex items-center p-4 cursor-pointer"
+              className="flex items-center p-2 cursor-pointer"
               onClick={() => onToggleSection(section.id)}
               aria-expanded={section.expanded}
               aria-controls={`content-${section.id}`}

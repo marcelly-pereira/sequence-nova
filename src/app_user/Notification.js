@@ -10,7 +10,7 @@ const Notification = () => {
 
   return (
     <BaseLayout>
-      <div className="bg-white min-h-screen m-6">
+      <div className="bg-white min-h-screen">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 ">
           <div className="flex items-center rounded-lg mb-6 w-full">
             <div className="bg-blue-100 rounded-full p-2 flex-shrink-0">
@@ -72,11 +72,10 @@ const Notification = () => {
             </div>
           </div>
 
-          {/* Estado vazio - sem notificações */}
           <div className="flex flex-col items-center justify-center py-12">
             <div className="text-gray-300 mb-4">
               <svg
-                className="h-16 w-16"
+                className="h-8 w-8"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"

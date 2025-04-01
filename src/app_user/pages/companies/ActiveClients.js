@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { FiSearch, FiMoreVertical, FiFileText, FiMenu } from 'react-icons/fi';
+import { FiSearch, FiMoreVertical, FiFileText, FiMenu, FiPlus } from 'react-icons/fi';
 import BaseLayout from '../../../app/BaseLayout';
 import Button from '../../../app/components/Button';
-import { FiPlus } from 'react-icons/fi';
 
 const ClientesAtivos = () => {
   const [empresas, setEmpresas] = useState([
@@ -58,7 +57,7 @@ const ClientesAtivos = () => {
   return (
     <BaseLayout>
       <div className="min-h-screen">
-        <div className="flex items-center mb-4 sm:mb-6">
+        <div className="flex items-center">
           <div className="mb-6">
             <Button
               variant="primary"
@@ -83,7 +82,9 @@ const ClientesAtivos = () => {
               <input
                 type="text"
                 placeholder="Procurar empresa"
-                className="border border-gray-300 rounded-md pl-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md 
+                          focus:outline-none focus:ring-1 focus:ring-blue-500/25 focus:border-blue-700 
+                          transition-colors"
                 value={filtro}
                 onChange={handleFiltroChange}
               />
@@ -102,7 +103,7 @@ const ClientesAtivos = () => {
                   <th className="px-2 sm:px-4 py-2 sm:py-3 border-b">ID</th>
                   <th className="px-2 sm:px-4 py-2 sm:py-3 border-b">CNPJ</th>
                   <th className="hidden sm:table-cell px-4 py-3 border-b">
-                    REGIME
+                    REGIME <br /> TRiBUTÁRIO
                   </th>
                   <th className="px-2 sm:px-4 py-2 sm:py-3 border-b">NOME</th>
                   <th className="hidden md:table-cell px-4 py-3 border-b">
@@ -139,11 +140,10 @@ const ClientesAtivos = () => {
                     </td>
                     <td className="px-2 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm">
                       <span
-                        className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium ${
-                          empresa.status === 'ativo'
+                        className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium ${empresa.status === 'ativo'
                             ? 'bg-green-100 text-green-800'
                             : 'bg-red-100 text-red-800'
-                        }`}
+                          }`}
                       >
                         {empresa.status === 'ativo' ? 'Ativo' : 'Inativo'}
                       </span>
@@ -156,11 +156,8 @@ const ClientesAtivos = () => {
                       )}
                     </td>
                     <td className="px-2 sm:px-4 py-3 sm:py-4 text-center">
-                      <div className="flex justify-around">
+                      <div className="flex justify-center">
                         <button className="text-gray-600 hover:text-gray-900">
-                          <FiFileText size={18} />
-                        </button>
-                        <button className="text-gray-600 hover:text-gray-900 ml-2">
                           <FiMoreVertical size={18} />
                         </button>
                       </div>
