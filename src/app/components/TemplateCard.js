@@ -44,7 +44,7 @@ const TemplateCard = ({
           <Button 
             variant="primary"
             onClick={onClick}
-            className="w-full p-2"
+            className="w-full p-[8px]"
           >
             Criar Sequência
           </Button>
@@ -58,7 +58,7 @@ const TemplateCard = ({
           <Button 
             variant="primary"
             onClick={onClick}
-            className="w-full p-2"
+            className="w-full p-[8px]"
           >
             Usar
           </Button>

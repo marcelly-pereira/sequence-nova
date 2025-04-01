@@ -20,7 +20,7 @@ const Header = () => {
 
   const navegarParaNotificacoes = () => {
     setNotificacoesAberto(false);
-    navigate('/notification'); // Navega para a página de notificações
+    navigate('/notification');
   };
 
   useEffect(() => {
@@ -43,7 +43,6 @@ const Header = () => {
     };
   }, []);
 
-  // Modal de notificações pequeno
   const NotificacoesModal = () => (
     <div className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg z-20 border">
       <div className="px-4 py-2 border-b">
@@ -94,7 +93,7 @@ const Header = () => {
               />
             </div>
             <div>
-              <h1 className="text-sm font-bold text-gray-800">
+              <h1 className="text-xs font-bold text-gray-800">
                 Marcelly Pereira
               </h1>
               <p className="text-xs text-gray-500">

@@ -37,7 +37,7 @@ const TemplatesSequencia = () => {
 
                     <div className="flex flex-col md:flex-row gap-6">
                         <div className="w-full md:w-64 mb-6 md:mb-0">
-                            <div className="bg-white rounded-lg border p-4 w-full">
+                            <div className="bg-white rounded-lg border p-2 w-full">
                                 <h2 className="font-bold text-[0.85rem] text-gray-800 mb-4">Departamento</h2>
                                 <ul>
                                     <li className="py-3 border-b flex justify-between items-center">

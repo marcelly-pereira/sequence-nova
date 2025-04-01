@@ -210,7 +210,7 @@ const MinhasSequencias = () => {
         <div className="mb-6 flex space-x-3">
           <Button
             variant="primary"
-            className="px-2 py-2"
+            className="p-1"
             icon={addIcon}
             onClick={() => console.log('Nova Sequência')}
           >
@@ -219,7 +219,7 @@ const MinhasSequencias = () => {
 
           <Button
             variant="outline"
-            className="px-2 py-2"
+            className="p-1"
             icon={automationIcon}
             onClick={() => console.log('Automações')}
           >
@@ -228,7 +228,7 @@ const MinhasSequencias = () => {
 
           <Button
             variant="outline"
-            className="px-2 py-2"
+            className="p-1"
             icon={templateIcon}
             onClick={() => console.log('Templates de Sequência')}
           >
