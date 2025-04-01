@@ -17,7 +17,7 @@ const Automacoes = () => {
           </Button>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-white rounded-lg shadow-sm border-gray-200">
           <div className="flex flex-col items-center justify-center py-12">
             <p className="text-gray-700 font-medium mb-1">
               Nenhuma automação encontrada.
