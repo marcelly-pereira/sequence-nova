@@ -58,17 +58,6 @@ const Listas = () => {
 
     return (
         <BaseLayout>
-            <div className="flex justify-between items-center mb-6">
-                <h4 className="text-[1.10rem]">Listas</h4>
-                <div className="text-sm">
-                    <span className="text-gray-600">Sequence</span>
-                    <span className="mx-2 text-gray-600">&gt;</span>
-                    <span className="text-gray-600">Tarefas</span>
-                    <span className="mx-2 text-gray-600">&gt;</span>
-                    <span className="text-gray-600">Listas</span>
-                </div>
-            </div>
-
             <Accordion 
                 sections={sections} 
                 onToggleSection={toggleSection} 

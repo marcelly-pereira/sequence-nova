@@ -22,43 +22,43 @@ function App() {
                     <Route index element={<Login />} />
                 </Route>
                 <Route
-                    path="/sequences/my-sequences"
+                    path="/sequencia"
                     element={
                         <MySequences />
                     }
                 />
                 <Route
-                    path="/sequences/templates"
+                    path="/templates"
                     element={
                         <TemplatesSequencia />
                     }
                 />
                 <Route
-                    path="/tasks-lists"
+                    path="/tarefas"
                     element={
                         <Lists />
                     }
                 />
                 <Route
-                    path="/tasks-recurrent"
+                    path="/detalhes_tarefas"
                     element={
                         <Recurrent />
                     }
                 />
                 <Route
-                    path="/actives-clients"
+                    path="/empresas"
                     element={
                         <Companies />
                     }
                 />
                 <Route
-                    path="/personalization-automations"
+                    path="/configurações"
                     element={
                         <Automations />
                     }
                 />
                 <Route
-                    path="/personalization-registrations"
+                    path="/lista-automacoes"
                     element={
                         <Registrations />
                     }

@@ -27,8 +27,8 @@ const Sidebar = () => {
       ),
       path: '/sequences',
       submenu: [
-        { name: 'Minhas Sequências', link: '/sequences/my-sequences' },
-        { name: 'Templates de Sequências', link: '/sequences/templates' }
+        { name: 'Minhas Sequências', link: '/sequencia' },
+        { name: 'Templates de Sequências', link: '/templates' }
       ]
     },
     {
@@ -46,8 +46,8 @@ const Sidebar = () => {
       ),
       path: '/tarefas',
       submenu: [
-        { name: 'Listas', link: '/tasks-lists' },
-        { name: 'Recorrentes', link: '/tasks-recurrent' }
+        { name: 'Listas', link: '/tarefas' },
+        { name: 'Recorrentes', link: '/detalhes_tarefas' }
       ]
     },
     {
@@ -64,7 +64,7 @@ const Sidebar = () => {
       ),
       path: '/empresas',
       submenu: [
-        { name: 'Clientes Ativos', link: '/actives-clients' },
+        { name: 'Clientes Ativos', link: '/empresas' },
       ]
     },
     {
@@ -78,8 +78,8 @@ const Sidebar = () => {
       ),
       path: '/configuracoes',
       submenu: [
-        { name: 'Cadastros', link: '/personalization-registrations' },
-        { name: 'Automações', link: '/personalization-automations' }
+        { name: 'Cadastros', link: '/configurações' },
+        { name: 'Automações', link: '/lista-automacoes' }
       ]
     }
   ];
