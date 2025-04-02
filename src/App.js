@@ -52,15 +52,15 @@ function App() {
                     }
                 />
                 <Route
-                    path="/lista-automacoes"
-                    element={
-                        <Automations />
-                    }
-                />
-                <Route
                     path="/configurações"
                     element={
                         <Registrations />
+                    }
+                />
+                <Route
+                    path="/lista-automacoes"
+                    element={
+                        <Automations />
                     }
                 />
                 <Route path="/user" element={<User />} />

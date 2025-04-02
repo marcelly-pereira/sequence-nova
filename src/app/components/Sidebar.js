@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { SlGrid } from "react-icons/sl";
-import { BsListCheck } from "react-icons/bs";
 
 const Icon = ({ children }) => (
   <div className="w-10 h-10 flex items-center justify-center transition-colors duration-200 text-white">

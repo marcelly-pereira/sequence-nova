@@ -4,9 +4,15 @@ import BaseLayout from '../../../app/BaseLayout';
 import Accordion from '../../../app/components/Accordion';
 import Button from '../../../app/components/Button';
 import Card from '../../../app/components/Card';
+import FormModal from '../../../app/components/FormModal';
+import { IoFlashOutline } from "react-icons/io5";
+import { LuLayoutTemplate } from "react-icons/lu";
+
 
 const MinhasSequencias = () => {
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const renderCardItems = (items) => {
     return items.map((item) => (
       <Card
@@ -173,38 +179,49 @@ const MinhasSequencias = () => {
   );
 
   const automationIcon = (
-    <svg
-      className="w-5 h-5"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M13 10V3L4 14h7v7l9-11h-7z"
-      ></path>
-    </svg>
+
+    <IoFlashOutline size={16} />
   );
 
   const templateIcon = (
-    <svg
-      className="w-5 h-5"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"
-      ></path>
-    </svg>
+    <LuLayoutTemplate size={16} />
   );
+
+  const FormModalFields = [
+    {
+      id: 'departamento',
+      label: 'Qual departamento?',
+      type: 'select',
+      options: [
+        { value: 'controladoria', label: 'Controladoria' },
+        { value: 'marketing', label: 'Marketing' },
+        { value: 'desenvolvimento', label: 'Desenvolvimento' },
+        { value: 'deploy', label: 'Deploy e Testes' }
+      ]
+    },
+    {
+      id: 'nome',
+      label: 'Nome da Sequência:',
+      type: 'select',
+      options: [
+        { value: 'demandas-marketing', label: 'Demandas Marketing' },
+        { value: 'solicitacoes-suporte', label: 'Solicitações de Suporte' },
+        { value: 'controle-desenvolvimento', label: 'Controle de Desenvolvimento' },
+        { value: 'vendas-negociacoes', label: 'Vendas e Negociações' }
+      ]
+    },
+    {
+      id: 'cor',
+      label: 'Cor da Sequência:',
+      type: 'color',
+      required: true
+    }
+  ];
+
+  const handleSaveFormModal = (data) => {
+    console.log('Dados salvos:', data);
+    setIsModalOpen(false);
+  };
 
   return (
     <BaseLayout title="Minhas Sequências">
@@ -214,7 +231,7 @@ const MinhasSequencias = () => {
             variant="primary"
             className="p-1"
             icon={addIcon}
-            onClick={() => console.log('Nova Sequência')}
+            onClick={() => setIsModalOpen(true)}
           >
             Nova Sequência
           </Button>
@@ -235,12 +252,21 @@ const MinhasSequencias = () => {
             onClick={() => navigate('/templates')}
           >
             Templates de Sequência
-          </ Button>
+          </Button>
         </div>
         <Accordion
           sections={sections}
           onToggleSection={toggleSection}
           emptyStateMessage="Nenhum item configurado"
+        />
+
+        <FormModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleSaveFormModal}
+          title="Nova Sequência"
+          fields={FormModalFields}
+          primaryColor="#0052cc"
         />
       </div>
     </BaseLayout>
