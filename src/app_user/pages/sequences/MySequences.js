@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import BaseLayout from '../../../app/BaseLayout';
 import Accordion from '../../../app/components/Accordion';
 import Button from '../../../app/components/Button';
 import Card from '../../../app/components/Card';
 
 const MinhasSequencias = () => {
+  const navigate = useNavigate();
   const renderCardItems = (items) => {
     return items.map((item) => (
       <Card
@@ -221,7 +223,7 @@ const MinhasSequencias = () => {
             variant="outline"
             className="p-1"
             icon={automationIcon}
-            onClick={() => console.log('Automações')}
+            onClick={() => navigate('/lista-automacoes')}
           >
             Automações
           </Button>
@@ -230,10 +232,10 @@ const MinhasSequencias = () => {
             variant="outline"
             className="p-1"
             icon={templateIcon}
-            onClick={() => console.log('Templates de Sequência')}
+            onClick={() => navigate('/templates')}
           >
             Templates de Sequência
-          </Button>
+          </ Button>
         </div>
         <Accordion
           sections={sections}
