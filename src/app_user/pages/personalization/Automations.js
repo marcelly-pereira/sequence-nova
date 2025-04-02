@@ -73,7 +73,7 @@ const Automacoes = () => {
   };
 
   return (
-    <BaseLayout>
+    <BaseLayout title="Automações">
       <div className="mx-auto">
         <Accordion
           sections={sections}

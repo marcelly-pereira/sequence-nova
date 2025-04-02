@@ -17,7 +17,7 @@ const TemplatesSequencia = () => {
     };
 
     return (
-        <BaseLayout>
+        <BaseLayout title="Lista de Templates">
             <div className="p-3 bg-white rounded-lg shadow-sm border-gray-200 min-h-screen">
                 <div className="max-w-7xl mx-auto">
                     <div className="flex flex-col sm:flex-row sm:items-center mb-4 sm:mb-6 space-y-3 sm:space-y-0">

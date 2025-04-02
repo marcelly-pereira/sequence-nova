@@ -57,7 +57,7 @@ const Listas = () => {
     };
 
     return (
-        <BaseLayout>
+        <BaseLayout title="Listas">
             <Accordion 
                 sections={sections} 
                 onToggleSection={toggleSection} 

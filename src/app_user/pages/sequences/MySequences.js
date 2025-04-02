@@ -205,7 +205,7 @@ const MinhasSequencias = () => {
   );
 
   return (
-    <BaseLayout>
+    <BaseLayout title="Minhas Sequências">
       <div>
         <div className="mb-6 flex space-x-3">
           <Button

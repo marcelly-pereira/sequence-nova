@@ -4,7 +4,7 @@ import BaseLayout from '../../../app/BaseLayout';
 import Button from '../../../app/components/Button';
 const Cadastros = () => {
     return (
-        <BaseLayout>
+        <BaseLayout title="Cadastros">
             <div className="min-h-screen">
                 <div className="mb-6">
                     <Button

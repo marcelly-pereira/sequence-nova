@@ -3,19 +3,24 @@ import { Helmet } from 'react-helmet';
 import Sidebar from '../app/components/Sidebar';
 import Header from '../app/components/Header';
 
-const BaseLayout = ({ children, title = 'Sequence', username = 'Marcelly Pereira' }) => {
+const BaseLayout = ({ 
+  children, 
+  title 
+}) => {
   return (
     <div className="flex min-h-screen bg-gray-100">
       <Helmet>
         <meta charSet="utf-8" />
-        <title>{title} | Sequence</title>
+        <title>{title}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Helmet>
       
       <Sidebar />
       
-      <div className="flex flex-col flex-grow ml-16">
-        <Header username={username} />
+      <div className="flex flex-col flex-grow ml-12">
+        <Header 
+          title={title}
+        />
         
         <main className="flex-grow p-6 bg-gray-100">
           {children}

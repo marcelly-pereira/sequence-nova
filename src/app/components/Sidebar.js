@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { SlGrid } from "react-icons/sl";
+import { BsListCheck } from "react-icons/bs";
 
 const Icon = ({ children }) => (
   <div className="w-10 h-10 flex items-center justify-center transition-colors duration-200 text-white">
@@ -18,12 +20,7 @@ const Sidebar = () => {
       key: 'sequencias',
       title: 'Sequência',
       icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="3" y="3" width="7" height="7"></rect>
-          <rect x="14" y="3" width="7" height="7"></rect>
-          <rect x="14" y="14" width="7" height="7"></rect>
-          <rect x="3" y="14" width="7" height="7"></rect>
-        </svg>
+        <SlGrid size={16}/>
       ),
       path: '/sequences',
       submenu: [
@@ -137,7 +134,7 @@ const Sidebar = () => {
     return (
       <div
         ref={submenuRef}
-        className="fixed left-16 z-50 shadow-lg"
+        className="fixed left-12 z-50 shadow-lg"
         style={{ top: rect.top, width: '180px' }}
         onMouseEnter={() => {
           if (timeoutRef.current) {
@@ -188,7 +185,7 @@ const Sidebar = () => {
   );
 
   return (
-    <div className="h-full w-16 bg-indigo-900 fixed left-0 top-0 flex flex-col items-center py-3">
+    <div className="h-full w-12 bg-indigo-900 fixed left-0 top-0 flex flex-col items-center py-[1.4rem]">
       <div className="mb-8">
         <Link to="/" className="flex items-center justify-center" aria-label="Home">
           <img src='/static/assets/images/favicon.ico' alt='Logo' className='w-6 h-6' />
