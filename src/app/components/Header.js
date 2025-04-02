@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FaBellSlash } from 'react-icons/fa';
 import UserMenu from './UserMenu';
 import { SlBell, SlGrid } from "react-icons/sl";
 import { useNavigate } from 'react-router-dom';
+import NotificationsModal from '../components/NotificationsModal'
 
 const Header = ({ title = 'Dashboard' }) => {
   const [menuAberto, setMenuAberto] = useState(false);
@@ -44,26 +44,6 @@ const Header = ({ title = 'Dashboard' }) => {
     };
   }, []);
 
-  const NotificacoesModal = () => (
-    <div className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg z-20 border">
-      <div className="px-4 py-2 border-b">
-        <h3 className="text-lg font-medium text-gray-700">Notificações</h3>
-      </div>
-      <div className="flex flex-col items-center justify-center py-8">
-        <FaBellSlash className="text-gray-400 mb-2" size={24} />
-        <p className="text-gray-500">Sem notificações</p>
-      </div>
-      <div className="px-4 py-2 border-t text-center">
-        <button
-          onClick={navegarParaNotificacoes}
-          className="text-gray-500 text-sm"
-        >
-          Ver todas as notificações
-        </button>
-      </div>
-    </div>
-  );
-
   return (
     <div className="bg-white px-2 shadow-sm">
       <div className="flex items-center justify-between">
@@ -83,7 +63,8 @@ const Header = ({ title = 'Dashboard' }) => {
               <SlBell size={16} className="text-gray-600" />
             </button>
 
-            {notificacoesAberto && <NotificacoesModal />}
+            {notificacoesAberto && <NotificationsModal
+            />}
           </div>
 
           <div className="text-left relative" ref={menuRef}>
