@@ -3,7 +3,6 @@ import { FiPlusCircle, FiMoreHorizontal, FiAlertCircle, FiZap, FiArrowUpCircle, 
 import { FiPlus, FiCheckCircle, FiXCircle } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 
-// Componente para indicador de posição de drop
 const DropIndicator = ({ beforeId, column }) => {
     return (
         <div
@@ -14,7 +13,6 @@ const DropIndicator = ({ beforeId, column }) => {
     );
 };
 
-// Componente para o badge de tipo de card
 const TypeBadge = ({ type }) => {
     return (
         <span className="text-xs font-semibold text-white bg-blue-500 px-2 py-0.5 rounded-sm">
@@ -23,7 +21,6 @@ const TypeBadge = ({ type }) => {
     );
 };
 
-// Componente para os indicadores de tempo
 const TimeIndicator = ({ days, isCompleted }) => {
     return (
         <div className="flex items-center mr-2">
@@ -37,7 +34,6 @@ const TimeIndicator = ({ days, isCompleted }) => {
 };
 
 const KanbanBoard = () => {
-    // Estado para armazenar as colunas e cards
     const [columns, setColumns] = useState([
         {
             id: 1,
@@ -78,7 +74,6 @@ const KanbanBoard = () => {
         }
     ]);
 
-    // Estado para o modal de criação de card
     const [showModal, setShowModal] = useState(false);
     const [currentColumnId, setCurrentColumnId] = useState(null);
     const [newCardTitle, setNewCardTitle] = useState('');
@@ -88,16 +83,13 @@ const KanbanBoard = () => {
     const [showTagSelector, setShowTagSelector] = useState(false);
     const [tagSearchTerm, setTagSearchTerm] = useState('');
 
-    // Estado para o modal de criação de fase
     const [showPhaseModal, setShowPhaseModal] = useState(false);
     const [newPhaseTitle, setNewPhaseTitle] = useState('');
     const [newPhaseColor, setNewPhaseColor] = useState('border-gray-300');
     const [newPhaseIcon, setNewPhaseIcon] = useState('');
 
-    // Estado para controlar quando um arrastar está em andamento
     const [isDragging, setIsDragging] = useState(false);
 
-    // Atualizar contagem de cards
     useEffect(() => {
         const updatedColumns = columns.map(column => ({
             ...column,
@@ -106,7 +98,6 @@ const KanbanBoard = () => {
         setColumns(updatedColumns);
     }, [columns.map(col => col.cards.length).join(',')]);
 
-    // Prevenir rolagem durante o arrastar
     useEffect(() => {
         const preventScroll = (e) => {
             if (isDragging) {
@@ -121,7 +112,6 @@ const KanbanBoard = () => {
         };
     }, [isDragging]);
 
-    // Função para abrir o modal de criação de card
     const openAddCardModal = (columnId) => {
         setCurrentColumnId(columnId);
         setNewCardTitle('');
@@ -131,7 +121,6 @@ const KanbanBoard = () => {
         setShowModal(true);
     };
 
-    // Função para adicionar um novo card
     const addNewCard = () => {
         if (newCardTitle.trim() === '') return;
 
@@ -165,7 +154,6 @@ const KanbanBoard = () => {
         setShowModal(false);
     };
 
-    // Função para abrir o modal de criação de fase
     const openAddPhaseModal = () => {
         setNewPhaseTitle('');
         setNewPhaseColor('border-gray-300');
@@ -173,7 +161,6 @@ const KanbanBoard = () => {
         setShowPhaseModal(true);
     };
 
-    // Função para adicionar uma nova fase
     const addNewPhase = () => {
         if (newPhaseTitle.trim() === '') return;
 
@@ -194,12 +181,10 @@ const KanbanBoard = () => {
         setShowPhaseModal(false);
     };
 
-    // Função para excluir uma fase
     const deletePhase = (phaseId) => {
         setColumns(prevColumns => prevColumns.filter(column => column.id !== phaseId));
     };
 
-    // Funções auxiliares para lidar com os indicadores de posição
     const getIndicatorsByColumn = (columnId) => {
         return Array.from(document.querySelectorAll(`[data-column="${columnId}"]`));
     };
@@ -245,7 +230,6 @@ const KanbanBoard = () => {
         el.element.style.opacity = "1";
     };
 
-    // Função para arrastar cards
     const handleDragStart = (e, cardId, sourceColumnId) => {
         e.dataTransfer.setData('cardId', cardId);
         e.dataTransfer.setData('sourceColumnId', sourceColumnId);
@@ -276,8 +260,7 @@ const KanbanBoard = () => {
         const cardId = parseInt(e.dataTransfer.getData('cardId'));
         const sourceColumnId = parseInt(e.dataTransfer.getData('sourceColumnId'));
 
-        // Se não existir cardId nos dados transferidos, pode ser 
-        // um arrasto de coluna, não de card, então ignoramos
+
         if (!cardId || isNaN(cardId) || !sourceColumnId || isNaN(sourceColumnId)) {
             clearHighlights();
             return;
@@ -292,10 +275,8 @@ const KanbanBoard = () => {
 
         const before = element.dataset.before || "-1";
 
-        // Encontra o card na coluna de origem
         const sourceColumn = columns.find(col => col.id === sourceColumnId);
 
-        // Verifica se sourceColumn existe antes de acessar cards
         if (!sourceColumn) {
             console.error("Coluna de origem não encontrada:", sourceColumnId);
             return;
@@ -307,9 +288,7 @@ const KanbanBoard = () => {
             return;
         }
 
-        // Prepara uma cópia atualizada das colunas
         const updatedColumns = columns.map(column => {
-            // Remove o card da coluna de origem
             if (column.id === sourceColumnId) {
                 const updatedCards = column.cards.filter(c => c.id !== cardId);
                 return {
@@ -319,15 +298,12 @@ const KanbanBoard = () => {
                 };
             }
 
-            // Adiciona o card na coluna de destino na posição correta
             if (column.id === targetColumnId) {
                 const newCards = [...column.cards];
 
                 if (before === "-1") {
-                    // Adiciona ao final
                     newCards.push(card);
                 } else {
-                    // Adiciona na posição específica
                     const insertIndex = newCards.findIndex(c => c.id === parseInt(before));
                     if (insertIndex !== -1) {
                         newCards.splice(insertIndex, 0, card);
@@ -348,7 +324,6 @@ const KanbanBoard = () => {
 
         setColumns(updatedColumns);
 
-        // Certifique-se de resetar o estado de arrastar
         handleDragEnd();
     };
 
@@ -466,7 +441,6 @@ const KanbanBoard = () => {
                             </div>
                         </div>
                     ))}
-                    {/* Botão de adicionar nova fase */}
                     <div className="flex-shrink-0 w-72 h-12 flex items-center justify-center border border-dashed border-gray-300 bg-[#f3f4f6] rounded-md cursor-pointer hover:bg-gray-100"
                         onClick={openAddPhaseModal}>
                         <div className="flex items-center text-gray-500">
@@ -477,7 +451,6 @@ const KanbanBoard = () => {
                 </div>
             </div>
 
-            {/* Botões no canto inferior esquerdo */}
             <div className="absolute bottom-4 left-4">
                 <button
                     className="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 shadow-md"
@@ -488,7 +461,6 @@ const KanbanBoard = () => {
                 </button>
             </div>
            
-            {/* Modal para adicionar novo card */}
             {showModal && (
                 <motion.div
                     initial={{ opacity: 0 }}
@@ -729,7 +701,6 @@ const KanbanBoard = () => {
                 </motion.div>
             )}
 
-            {/* Modal para adicionar nova fase */}
             {showPhaseModal && (
                 <motion.div
                     initial={{ opacity: 0 }}
