@@ -21,7 +21,7 @@ const MenuUsuario = ({ onItemClick }) => {
     };
 
     return (
-        <div className="absolute right-[-1.95rem] mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+        <div className="absolute right-[0.05rem] mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
             <div className="py-1">
                 <button
                     className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"

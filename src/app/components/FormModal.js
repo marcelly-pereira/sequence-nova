@@ -11,7 +11,6 @@ const FormModal = ({
   const [formData, setFormData] = useState({});
   const [selectedColor, setSelectedColor] = useState(null);
 
-  // Cores disponíveis para seleção
   const colorOptions = [
     { id: 'blue-dark', color: '#0052cc' },
     { id: 'blue-medium', color: '#4c94ff' },
@@ -20,7 +19,6 @@ const FormModal = ({
     { id: 'purple-light', color: '#d8b4fe' }
   ];
 
-  // Efeito para gerenciar o scroll do body quando o modal está aberto
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -33,7 +31,6 @@ const FormModal = ({
     };
   }, [isOpen]);
 
-  // Manipula mudanças nos campos do formulário
   const handleChange = (fieldId, value) => {
     setFormData({
       ...formData,
@@ -41,7 +38,6 @@ const FormModal = ({
     });
   };
 
-  // Manipula o envio do formulário
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave({
@@ -50,23 +46,18 @@ const FormModal = ({
     });
   };
 
-  // Manipula seleção de cor
   const handleColorSelect = (color) => {
     setSelectedColor(color);
   };
 
-  // Verifica se há campos obrigatórios não preenchidos
   const isFormValid = () => {
-    // Verifica cada campo obrigatório
     const requiredFields = fields.filter(field => field.required);
     
     for (const field of requiredFields) {
-      // Verifica campos de texto e select
       if (field.type !== 'color' && !formData[field.id]) {
         return false;
       }
       
-      // Verifica campo de cor
       if (field.type === 'color' && !selectedColor) {
         return false;
       }
@@ -75,7 +66,6 @@ const FormModal = ({
     return true;
   };
 
-  // Se o modal não estiver aberto, não renderiza nada
   if (!isOpen) return null;
 
   return (

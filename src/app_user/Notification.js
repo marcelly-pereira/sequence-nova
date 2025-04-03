@@ -29,7 +29,7 @@ const Notification = () => {
                 />
               </svg>
             </div>
-            <h1 className="ml-3 text-xl font-medium text-gray-800 flex-grow">
+            <h1 className="ml-3 text-md font-medium text-gray-800 flex-grow">
               Gerencie suas notificações recentes
             </h1>
           </div>
@@ -41,7 +41,7 @@ const Notification = () => {
                 <button
                   className={`px-4 py-1 rounded-full text-sm ${
                     filtroAtivo === 'nao-lidas'
-                      ? 'bg-blue-600 text-white'
+                      ? 'bg-[#1526ff] text-white'
                       : 'bg-gray-200 text-gray-700'
                   }`}
                   onClick={() => handleFiltroChange('nao-lidas')}
@@ -51,7 +51,7 @@ const Notification = () => {
                 <button
                   className={`px-4 py-1 rounded-full text-sm ${
                     filtroAtivo === 'lidas'
-                      ? 'bg-blue-600 text-white'
+                      ? 'bg-[#1526ff] text-white'
                       : 'bg-gray-200 text-gray-700'
                   }`}
                   onClick={() => handleFiltroChange('lidas')}
@@ -61,7 +61,7 @@ const Notification = () => {
                 <button
                   className={`px-4 py-1 rounded-full text-sm ${
                     filtroAtivo === 'todas'
-                      ? 'bg-blue-600 text-white'
+                      ? 'bg-[#1526ff] text-white'
                       : 'bg-gray-200 text-gray-700'
                   }`}
                   onClick={() => handleFiltroChange('todas')}

@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import CardPropTypes from '../../types/CardPropTypes'
 
 const Card = ({ 
   title = "Solicitações de Suporte",
@@ -7,7 +7,7 @@ const Card = ({
   count = 46
 }) => {
   return (
-    <div className="bg-white rounded-lg border p-6 w-64 flex flex-col gap-3">
+    <div className="bg-white rounded-lg border p-6 w-64 h-40 flex flex-col justify-between">
       <div className="flex items-center gap-3">
         <div className="w-7 h-7 bg-[#F3F4F6] rounded-md flex items-center justify-center">
           <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -25,10 +25,6 @@ const Card = ({
   );
 };
 
-Card.propTypes = {
-  title: PropTypes.string,
-  subtitle: PropTypes.string,
-  count: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-};
+Card.propTypes = CardPropTypes;
 
 export default Card;

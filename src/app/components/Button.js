@@ -10,7 +10,7 @@ export const Button = ({
     icon = null
 }) => {
     const getButtonClasses = () => {
-        const baseClasses = "flex items-center justify-center gap-1 rounded-md transition-all duration-200";
+        const baseClasses = "flex items-center justify-center gap-1 rounded-md transition-all duration-200 px-2 text-sm";
 
         const variantClasses = {
             primary: "bg-[#1526ff] hover:opacity-90 text-white",
