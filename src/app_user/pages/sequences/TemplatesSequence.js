@@ -25,7 +25,7 @@ const TemplatesSequencia = () => {
                             <input
                                 type="text"
                                 placeholder="Procurar empresa"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md 
+                                className="text-sm w-full px-4 py-2 border border-gray-300 rounded-md 
                                     focus:outline-none focus:ring-1 focus:ring-blue-500/25 focus:border-blue-700 
                                     transition-colors"
                             />
@@ -36,24 +36,24 @@ const TemplatesSequencia = () => {
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-6">
-                        <div className="w-full md:w-64 mb-6 md:mb-0">
+                        <div className="w-full md:w-56 mb-6 md:mb-0">
                             <div className="bg-white rounded-lg border p-2 w-full">
-                                <h2 className="font-bold text-[0.85rem] text-gray-800 mb-4">Departamento</h2>
+                                <h2 className="font-bold text-md text-gray-800 mb-4">Departamento</h2>
                                 <ul>
                                     <li className="py-3 border-b flex justify-between items-center">
-                                        <span className="text-gray-700">Controladoria</span>
+                                        <span className="text-gray-700 text-sm">Controladoria</span>
                                         <span className="text-gray-500 text-sm">1</span>
                                     </li>
                                     <li className="py-3 border-b flex justify-between items-center">
-                                        <span className="text-gray-700">Marketing</span>
+                                        <span className="text-gray-700 text-sm">Marketing</span>
                                         <span className="text-gray-500 text-sm">1</span>
                                     </li>
                                     <li className="py-3 border-b flex justify-between items-center">
-                                        <span className="text-gray-700">Desenvolvimento</span>
+                                        <span className="text-gray-700 text-sm">Desenvolvimento</span>
                                         <span className="text-gray-500 text-sm">0</span>
                                     </li>
                                     <li className="py-3 border-b flex justify-between items-center">
-                                        <span className="text-gray-700">Deploy e Testes</span>
+                                        <span className="text-gray-700 text-sm">Deploy e Testes</span>
                                         <span className="text-gray-500 text-sm">0</span>
                                     </li>
                                 </ul>

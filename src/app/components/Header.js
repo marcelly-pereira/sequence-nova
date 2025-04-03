@@ -45,10 +45,10 @@ const Header = ({ title = 'Dashboard' }) => {
   }, []);
 
   return (
-    <div className="bg-white px-2 shadow-sm">
+    <div className="bg-white px-2 py-4 shadow-sm">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <div className="bg-blue-50 p-1.5 rounded-full mr-3">
+          <div className="bg-blue-50 p-2 rounded-full mr-3">
             <SlGrid size={16} className='text-[#1526ff]' />
           </div>
           <h1 className="text-base font-semibold text-gray-800">{title}</h1>

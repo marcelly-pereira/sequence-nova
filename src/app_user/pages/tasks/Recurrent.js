@@ -11,21 +11,21 @@ const Recorrentes = () => {
                         <input
                             type="text"
                             placeholder="Procurar..."
-                            className="px-4 py-2 border border-gray-300 rounded-md 
+                            className="text-sm px-4 py-2 border border-gray-300 rounded-md 
                                     focus:outline-none focus:ring-1 focus:ring-blue-500/25 focus:border-blue-700 
                                     transition-colors"
                         />
-                        <div className="ml-2 p-2 text-gray-500">
+                        <div className="ml-2 p-2 text-gray-400">
                             <FiSearch size={16} />
                         </div>
                     </div>
-                    <button className="flex items-center px-3 py-1 bg-white border border-gray-300 rounded-md text-sm mr-2">
-                        <FiList size={16} className="mr-2 text-gray-600" />
+                    <button className="flex items-center px-3 py-1 bg-white border border-gray-300 rounded-md text-sm mr-2 text-gray-400">
+                        <FiList size={16} className="mr-2 text-gray-400" />
                         <span>Listas</span>
                     </button>
 
-                    <button className="flex items-center px-3 py-1 bg-white border border-gray-300 rounded-md text-sm ml-2">
-                        <FiFilter size={16} className="mr-2 text-gray-600" />
+                    <button className="flex items-center px-3 py-1 bg-white border border-gray-300 rounded-md text-sm ml-2 text-gray-400">
+                        <FiFilter size={16} className="mr-2 text-gray-400" />
                         <span>Filtrar</span>
                     </button>
                 </div>

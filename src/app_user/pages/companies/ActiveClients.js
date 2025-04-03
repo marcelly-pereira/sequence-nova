@@ -98,7 +98,7 @@ const ClientesAtivos = () => {
           <div className="mb-6">
             <Button
               variant="primary"
-              className="py-2 px-4 font-medium shadow-sm"
+              className="text-sm py-[0.45rem] px-2 shadow-sm"
               icon={<FiPlus size={18} />}
             >
               Cadastrar
@@ -119,13 +119,13 @@ const ClientesAtivos = () => {
               <input
                 type="text"
                 placeholder="Procurar empresa"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md 
+                className="text-sm w-full px-4 py-2 border border-gray-300 rounded-md 
                           focus:outline-none focus:ring-1 focus:ring-blue-500/25 focus:border-blue-700 
                           transition-colors"
                 value={filtro}
                 onChange={handleFiltroChange}
               />
-              <button className="ml-2 text-gray-500">
+              <button className="ml-2 text-gray-400">
                 <FiSearch size={18} />
               </button>
             </div>

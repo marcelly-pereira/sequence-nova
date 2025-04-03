@@ -9,7 +9,7 @@ const Automacoes = () => {
         <div className="mb-6">
           <Button
             variant="primary"
-            className="py-2 px-4 font-medium shadow-sm"
+            className="text-sm py-[0.45rem] px-2 shadow-sm"
             icon={<FiPlus size={18} />}
           >
             Criar Nova

@@ -35,11 +35,11 @@ export const TemplateStatic = () => {
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
         {TEMPLATES.map((template, index) => (
-          <div key={index} className="flex-none w-full">
+          <div key={index} className="flex-none w-full flex justify-center items-center">
             <img
               src={template.src}
               alt={template.alt}
-              className="w-3xs object-contain"
+              className="w-[319px] object-contain"
             />
           </div>
         ))}

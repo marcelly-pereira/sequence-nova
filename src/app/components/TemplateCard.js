@@ -26,39 +26,39 @@ const TemplateCard = ({
         <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
           {icon}
         </div>
-        <span className="font-medium text-gray-800">{title}</span>
+        <span className="text-sm font-medium text-gray-800">{title}</span>
       </div>
 
-      <div className="bg-gray-100 rounded-full py-1 px-1 inline-block">
-        <span className="text-xs text-gray-600">
+      <div className="bg-gray-100 rounded-full py-1 px-2 inline-block">
+        <span className="text-xs text-gray-600 italic">
           {isCreateTemplate ? "Novo Template" : department}
         </span>
       </div>
       
       {isCreateTemplate ? (
         <>
-          <p className="text-sm text-gray-600 text-left my-4">
+          <p className="text-xs text-black text-left my-4">
             Criar uma nova sequência.
           </p>
           
           <Button 
             variant="primary"
             onClick={onClick}
-            className="w-full p-[8px]"
+            className="w-full text-sm py-[0.45rem] px-2 shadow-sm"
           >
             Criar Sequência
           </Button>
         </>
       ) : (
         <>
-          <p className="text-sm text-gray-600 text-left my-4">
+          <p className="text-xs text-black text-left my-4">
             Ver mais
           </p>
           
           <Button 
             variant="primary"
             onClick={onClick}
-            className="w-full p-[8px]"
+            className="w-full text-sm py-[0.45rem] px-2 shadow-sm"
           >
             Usar
           </Button>

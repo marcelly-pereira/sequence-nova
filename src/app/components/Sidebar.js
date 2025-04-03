@@ -144,7 +144,7 @@ const Sidebar = () => {
         onMouseLeave={handleMenuLeave}
       >
         <div className="flex flex-col w-full">
-          <div className="bg-indigo-800 text-white text-base px-2 py-2 font-medium flex items-center h-10 w-full">
+          <div className="text-md bg-indigo-800 text-white text-base px-2 py-2 font-medium flex items-center h-10 w-full">
             {menu.title}
           </div>
 
@@ -157,7 +157,7 @@ const Sidebar = () => {
                 <li key={index} className="w-full text-left">
                   <Link
                     to={item.link}
-                    className="block py-2 text-gray-300 hover:text-white text-sm transition-colors w-full text-left px-2"
+                    className="block py-2 text-gray-300 hover:text-white text-md transition-colors w-full text-left px-8"
                   >
                     {item.name}
                   </Link>

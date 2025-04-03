@@ -229,7 +229,7 @@ const MinhasSequencias = () => {
         <div className="mb-6 flex space-x-3">
           <Button
             variant="primary"
-            className="p-1"
+            className="text-sm py-[0.45rem] px-2 shadow-sm"
             icon={addIcon}
             onClick={() => setIsModalOpen(true)}
           >
@@ -238,7 +238,7 @@ const MinhasSequencias = () => {
 
           <Button
             variant="outline"
-            className="p-1"
+            className="text-sm py-[0.45rem] px-2 shadow-sm"
             icon={automationIcon}
             onClick={() => navigate('/lista-automacoes')}
           >
@@ -247,7 +247,7 @@ const MinhasSequencias = () => {
 
           <Button
             variant="outline"
-            className="p-1"
+            className="text-sm py-[0.45rem] px-2 shadow-sm"
             icon={templateIcon}
             onClick={() => navigate('/templates')}
           >

@@ -23,8 +23,8 @@ const Accordion = ({ sections, onToggleSection, emptyStateMessage, emptyStateSub
               <div className="mr-3">
                 {section.icon}
               </div>
-              <span className="text-gray-800 font-medium">{section.title}</span>
-              <span className="ml-2 text-sm bg-gray-100 px-2 py-0.5 rounded-full text-gray-600">{section.count}</span>
+              <span className="text-gray-800 font-medium text-sm">{section.title}</span>
+              <span className="ml-2 text-xs bg-gray-100 px-2 py-0.5 rounded-full text-gray-600">{section.count}</span>
               <div className="ml-auto">
                 <svg 
                   className={`w-5 h-5 text-gray-400 transform transition-transform duration-500 ease-in-out ${
@@ -60,7 +60,7 @@ const Accordion = ({ sections, onToggleSection, emptyStateMessage, emptyStateSub
                     {section.items}
                   </div>
                 ) : (
-                  <div className="text-center py-10 text-gray-500">
+                  <div className="text-center py-10 text-gray-500 text-sm">
                     <p>{emptyStateMessage || "Nenhum item configurado"}</p>
                     {emptyStateSubMessage && <p>{emptyStateSubMessage}</p>}
                   </div>
