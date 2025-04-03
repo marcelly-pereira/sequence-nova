@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import UserMenu from './UserMenu';
 import { SlBell, SlGrid } from "react-icons/sl";
 import { useNavigate } from 'react-router-dom';
-import NotificationsModal from '../components/NotificationsModal'
+import NotificationsModal from '../components/NotificationsModal';
+import { AnimatePresence } from 'framer-motion';
 
 const Header = ({ title = 'Dashboard' }) => {
   const [menuAberto, setMenuAberto] = useState(false);
@@ -63,8 +64,9 @@ const Header = ({ title = 'Dashboard' }) => {
               <SlBell size={16} className="text-gray-600" />
             </button>
 
-            {notificacoesAberto && <NotificationsModal
-            />}
+            <AnimatePresence>
+              {notificacoesAberto && <NotificationsModal />}
+            </AnimatePresence>
           </div>
 
           <div className="text-left relative" ref={menuRef}>
@@ -89,7 +91,9 @@ const Header = ({ title = 'Dashboard' }) => {
               </div>
             </div>
 
-            {menuAberto && <UserMenu onItemClick={() => setMenuAberto(false)} />}
+            <AnimatePresence>
+              {menuAberto && <UserMenu onItemClick={() => setMenuAberto(false)} />}
+            </AnimatePresence>
           </div>
         </div>
       </div>
