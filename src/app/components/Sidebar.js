@@ -13,6 +13,7 @@ const Sidebar = () => {
   const menuRefs = useRef({});
   const submenuRef = useRef(null);
   const timeoutRef = useRef(null);
+  const [submenuVisible, setSubmenuVisible] = useState(false);
 
   const menuItems = [
     {
@@ -96,6 +97,17 @@ const Sidebar = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Adicionar uma pequena pausa antes de mostrar o submenu para permitir a animação
+    if (activeSubmenu) {
+      setTimeout(() => {
+        setSubmenuVisible(true);
+      }, 50);
+    } else {
+      setSubmenuVisible(false);
+    }
+  }, [activeSubmenu]);
+
   const handleMenuHover = (key) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -133,7 +145,9 @@ const Sidebar = () => {
     return (
       <div
         ref={submenuRef}
-        className="fixed left-12 z-50 shadow-lg"
+        className={`fixed left-12 z-50 shadow-lg transition-all duration-300 ease-in-out ${
+          submenuVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'
+        }`}
         style={{ top: rect.top, width: '180px' }}
         onMouseEnter={() => {
           if (timeoutRef.current) {
@@ -149,12 +163,20 @@ const Sidebar = () => {
           </div>
 
           <div
-            className="bg-[#252563] w-full"
+            className="bg-[#252563] w-full overflow-hidden"
             style={{ height: `${heightToLastItem}px` }}
           >
             <ul className="py-2 w-full">
               {menu.submenu.map((item, index) => (
-                <li key={index} className="w-full text-left">
+                <li 
+                  key={index} 
+                  className="w-full text-left transform transition-transform duration-300 ease-in-out" 
+                  style={{ 
+                    transitionDelay: `${index * 50}ms`,
+                    transform: submenuVisible ? 'translateX(0)' : 'translateX(-10px)',
+                    opacity: submenuVisible ? 1 : 0
+                  }}
+                >
                   <Link
                     to={item.link}
                     className="block py-2 text-gray-300 hover:text-white text-md transition-colors w-full text-left px-8"
@@ -172,7 +194,7 @@ const Sidebar = () => {
 
   const MenuItem = ({ item }) => (
     <div
-      className={`relative w-16 h-10 flex justify-center ${activeSubmenu === item.key ? 'bg-indigo-800' : ''}`}
+      className={`relative w-16 h-10 flex justify-center transition-colors duration-200 ${activeSubmenu === item.key ? 'bg-indigo-800' : 'hover:bg-indigo-800/60'}`}
       ref={ref => menuRefs.current[item.key] = ref}
       onMouseEnter={() => handleMenuHover(item.key)}
       onMouseLeave={handleMenuLeave}
@@ -197,7 +219,7 @@ const Sidebar = () => {
         ))}
       </nav>
 
-      {renderSubmenu(activeSubmenu)}
+      {activeSubmenu && renderSubmenu(activeSubmenu)}
     </div>
   );
 };
