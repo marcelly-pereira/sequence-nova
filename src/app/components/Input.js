@@ -26,7 +26,7 @@ export const Input = ({
                 onChange={onChange}
                 required={required}
                 placeholder={placeholder}
-                className={`w-full px-4 py-2 border border-gray-300 rounded-md text-sm
+                className={`text-sm w-full px-4 py-2 border border-gray-300 rounded-md text-sm
                           focus:outline-none focus:ring-1 focus:ring-blue-500/25 focus:border-blue-700 
                           transition-colors ${className}`}
             />

@@ -3,7 +3,7 @@ import { FiSearch, FiMenu, FiPlus } from 'react-icons/fi';
 import BaseLayout from '../../../app/BaseLayout';
 import Button from '../../../app/components/Button';
 import Table from '../../../app/components/Table';
-import FormRegister from '../../../app/components/FormRegister'; 
+import FormRegisterClient from '../../../app/forms/FormRegisterClient'; 
 
 const ClientesAtivos = () => {
   const [empresas, setEmpresas] = useState([
@@ -195,7 +195,7 @@ const ClientesAtivos = () => {
         </div>
       </div>
 
-      <FormRegister 
+      <FormRegisterClient 
         isOpen={formModalOpen}
         onClose={handleCloseCadastroModal}
         onSave={handleSaveCliente}

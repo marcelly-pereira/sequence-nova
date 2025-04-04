@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-
+import { Input } from '../components/Input';
+import { Select } from '../components/Select'; 
+import Button from '../components/Button';
+import SelectResponsible from '../components/SelectResponsible';
 const BaseFormModal = ({ 
   isOpen, 
   onClose, 
@@ -50,30 +53,26 @@ const BaseFormModal = ({
             </div>
             
             <div className="px-6 py-4 flex justify-end items-center bg-gray-50">
-              <motion.button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 mr-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {cancelButtonText}
-              </motion.button>
-              <motion.button
-                type="button"
-                onClick={onSubmit}
-                disabled={!isValid}
-                className={`px-4 py-2 rounded-md text-sm font-medium text-white flex items-center ${
-                  isValid 
-                    ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer' 
-                    : 'bg-blue-300 cursor-not-allowed opacity-50'
-                }`}
-                whileHover={isValid ? { scale: 1.05 } : {}}
-                whileTap={isValid ? { scale: 0.95 } : {}}
-                style={{ backgroundColor: isValid ? primaryColor : undefined }}
-              >
-                {submitButtonText}
-              </motion.button>
+              <div className="mr-2">
+                <Button 
+                  variant="outline"
+                  onClick={onClose}
+                  className="py-2"
+                >
+                  {cancelButtonText}
+                </Button>
+              </div>
+              
+              <div>
+                <Button 
+                  variant="primary"
+                  onClick={onSubmit}
+                  disabled={!isValid}
+                  className={`py-2 ${!isValid ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                  {submitButtonText}
+                </Button>
+              </div>
             </div>
           </motion.div>
         </motion.div>
@@ -89,7 +88,7 @@ const FormRegister = ({
   primaryColor = '#0052cc'
 }) => {
   const [formData, setFormData] = useState({
-    responsavel: '',
+    responsavel: [],
     cnpj: '',
     regimeTributario: '',
     nomeFantasia: '',
@@ -155,7 +154,6 @@ const FormRegister = ({
     'email'
   ];
 
-  // Handler para alteração nos campos
   const handleChange = (fieldId, value) => {
     setFormData({
       ...formData,
@@ -164,7 +162,12 @@ const FormRegister = ({
   };
 
   const isFormValid = () => {
-    return requiredFields.every(field => formData[field]);
+    if (requiredFields.includes('responsavel') && formData.responsavel.length === 0) {
+      return false;
+    }
+    
+    return requiredFields.filter(field => field !== 'responsavel')
+      .every(field => formData[field]);
   };
 
   const handleSubmit = () => {
@@ -204,7 +207,7 @@ const FormRegister = ({
     {
       id: 'responsavel',
       label: 'Responsável',
-      type: 'select',
+      type: 'multiselect',
       required: true
     },
     {
@@ -362,63 +365,43 @@ const FormRegister = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 + index * 0.05 }}
       >
-        <label className="block text-sm font-medium">
-          {field.label}
-          {field.required && <span className="text-red-500 ml-1">*</span>}
-        </label>
+        {field.type === 'multiselect' && field.id === 'responsavel' && (
+          <SelectResponsible
+            id={field.id}
+            name={field.id}
+            label={field.label}
+            value={formData[field.id] || []}
+            onChange={(value) => handleChange(field.id, value)}
+            required={field.required}
+            options={responsavelOptions}
+          />
+        )}
         
         {field.type === 'select' && (
-          <div className="relative">
-            <select
-              className="w-full px-4 py-2 border border-gray-300 rounded-md 
-                  focus:outline-none focus:ring-1 focus:ring-blue-500/25 focus:border-blue-700 
-                  transition-colors pr-10 appearance-none bg-white"
-              value={formData[field.id] || ''}
-              onChange={(e) => handleChange(field.id, e.target.value)}
-              required={field.required}
-            >
-              <option value="" disabled>Selecione...</option>
-              {field.id === 'responsavel' && responsavelOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-              {field.id === 'regimeTributario' && regimeTributarioOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-              {field.id === 'uf' && ufOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-            <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-              <svg 
-                className="w-5 h-5 text-gray-400" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24" 
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth="2" 
-                  d="M19 9l-7 7-7-7"
-                ></path>
-              </svg>
-            </div>
-          </div>
+          <Select
+            id={field.id}
+            name={field.id}
+            label={field.label}
+            value={formData[field.id] || ''}
+            onChange={(value) => handleChange(field.id, value)}
+            required={field.required}
+            options={
+              field.id === 'regimeTributario' 
+                ? regimeTributarioOptions 
+                : field.id === 'uf' 
+                  ? ufOptions 
+                  : []
+            }
+            placeholder="Selecione"
+          />
         )}
         
         {field.type === 'text' && (
-          <input
+          <Input
+            id={field.id}
+            name={field.id}
+            label={field.label}
             type="text"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md 
-                  focus:outline-none focus:ring-1 focus:ring-blue-500/25 focus:border-blue-700 
-                  transition-colors"
             value={formData[field.id] || ''}
             onChange={(e) => {
               const value = field.mask ? field.mask(e.target.value) : e.target.value;
@@ -430,11 +413,11 @@ const FormRegister = ({
         )}
 
         {field.type === 'date' && (
-          <input
+          <Input
+            id={field.id}
+            name={field.id}
+            label={field.label}
             type="date"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md 
-                  focus:outline-none focus:ring-1 focus:ring-blue-500/25 focus:border-blue-700 
-                  transition-colors"
             value={formData[field.id] || ''}
             onChange={(e) => handleChange(field.id, e.target.value)}
             required={field.required}
@@ -442,14 +425,16 @@ const FormRegister = ({
         )}
         
         {field.type === 'textarea' && (
-          <textarea
-            className="w-full px-4 py-2 border border-gray-300 rounded-md 
-                  focus:outline-none focus:ring-1 focus:ring-blue-500/25 focus:border-blue-700 
-                  transition-colors min-h-[100px] resize-y"
+          <Input
+            id={field.id}
+            name={field.id}
+            label={field.label}
+            type="textarea"
             value={formData[field.id] || ''}
             onChange={(e) => handleChange(field.id, e.target.value)}
             placeholder={field.placeholder}
             required={field.required}
+            rows={4}
           />
         )}
       </motion.div>
@@ -464,7 +449,7 @@ const FormRegister = ({
       title="Novo Cliente"
       primaryColor={primaryColor}
       isValid={isFormValid()}
-      submitButtonText="Cadastrar Cliente"
+      submitButtonText="Cadastrar"
       cancelButtonText="Cancelar"
     >
       {renderFormFields()}

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import BaseFormModal from './BaseForm';
+import BaseFormModal from '../components/BaseForm';
 
-const FormModal = ({ 
+const FormMySequence = ({ 
   isOpen, 
   onClose, 
   onSave, 
@@ -74,7 +74,7 @@ const FormModal = ({
         {field.type === 'select' && field.options && (
           <div className="relative">
             <select
-              className="w-full px-4 py-2 border border-gray-300 rounded-md 
+              className="text-sm w-full px-4 py-2 border border-gray-300 rounded-md 
                   focus:outline-none focus:ring-1 focus:ring-blue-500/25 focus:border-blue-700 
                   transition-colors pr-10 appearance-none bg-white"
               value={formData[field.id] || ''}
@@ -110,7 +110,7 @@ const FormModal = ({
         {field.type === 'text' && (
           <input
             type="text"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md 
+            className="text-sm w-full px-4 py-2 border border-gray-300 rounded-md 
                   focus:outline-none focus:ring-1 focus:ring-blue-500/25 focus:border-blue-700 
                   transition-colors"
             value={formData[field.id] || ''}
@@ -163,4 +163,4 @@ const FormModal = ({
   );
 };
 
-export default FormModal;
+export default FormMySequence;

@@ -15,7 +15,7 @@ export const Button = ({
         const variantClasses = {
             primary: "bg-[#1526ff] hover:opacity-90 text-white",
             secondary: "bg-gray-500 hover:bg-gray-600",
-            outline: "border-[1.5px] border-[#312e81] text-[#312e81]"
+            outline: "border-[1.5px] border-[#1526ff] text-[#1526ff]"
         };
 
         return `${baseClasses} ${variantClasses[variant]} ${className}`;

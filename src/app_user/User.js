@@ -86,14 +86,6 @@ const User = () => {
 
   return (
     <BaseLayout>
-      <div className="flex justify-between items-center mb-6">
-        <h4 className="text-[1.10rem]">Minha Conta</h4>
-        <div className="text-sm">
-          <span className="text-gray-600">Sequence</span>
-          <span className="mx-2 text-gray-500">&gt;</span>
-          <span className="text-gray-600">Minha Conta</span>
-        </div>
-      </div>
       <div className="bg-white rounded-lg shadow mb-6 p-6">
         <div className="flex items-center">
           <div className="w-12 h-12 rounded-full bg-gray-200 overflow-hidden mr-4">
@@ -113,11 +105,11 @@ const User = () => {
       </div>
 
       <div className="bg-white rounded-lg shadow p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-6">
+        <h3 className="text-base  font-semibold text-gray-900 mb-6">
           Dados Pessoais e profissionais
         </h3>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className='text-sm'>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label

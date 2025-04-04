@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const BaseFormModal = ({
+const BaseForm = ({
   isOpen,
   onClose,
   onSubmit,
@@ -134,4 +134,4 @@ const BaseFormModal = ({
   );
 };
 
-export default BaseFormModal;
+export default BaseForm;
