@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import UserMenu from './UserMenu';
 import { SlBell, SlGrid } from "react-icons/sl";
-import { useNavigate } from 'react-router-dom';
 import NotificationsModal from '../components/NotificationsModal';
 import { AnimatePresence } from 'framer-motion';
 
@@ -10,7 +9,6 @@ const Header = ({ title = 'Dashboard' }) => {
   const [notificacoesAberto, setNotificacoesAberto] = useState(false);
   const menuRef = useRef(null);
   const notificacoesRef = useRef(null);
-  const navigate = useNavigate();
 
   const alternarMenu = () => {
     setMenuAberto(!menuAberto);
@@ -20,10 +18,6 @@ const Header = ({ title = 'Dashboard' }) => {
     setNotificacoesAberto(!notificacoesAberto);
   };
 
-  const navegarParaNotificacoes = () => {
-    setNotificacoesAberto(false);
-    navigate('/notification');
-  };
 
   useEffect(() => {
     function handleClickFora(event) {
@@ -46,7 +40,7 @@ const Header = ({ title = 'Dashboard' }) => {
   }, []);
 
   return (
-    <div className="bg-white px-2 py-4 shadow-sm">
+    <div className="bg-white px-[1rem] py-4 shadow-sm">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <div className="bg-blue-50 p-2 rounded-full mr-3">

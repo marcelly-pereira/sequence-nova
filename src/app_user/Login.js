@@ -15,7 +15,7 @@ function Login() {
 
     return (
         <div className="min-h-screen w-full flex items-center justify-center py-8 authentication-bg">
-            <div className="max-w-3xl mx-auto flex flex-col md:flex-row rounded-lg shadow-lg shadow-gray-300 overflow-hidden">
+            <div className="max-w-4xl mx-auto flex flex-col md:flex-row rounded-lg shadow-lg shadow-gray-300 overflow-hidden">
                 {/* Coluna da esquerda para ficar mais organizado pra mim */}
                 <div className="flex-1 p-5 bg-white">
                     <h1 className="text-4xl font-bold text-black mb-2 mt-6">Bem-vindo(a)</h1>

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { FiSearch, FiMoreVertical, FiFileText, FiMenu, FiPlus } from 'react-icons/fi';
+import React, { useState, useEffect } from 'react';
+import { FiSearch, FiMenu, FiPlus } from 'react-icons/fi';
 import BaseLayout from '../../../app/BaseLayout';
 import Button from '../../../app/components/Button';
 import Table from '../../../app/components/Table';
+import FormRegister from '../../../app/components/FormRegister'; 
 
 const ClientesAtivos = () => {
   const [empresas, setEmpresas] = useState([
@@ -51,6 +52,19 @@ const ClientesAtivos = () => {
   const [filtro, setFiltro] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [paginaAtual, setPaginaAtual] = useState(1);
+  const [formModalOpen, setFormModalOpen] = useState(false); 
+
+  useEffect(() => {
+    if (formModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [formModalOpen]);
 
   const colunas = [
     { titulo: 'ID', campo: 'id' },
@@ -79,6 +93,33 @@ const ClientesAtivos = () => {
     console.log('Ação clicada para empresa:', empresa);
   };
 
+  const handleOpenCadastroModal = () => {
+    setFormModalOpen(true);
+  };
+
+  const handleCloseCadastroModal = () => {
+    setFormModalOpen(false);
+  };
+
+  const handleSaveCliente = (formData) => {
+    const novoCliente = {
+      id: empresas.length + 1,
+      cnpj: formData.cnpj,
+      regimeTributario: formData.regimeTributario,
+      nomeFantasia: formData.nomeFantasia,
+      cidade: formData.cidade,
+      uf: formData.uf,
+      status: 'ativo', 
+      prontuario: false
+    };
+
+    setEmpresas([...empresas, novoCliente]);
+    
+    setFormModalOpen(false);
+    
+    console.log('Cliente cadastrado com sucesso:', novoCliente);
+  };
+
   const renderizarStatus = (status) => (
     <span
       className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium ${
@@ -100,6 +141,7 @@ const ClientesAtivos = () => {
               variant="primary"
               className="text-sm py-[0.45rem] px-2 shadow-sm"
               icon={<FiPlus size={18} />}
+              onClick={handleOpenCadastroModal}
             >
               Cadastrar
             </Button>
@@ -152,6 +194,13 @@ const ClientesAtivos = () => {
           </div>
         </div>
       </div>
+
+      <FormRegister 
+        isOpen={formModalOpen}
+        onClose={handleCloseCadastroModal}
+        onSave={handleSaveCliente}
+        primaryColor="#0052cc"
+      />
     </BaseLayout>
   );
 };

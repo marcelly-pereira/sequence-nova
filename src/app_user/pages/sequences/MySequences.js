@@ -4,7 +4,7 @@ import BaseLayout from '../../../app/BaseLayout';
 import Accordion from '../../../app/components/Accordion';
 import Button from '../../../app/components/Button';
 import Card from '../../../app/components/Card';
-import FormModal from '../../../app/components/FormModal';
+import FormMySequence from '../../../app/components/FormMySequence';
 import { IoFlashOutline } from "react-icons/io5";
 import { LuLayoutTemplate } from "react-icons/lu";
 
@@ -187,7 +187,7 @@ const MinhasSequencias = () => {
     <LuLayoutTemplate size={16} />
   );
 
-  const FormModalFields = [
+  const FormMySequenceFields = [
     {
       id: 'departamento',
       label: 'Qual departamento?',
@@ -218,7 +218,7 @@ const MinhasSequencias = () => {
     }
   ];
 
-  const handleSaveFormModal = (data) => {
+  const handleSaveFormMySequence = (data) => {
     console.log('Dados salvos:', data);
     setIsModalOpen(false);
   };
@@ -260,12 +260,12 @@ const MinhasSequencias = () => {
           emptyStateMessage="Nenhum item configurado"
         />
 
-        <FormModal
+        <FormMySequence
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          onSave={handleSaveFormModal}
+          onSave={handleSaveFormMySequence}
           title="Nova Sequência"
-          fields={FormModalFields}
+          fields={FormMySequenceFields}
           primaryColor="#0052cc"
         />
       </div>

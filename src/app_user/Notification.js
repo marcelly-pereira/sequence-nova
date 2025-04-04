@@ -11,7 +11,7 @@ const Notification = () => {
   return (
     <BaseLayout>
       <div className="bg-white min-h-screen">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 ">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 py-6 ">
           <div className="flex items-center rounded-lg mb-6 w-full">
             <div className="bg-blue-100 rounded-full p-2 flex-shrink-0">
               <svg
