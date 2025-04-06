@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import BaseLayout from '../app/BaseLayout';
 import Input from '../app/components/Input';
 import Button from '../app/components/Button';
+import { FiUpload } from 'react-icons/fi'; 
 
 const User = () => {
   const [userData, setUserData] = useState({
@@ -90,7 +91,7 @@ const User = () => {
         <div className="flex items-center">
           <div className="w-12 h-12 rounded-full bg-gray-200 overflow-hidden mr-4">
             <img
-              src="/api/placeholder/48/48"
+              src="https://images.pexels.com/photos/8728382/pexels-photo-8728382.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=12"
               alt="avatar"
               className="w-full h-full object-cover"
             />
@@ -208,8 +209,8 @@ const User = () => {
               Imagem de Perfil:
             </label>
             <div className="flex">
-              <label className="px-4 py-2 bg-gray-100 text-gray-700 rounded-l-md border border-r-0 border-gray-300 cursor-pointer hover:bg-gray-200 transition-colors">
-                Escolher Arquivo
+              <label className="px-4 py-2 bg-gray-100 text-gray-700 rounded-l-md border border-r-0 border-gray-300 cursor-pointer hover:bg-blue-100 transition-colors flex items-center gap-2">
+                <FiUpload className="text-gray-600" />
                 <input
                   type="file"
                   id="imagem"

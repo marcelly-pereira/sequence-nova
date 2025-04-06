@@ -70,9 +70,9 @@ const Header = ({ title = 'Dashboard' }) => {
             >
               <div className="h-8 w-8 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 flex items-center justify-center">
                 <img
-                  src="/static/assets/images/favicon.ico"
+                  src="https://images.pexels.com/photos/8728382/pexels-photo-8728382.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=12"
                   alt="Perfil"
-                  className="h-8 w-8 object-cover"
+                  className="h-8 w-8 object-cover rounded-full"
                 />
               </div>
               <div>
