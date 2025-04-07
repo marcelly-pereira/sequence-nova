@@ -1,7 +1,7 @@
 import React from 'react';
 import { FiMoreVertical } from 'react-icons/fi';
 import { CiFileOn } from "react-icons/ci";
-
+import { useNavigate } from 'react-router-dom';
 
 const Table = ({ 
   colunas, 
@@ -9,6 +9,12 @@ const Table = ({
   onAcaoClick, 
   renderizarStatus 
 }) => {
+  const navigate = useNavigate();
+
+  const handleProntuarioClick = (item) => {
+    navigate(`/record?id=${item.id}`);
+  };
+
   return (
     <table className="min-w-full divide-y divide-gray-200">
       <thead className="bg-gray-50">
@@ -36,7 +42,9 @@ const Table = ({
                   ${coluna.apenasDesktop ? 'hidden sm:table-cell' : ''} 
                   px-2 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm text-gray-700
                   ${coluna.centralizado ? 'text-center' : ''}
+                  ${coluna.tipo === 'prontuario' && item[coluna.campo] ? 'cursor-pointer' : ''}
                 `}
+                onClick={coluna.tipo === 'prontuario' && item[coluna.campo] ? () => handleProntuarioClick(item) : undefined}
               >
                 {renderConteudo(coluna, item, onAcaoClick, renderizarStatus)}
               </td>
@@ -58,7 +66,9 @@ const renderConteudo = (coluna, item, onAcaoClick, renderizarStatus) => {
   if (coluna.tipo === 'prontuario') {
     return valor ? (
       <div className="flex justify-center">
-        <CiFileOn size={18} className="text-gray-600" />
+        <div className="p-1 rounded-full hover:bg-gray-200 transition-colors">
+          <CiFileOn size={18} className="text-gray-600" />
+        </div>
       </div>
     ) : null;
   }

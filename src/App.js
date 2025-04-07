@@ -12,6 +12,7 @@ import Automations from '../src/app_user/pages/personalization/Automations';
 import Registrations from '../src/app_user/pages/personalization/Registrations';
 import User from '../src/app_user/User';
 import Notification from '../src/app_user/Notification'
+import Record from '../src/app_user/Record'
 
 function App() {
     return (
@@ -65,6 +66,7 @@ function App() {
                 />
                 <Route path="/user" element={<User />} />
                 <Route path="/notification" element={<Notification />} />
+                <Route path="/record" element={<Record />} />
             </Routes>
         </Router>
     );

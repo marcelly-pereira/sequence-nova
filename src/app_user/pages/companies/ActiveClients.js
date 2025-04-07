@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { FiSearch, FiMenu, FiPlus } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom'; // Importando useNavigate para navegação
 import BaseLayout from '../../../app/BaseLayout';
 import Button from '../../../app/components/Button';
 import Table from '../../../app/components/Table';
 import FormRegisterClient from '../../../app/forms/FormRegisterClient'; 
 
 const ClientesAtivos = () => {
+  const navigate = useNavigate(); // Hook para navegação
+  
   const [empresas, setEmpresas] = useState([
     {
       id: 1,
@@ -74,7 +77,13 @@ const ClientesAtivos = () => {
     { titulo: 'CIDADE', campo: 'cidade', apenasDesktop: true },
     { titulo: 'UF', campo: 'uf' },
     { titulo: 'STATUS', campo: 'status', tipo: 'status' },
-    { titulo: 'PRONT.', campo: 'prontuario', tipo: 'prontuario', apenasDesktop: true },
+    { 
+      titulo: 'PRONT.', 
+      campo: 'prontuario', 
+      tipo: 'prontuario', 
+      apenasDesktop: true,
+      onClick: (empresa) => handleProntuarioClick(empresa) // Adicionando onClick para prontuário
+    },
     { titulo: 'AÇÕES', tipo: 'acao', centralizado: true },
   ];
 
@@ -91,6 +100,13 @@ const ClientesAtivos = () => {
 
   const handleAcaoClick = (empresa) => {
     console.log('Ação clicada para empresa:', empresa);
+  };
+
+  // Função para lidar com cliques no prontuário
+  const handleProntuarioClick = (empresa) => {
+    console.log('Prontuário clicado para empresa:', empresa);
+    // Navegar para a tela de prontuário com o ID da empresa
+    navigate(`/record?id=${empresa.id}`);
   };
 
   const handleOpenCadastroModal = () => {
@@ -131,6 +147,18 @@ const ClientesAtivos = () => {
       {status === 'ativo' ? 'Ativo' : 'Inativo'}
     </span>
   );
+
+  // Função para renderizar o prontuário como clicável
+  const renderizarProntuario = (temProntuario, empresa) => {
+    return (
+      <div 
+        className={`cursor-pointer flex justify-center`}
+        onClick={() => handleProntuarioClick(empresa)}
+      >
+        <div className={`w-3 h-3 rounded-full ${temProntuario ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+      </div>
+    );
+  };
 
   return (
     <BaseLayout title="Clientes ativos">
@@ -182,6 +210,7 @@ const ClientesAtivos = () => {
               dados={empresasFiltradas}
               onAcaoClick={handleAcaoClick}
               renderizarStatus={renderizarStatus}
+              renderizarProntuario={renderizarProntuario} // Nova função para renderizar o prontuário
               paginaAtual={paginaAtual}
               onChangePagina={setPaginaAtual}
             />
