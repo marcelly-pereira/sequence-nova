@@ -148,7 +148,6 @@ const ClientesAtivos = () => {
     </span>
   );
 
-  // Função para renderizar o prontuário como clicável
   const renderizarProntuario = (temProntuario, empresa) => {
     return (
       <div 
@@ -210,7 +209,7 @@ const ClientesAtivos = () => {
               dados={empresasFiltradas}
               onAcaoClick={handleAcaoClick}
               renderizarStatus={renderizarStatus}
-              renderizarProntuario={renderizarProntuario} // Nova função para renderizar o prontuário
+              renderizarProntuario={renderizarProntuario}
               paginaAtual={paginaAtual}
               onChangePagina={setPaginaAtual}
             />
