@@ -21,8 +21,8 @@ const Relacionamento = () => {
     <div className="grid grid-cols-3 gap-4">
       <div className="bg-white rounded-lg p-6 shadow-sm">
         <div className="flex items-center mb-4">
-          <div className="w-10 h-10 rounded-full bg-[#18183A] flex items-center justify-center mr-3">
-            <FaUser className="text-white" />
+          <div className="w-8 h-8 rounded-full bg-[#18183A] flex items-center justify-center mr-3">
+            <FaUser className="text-white w-4 h-4" />
           </div>
           <h2 className="text-md font-medium">Cliente</h2>
         </div>
