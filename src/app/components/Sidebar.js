@@ -98,7 +98,6 @@ const Sidebar = () => {
   }, []);
 
   useEffect(() => {
-    // Adicionar uma pequena pausa antes de mostrar o submenu para permitir a animação
     if (activeSubmenu) {
       setTimeout(() => {
         setSubmenuVisible(true);

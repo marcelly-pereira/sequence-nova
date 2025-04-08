@@ -72,7 +72,7 @@ const FiscalManagementUI = () => {
             <button
               key={tab}
               className={`py-2 px-4 rounded-lg text-sm ${activeTab === tab
-                ? 'bg-[#18183A] text-white'
+                ? 'bg-[#252563] text-white'
                 : 'bg-white text-gray-700 hover:bg-gray-100'
                 }`}
               onClick={() => setActiveTab(tab)}

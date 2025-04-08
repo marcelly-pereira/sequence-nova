@@ -7,7 +7,7 @@ const EmpresasRelacionadas = () => {
   return (
     <div className="bg-white rounded-lg p-6 shadow-sm">
       <div className="flex items-center mb-6">
-        <div className="w-8 h-8 rounded-full bg-[#18183A] flex items-center justify-center mr-3">
+        <div className="w-8 h-8 rounded-full bg-[#252563] flex items-center justify-center mr-3">
           <svg
             className="w-4 h-4 text-white"
             viewBox="0 0 24 24"

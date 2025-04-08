@@ -66,7 +66,7 @@ const renderConteudo = (coluna, item, onAcaoClick, renderizarStatus) => {
   if (coluna.tipo === 'prontuario') {
     return valor ? (
       <div className="flex justify-center">
-        <div className="p-1 rounded-full hover:bg-gray-200 transition-colors">
+        <div className="p-1 rounded-full hover:bg-gray-100 transition-colors">
           <CiFileOn size={18} className="text-gray-600" />
         </div>
       </div>

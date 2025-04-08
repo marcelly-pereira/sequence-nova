@@ -21,7 +21,7 @@ const Relacionamento = () => {
     <div className="grid grid-cols-3 gap-4">
       <div className="bg-white rounded-lg p-6 shadow-sm">
         <div className="flex items-center mb-4">
-          <div className="w-8 h-8 rounded-full bg-[#18183A] flex items-center justify-center mr-3">
+          <div className="w-8 h-8 rounded-full bg-[#252563] flex items-center justify-center mr-3">
             <FaUser className="text-white w-4 h-4" />
           </div>
           <h2 className="text-md font-medium">Cliente</h2>
@@ -57,7 +57,7 @@ const Relacionamento = () => {
       
       <div className="bg-white rounded-lg p-6 shadow-sm">
         <div className="flex items-center mb-4">
-          <div className="w-8 h-8 rounded-full bg-[#18183A] flex items-center justify-center mr-3">
+          <div className="w-8 h-8 rounded-full bg-[#252563] flex items-center justify-center mr-3">
             <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/>
             </svg>
@@ -81,7 +81,7 @@ const Relacionamento = () => {
       
       <div className="bg-white rounded-lg p-6 shadow-sm">
         <div className="flex items-center mb-4">
-          <div className="w-8 h-8 rounded-full bg-[#18183A] flex items-center justify-center mr-3">
+          <div className="w-8 h-8 rounded-full bg-[#252563] flex items-center justify-center mr-3">
             <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor">
               <path d="M11.8,10.9c-2.27-0.59-3-1.2-3-2.15c0-1.09,1.01-1.85,2.7-1.85c1.78,0,2.44,0.85,2.5,2.1h2.21 c-0.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94,0.42-3.5,1.68-3.5,3.61c0,2.31,1.91,3.46,4.7,4.13c2.5,0.6,3,1.48,3,2.41 c0,0.69-0.49,1.79-2.7,1.79c-2.06,0-2.87-0.92-2.98-2.1H6.32c0.12,2.19,1.76,3.42,3.68,3.83V21h3v-2.15 c1.95-0.37,3.5-1.5,3.5-3.55C16.5,12.46,14.07,11.49,11.8,10.9z"/>
             </svg>

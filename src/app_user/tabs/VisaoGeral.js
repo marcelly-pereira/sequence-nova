@@ -222,7 +222,7 @@ const VisaoGeral = () => {
       <div className="grid grid-cols-3 gap-4">
         <div className="bg-white rounded-lg p-4 shadow-sm">
           <div className="flex items-center mb-4">
-            <div className="w-8 h-8 rounded-full bg-[#18183A] flex items-center justify-center mr-2">
+            <div className="w-8 h-8 rounded-full bg-[#252563] flex items-center justify-center mr-2">
               <FaClipboardCheck className="text-white text-sm" />
             </div>
             <h2 className="text-md font-medium">Tributos a pagar</h2>
@@ -317,7 +317,7 @@ const VisaoGeral = () => {
 
         <div className="bg-white rounded-lg p-4 shadow-sm">
           <div className="flex items-center mb-4">
-            <div className="w-8 h-8 rounded-full bg-[#18183A] flex items-center justify-center mr-2">
+            <div className="w-8 h-8 rounded-full bg-[#252563] flex items-center justify-center mr-2">
               <FaClipboardCheck className="text-white text-sm" />
             </div>
             <h2 className="text-md font-medium">Obrigações</h2>
@@ -366,7 +366,7 @@ const VisaoGeral = () => {
 
         <div className="bg-white rounded-lg p-4 shadow-sm">
           <div className="flex items-center mb-4">
-            <div className="w-8 h-8 rounded-full bg-[#18183A] flex items-center justify-center mr-2">
+            <div className="w-8 h-8 rounded-full bg-[#252563] flex items-center justify-center mr-2">
               <FaClipboardCheck className="text-white text-sm" />
             </div>
             <h2 className="text-md font-medium">Situação Fiscal</h2>
@@ -378,13 +378,13 @@ const VisaoGeral = () => {
             <table className="w-full min-w-full">
               <thead>
                 <tr>
-                  <th className="font-medium text-sm bg-[#18183A] text-white p-2 text-left whitespace-nowrap rounded-tl-lg">
+                  <th className="font-medium text-sm bg-[#252563] text-white p-2 text-left whitespace-nowrap rounded-tl-lg">
                     CERTIDÕES
                   </th>
-                  <th className="font-medium text-sm bg-[#18183A] text-white p-2 text-left whitespace-nowrap">
+                  <th className="font-medium text-sm bg-[#252563] text-white p-2 text-left whitespace-nowrap">
                     SITUAÇÃO
                   </th>
-                  <th className="font-medium text-sm bg-[#18183A] text-white p-2 text-left whitespace-nowrap rounded-tr-lg">
+                  <th className="font-medium text-sm bg-[#252563] text-white p-2 text-left whitespace-nowrap rounded-tr-lg">
                     DATA DE VENC.
                   </th>
                 </tr>
@@ -454,7 +454,7 @@ const VisaoGeral = () => {
               <button
                 className={`p-2 rounded-tl-lg ${
                   activeFiscalCategory === 'Federal'
-                    ? 'bg-[#18183A] text-white font-medium text-sm'
+                    ? 'bg-[#252563] text-white font-medium text-sm'
                     : 'bg-gray-100 text-gray-700 text-sm'
                 }`}
                 onClick={() => setActiveFiscalCategory('Federal')}
@@ -464,7 +464,7 @@ const VisaoGeral = () => {
               <button
                 className={`p-2 ${
                   activeFiscalCategory === 'Estadual'
-                    ? 'bg-[#18183A] text-white font-medium text-sm'
+                    ? 'bg-[#252563] text-white font-medium text-sm'
                     : 'bg-gray-100 text-gray-700 text-sm'
                 }`}
                 onClick={() => setActiveFiscalCategory('Estadual')}
@@ -474,7 +474,7 @@ const VisaoGeral = () => {
               <button
                 className={`p-2 rounded-tr-lg ${
                   activeFiscalCategory === 'Municipal'
-                    ? 'bg-[#18183A] text-white font-medium text-sm'
+                    ? 'bg-[#252563] text-white font-medium text-sm'
                     : 'bg-gray-100 text-gray-700 text-sm '
                 }`}
                 onClick={() => setActiveFiscalCategory('Municipal')}
