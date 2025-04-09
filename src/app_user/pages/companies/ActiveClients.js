@@ -180,7 +180,7 @@ const ClientesAtivos = () => {
           </button>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border-gray-200 p-3 sm:p-6">
+        <div className="bg-white rounded-2xl shadow-sm border-gray-200 p-3 sm:p-6">
           <div className="flex flex-col sm:flex-row sm:items-center mb-4 sm:mb-6 space-y-3 sm:space-y-0">
             <div className="flex sm:mr-4 items-center">
               <input

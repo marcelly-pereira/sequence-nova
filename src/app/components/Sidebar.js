@@ -144,7 +144,7 @@ const Sidebar = () => {
     return (
       <div
         ref={submenuRef}
-        className={`fixed left-14 shadow-lg transition-all duration-300 ease-in-out ${
+        className={`fixed left-[4.5rem] shadow-lg transition-all duration-300 ease-in-out ${
           submenuVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'
         }`}
         style={{ 
@@ -211,7 +211,7 @@ const Sidebar = () => {
   return (
     <>
       <div className="h-full flex justify-center items-center">
-        <div className="h-[98%] w-12 bg-indigo-900 fixed left-[0.50rem] top-[1%] flex flex-col items-center py-[1.4rem] rounded-2xl">
+        <div className="h-[98%] w-16 bg-indigo-900 fixed left-[0.50rem] top-[1%] flex flex-col items-center py-[1.4rem] rounded-2xl">
           <div className="mb-8">
             <Link to="/" className="flex items-center justify-center" aria-label="Home">
               <img src='/static/assets/images/favicon.ico' alt='Logo' className='w-6 h-6' />

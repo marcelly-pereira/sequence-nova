@@ -5,7 +5,7 @@ import { FiSearch, FiList, FiFilter } from 'react-icons/fi';
 const Recorrentes = () => {
     return (
         <BaseLayout title="Tarefas Recorrentes">
-            <div className="bg-white rounded-lg shadow-sm border-gray-200 min-h-screen">
+            <div className="bg-white rounded-2xl shadow-sm border-gray-200 min-h-screen">
                 <div className="flex justify-between items-center p-3">
                     <div className="flex items-center flex-grow">
                         <input

@@ -39,7 +39,7 @@ const Header = ({ title = 'Automações' }) => {
   }, []);
 
   return (
-    <div className="bg-white shadow-sm mx-2 mt-2 rounded-2xl mb-2">
+    <div className="bg-white shadow-sm mx-4 mt-2 rounded-2xl mb-2">
       <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center">
           <h1 className="text-lg font-medium text-gray-800">{title}</h1>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FiPlus, FiMoreVertical, FiFile } from 'react-icons/fi';
+import { FiPlus, FiFile } from 'react-icons/fi';
 import BaseLayout from '../../../app/BaseLayout';
 import Button from '../../../app/components/Button';
 import FlipCard from '../../../app/components/FlipCard';
