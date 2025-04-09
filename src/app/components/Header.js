@@ -4,7 +4,7 @@ import { SlBell, SlGrid } from "react-icons/sl";
 import NotificationsModal from '../components/NotificationsModal';
 import { AnimatePresence } from 'framer-motion';
 
-const Header = ({ title = 'Dashboard' }) => {
+const Header = ({ title = 'Automações' }) => {
   const [menuAberto, setMenuAberto] = useState(false);
   const [notificacoesAberto, setNotificacoesAberto] = useState(false);
   const menuRef = useRef(null);
@@ -17,7 +17,6 @@ const Header = ({ title = 'Dashboard' }) => {
   const alternarNotificacoes = () => {
     setNotificacoesAberto(!notificacoesAberto);
   };
-
 
   useEffect(() => {
     function handleClickFora(event) {
@@ -40,22 +39,19 @@ const Header = ({ title = 'Dashboard' }) => {
   }, []);
 
   return (
-    <div className="bg-white px-[1rem] py-4 shadow-sm">
-      <div className="flex items-center justify-between">
+    <div className="bg-white shadow-sm mx-2 mt-2 rounded-2xl mb-2">
+      <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center">
-          <div className="bg-blue-50 p-2 rounded-full mr-3">
-            <SlGrid size={16} className='text-[#1526ff]' />
-          </div>
-          <h1 className="text-base font-semibold text-gray-800">{title}</h1>
+          <h1 className="text-lg font-medium text-gray-800">{title}</h1>
         </div>
 
-        <div className="flex items-center">
-          <div className="mr-4 relative" ref={notificacoesRef}>
+        <div className="flex items-center space-x-4">
+          <div className="relative" ref={notificacoesRef}>
             <button
-              className="cursor-pointer flex items-center justify-center h-8 w-8 rounded-full hover:bg-gray-100"
+              className="cursor-pointer flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-100"
               onClick={alternarNotificacoes}
             >
-              <SlBell size={16} className="text-gray-600" />
+              <SlBell size={18} className="text-gray-600" />
             </button>
 
             <AnimatePresence>
@@ -65,18 +61,18 @@ const Header = ({ title = 'Dashboard' }) => {
 
           <div className="text-left relative" ref={menuRef}>
             <div
-              className="cursor-pointer flex items-center space-x-2"
+              className="cursor-pointer flex items-center space-x-3"
               onClick={alternarMenu}
             >
-              <div className="h-8 w-8 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 flex items-center justify-center">
+              <div className="h-10 w-10 rounded-full overflow-hidden flex-shrink-0">
                 <img
                   src="https://images.pexels.com/photos/8728382/pexels-photo-8728382.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=12"
                   alt="Perfil"
-                  className="h-8 w-8 object-cover rounded-full"
+                  className="h-10 w-10 object-cover rounded-full"
                 />
               </div>
               <div>
-                <h1 className="text-xs font-bold text-gray-800">
+                <h1 className="text-sm font-medium text-gray-800">
                   Marcelly Pereira
                 </h1>
                 <p className="text-xs text-gray-500">

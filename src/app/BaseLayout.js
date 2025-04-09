@@ -8,7 +8,7 @@ const BaseLayout = ({
   title 
 }) => {
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-[#eceef1]">
       <Helmet>
         <meta charSet="utf-8" />
         <title>{title}</title>
@@ -17,12 +17,12 @@ const BaseLayout = ({
       
       <Sidebar />
       
-      <div className="flex flex-col flex-grow ml-12">
+      <div className="flex flex-col flex-grow ml-16">
         <Header 
           title={title}
         />
         
-        <main className="flex-grow p-6 bg-gray-100">
+        <main className="flex-grow p-4 bg-[#eceef1]">
           {children}
         </main>
       </div>

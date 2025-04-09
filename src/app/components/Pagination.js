@@ -49,7 +49,6 @@ const Pagination = ({
   return (
     <nav className="flex items-center justify-center my-8">
       <ul className="flex items-center space-x-1">
-        {/* Botão Anterior */}
         <li>
           <button
             onClick={handlePrevious}

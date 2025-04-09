@@ -13,7 +13,7 @@ export const Button = ({
         const baseClasses = "flex items-center justify-center gap-1 rounded-md transition-all duration-200 px-2 text-sm";
 
         const variantClasses = {
-            primary: "bg-[#1526ff] hover:opacity-90 text-white",
+            primary: "bg-[#005efc] hover:opacity-90 text-white",
             secondary: "bg-gray-500 hover:bg-gray-600",
             outline: "border-[1.5px] border-[#1526ff] text-[#1526ff]"
         };
