@@ -4,10 +4,6 @@ import { FiSearch } from 'react-icons/fi';
 import TemplateCard, { GridIcon, DocumentIcon } from '../../../app/components/TemplateCard';
 
 const TemplatesSequencia = () => {
-    const handleSearch = (e) => {
-        console.log('Pesquisando:', e.target.value);
-    };
-
     const handleCreateTemplate = () => {
         console.log('Criar novo template');
     };

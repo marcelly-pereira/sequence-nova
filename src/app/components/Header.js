@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import UserMenu from './UserMenu';
-import { SlBell, SlGrid } from "react-icons/sl";
+import { SlBell } from "react-icons/sl";
 import NotificationsModal from '../components/NotificationsModal';
 import { AnimatePresence } from 'framer-motion';
 

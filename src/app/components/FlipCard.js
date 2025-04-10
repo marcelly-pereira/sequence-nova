@@ -27,9 +27,9 @@ const StyledFlipCard = styled.div`
     height: 100%;
     backface-visibility: hidden;
     display: flex;
+    border: 5px solid #cfe0ed;
     flex-direction: column;
     border-radius: 1rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
 
   .automation-card-front {
@@ -37,7 +37,8 @@ const StyledFlipCard = styled.div`
     border: 1px solid #E5E7EB;
     transform: rotateY(0deg);
     padding: 1.5rem;
-    justify-content: space-between;
+    justify-content: space-between;z
+    border: 1px solid #cfe0ed;
   }
 
   .automation-card-back {
@@ -47,6 +48,7 @@ const StyledFlipCard = styled.div`
     justify-content: center;
     align-items: center;
     text-align: center;
+    border: 1px solid #005efc;
   }
 `;
 
