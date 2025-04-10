@@ -17,7 +17,7 @@ const BaseLayout = ({
       
       <Sidebar />
       
-      <div className="flex flex-col flex-grow ml-16">
+      <div className="flex flex-col flex-grow ml-12">
         <Header 
           title={title}
         />

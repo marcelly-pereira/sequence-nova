@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { FiPlus, FiFile, FiMoreVertical, FiCalendar, FiCheckCircle, FiXCircle, FiUser } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 import BaseLayout from '../../../app/BaseLayout';
 import Button from '../../../app/components/Button';
 import FlipCard from '../../../app/components/FlipCard';
 
 const Automacoes = () => {
+  const navigate = useNavigate();
+  
   const [automations, setAutomations] = useState([
     {
       id: 1,
@@ -51,6 +54,10 @@ const Automacoes = () => {
     );
   };
 
+  const handleNavigation = (id) => {
+    navigate(`/deploymentcard?automationId=${id}`);
+  };
+
   const renderAutomationCardFront = (automation) => (
     <div className="flex flex-col h-full">
       <div className="flex items-center mb-4">
@@ -67,7 +74,10 @@ const Automacoes = () => {
       </div>
 
       <div className="mt-auto">
-        <button className="bg-gray-200 text-xs text-gray-700 px-4 py-2 rounded">
+        <button 
+          className="bg-gray-200 text-xs text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition-colors"
+          onClick={() => handleNavigation(automation.id)}
+        >
           Ver mais
         </button>
       </div>
@@ -78,7 +88,7 @@ const Automacoes = () => {
     <div className="flex flex-col h-full bg-white w-full p-2">
       <div className="flex justify-between items-center w-full mb-1">
         <div className="flex items-center gap-2">
-          <FiCalendar className="text-[#005efc] mr-1" size={14} />
+          <FiCalendar className="text-[#0056d6] mr-1" size={14} />
           <span className="text-gray-700 text-sm font-medium">
             Iniciada em {automation.startDate} às {automation.startTime}
           </span>
@@ -91,20 +101,20 @@ const Automacoes = () => {
       
       <div className="flex flex-col space-y-1">
         <div className="flex items-center">
-          <FiUser className="text-[#005efc] mr-2" size={14} />
+          <FiUser className="text-[#0056d6] mr-2" size={14} />
           <span className="text-gray-600 text-xs">
             Criado por: {automation.createdBy}
           </span>
         </div>
         
         <div className="flex items-center">
-          <FiCheckCircle className="text-[#005efc] mr-2" size={16} />
+          <FiCheckCircle className="text-[#0056d6] mr-2" size={16} />
           <span className="text-gray-600 text-xs mr-1">Sucesso:</span>
           <span className="text-gray-600 font-medium">{automation.successes}</span>
         </div>
         
         <div className="flex items-center">
-          <FiXCircle className="text-[#005efc] mr-2" size={16} />
+          <FiXCircle className="text-[#0056d6] mr-2" size={16} />
           <span className="text-gray-600 text-xs mr-1">Falha:</span>
           <span className="text-gray-600 font-medium">{automation.failures}</span>
         </div>
@@ -113,13 +123,19 @@ const Automacoes = () => {
       <div className="flex-grow"></div>
       
       <div className="w-full flex justify-between items-center mt-4">
-        <button className="bg-gray-200 text-xs text-gray-700 px-4 py-2 rounded">
+        <button 
+          className="bg-gray-200 text-xs text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition-colors"
+          onClick={() => handleNavigation(automation.id)}
+        >
           Ver mais
         </button>
         
         <div 
           className="relative inline-flex items-center cursor-pointer"
-          onClick={() => toggleStatus(automation.id)}
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleStatus(automation.id);
+          }}
         >
           <input 
             type="checkbox" 

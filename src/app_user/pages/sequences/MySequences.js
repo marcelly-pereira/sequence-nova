@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import BaseLayout from '../../../app/BaseLayout';
 import Accordion from '../../../app/components/Accordion';
 import Button from '../../../app/components/Button';
+import { AnimatedExpandingButton } from '../../../app/components/Button';
 import Card from '../../../app/components/Card';
 import FormMySequence from '../../../app/forms/FormMySequence';
 import { IoFlashOutline } from "react-icons/io5";
@@ -179,7 +180,6 @@ const MinhasSequencias = () => {
   );
 
   const automationIcon = (
-
     <IoFlashOutline size={16} />
   );
 
@@ -223,36 +223,45 @@ const MinhasSequencias = () => {
     setIsModalOpen(false);
   };
 
+  // Ícones personalizados para os botões animados
+  const customAutomationIcon = (
+    <div className="w-full h-full text-white transition-all duration-200 ease-in-out group-hover:text-[#0056d6] group-focus:text-[#0056d6]">
+      <IoFlashOutline className="w-full h-full" />
+    </div>
+  );
+
+  const customTemplateIcon = (
+    <div className="w-full h-full text-white transition-all duration-200 ease-in-out group-hover:text-[#0056d6] group-focus:text-[#0056d6]">
+      <LuLayoutTemplate className="w-full h-full" />
+    </div>
+  );
+
   return (
     <BaseLayout title="Minhas Sequências">
       <div>
-        <div className="mb-6 flex space-x-3">
+        <div className="mb-6 flex space-x-2">
           <Button
             variant="primary"
-            className="text-sm py-[0.45rem] px-2 shadow-sm"
+            className="text-sm py-[0.45rem] px-4 shadow-sm"
             icon={addIcon}
             onClick={() => setIsModalOpen(true)}
           >
             Nova Sequência
           </Button>
 
-          <Button
-            variant="outline"
-            className="text-sm py-[0.45rem] px-2 shadow-sm"
-            icon={automationIcon}
+          <AnimatedExpandingButton
             onClick={() => navigate('/lista-automacoes')}
-          >
-            Automações
-          </Button>
+            text="Automações"
+            icon={customAutomationIcon}
+            className="border-[1px] border-[#0056d6]"
+          />
 
-          <Button
-            variant="outline"
-            className="text-sm py-[0.45rem] px-2 shadow-sm"
-            icon={templateIcon}
+          <AnimatedExpandingButton
             onClick={() => navigate('/templates')}
-          >
-            Templates de Sequência
-          </Button>
+            text="Templates de Sequência"
+            icon={customTemplateIcon}
+            className="border-[1px] border-[#0056d6]"
+          />
         </div>
         <Accordion
           sections={sections}

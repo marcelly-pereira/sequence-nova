@@ -39,10 +39,10 @@ const Header = ({ title = 'Automações' }) => {
   }, []);
 
   return (
-    <div className="bg-white shadow-sm mx-4 mt-2 rounded-2xl mb-2">
-      <div className="flex items-center justify-between px-6 py-4">
+    <div className="bg-white shadow-sm mb-2 rounded">
+      <div className="flex items-center justify-between px-4 py-2">
         <div className="flex items-center">
-          <h1 className="text-lg font-medium text-gray-800">{title}</h1>
+          <h1 className="text-md font-medium text-gray-800">{title}</h1>
         </div>
 
         <div className="flex items-center space-x-4">
@@ -51,7 +51,7 @@ const Header = ({ title = 'Automações' }) => {
               className="cursor-pointer flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-100"
               onClick={alternarNotificacoes}
             >
-              <SlBell size={18} className="text-gray-600" />
+              <SlBell size={16} className="text-gray-600" />
             </button>
 
             <AnimatePresence>
@@ -64,11 +64,11 @@ const Header = ({ title = 'Automações' }) => {
               className="cursor-pointer flex items-center space-x-3"
               onClick={alternarMenu}
             >
-              <div className="h-10 w-10 rounded-full overflow-hidden flex-shrink-0">
+              <div className="h-8 w-8 rounded-full overflow-hidden flex-shrink-0">
                 <img
                   src="https://images.pexels.com/photos/8728382/pexels-photo-8728382.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=12"
                   alt="Perfil"
-                  className="h-10 w-10 object-cover rounded-full"
+                  className="h-8 w-8 object-cover rounded-full"
                 />
               </div>
               <div>

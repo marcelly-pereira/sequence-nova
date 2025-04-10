@@ -98,6 +98,7 @@ const Sidebar = () => {
   }, []);
 
   useEffect(() => {
+    // Adicionar uma pequena pausa antes de mostrar o submenu para permitir a animação
     if (activeSubmenu) {
       setTimeout(() => {
         setSubmenuVisible(true);
@@ -131,7 +132,7 @@ const Sidebar = () => {
     if (!ref) return null;
 
     const rect = ref.getBoundingClientRect();
-    
+
     const lastItemRef = menuRefs.current[menuItems[menuItems.length - 1].key];
     let lastBottom = 0;
     if (lastItemRef) {
@@ -144,14 +145,10 @@ const Sidebar = () => {
     return (
       <div
         ref={submenuRef}
-        className={`fixed left-[4.5rem] shadow-lg transition-all duration-300 ease-in-out ${
+        className={`fixed left-12 z-50 shadow-lg transition-all duration-300 ease-in-out ${
           submenuVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'
         }`}
-        style={{ 
-          top: rect.top, 
-          width: '180px',
-          zIndex: 9999999
-        }}
+        style={{ top: rect.top, width: '180px' }}
         onMouseEnter={() => {
           if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
@@ -161,12 +158,12 @@ const Sidebar = () => {
         onMouseLeave={handleMenuLeave}
       >
         <div className="flex flex-col w-full">
-          <div className="text-md bg-indigo-800 text-white text-base px-2 py-2 font-medium flex items-center h-10 w-full rounded-t-lg">
+          <div className="text-md bg-indigo-800 text-white text-base px-2 py-2 font-medium flex items-center h-10 w-full">
             {menu.title}
           </div>
 
           <div
-            className="bg-[#252563] w-full overflow-hidden rounded-b-lg"
+            className="bg-[#252563] w-full overflow-hidden"
             style={{ height: `${heightToLastItem}px` }}
           >
             <ul className="py-2 w-full">
@@ -197,7 +194,7 @@ const Sidebar = () => {
 
   const MenuItem = ({ item }) => (
     <div
-      className={`relative w-10 h-10 flex justify-center transition-colors duration-200 my-2 ${activeSubmenu === item.key ? 'bg-indigo-800 rounded-xl' : 'hover:bg-indigo-800/60 hover:rounded-xl'}`}
+      className={`relative w-16 h-10 flex justify-center transition-colors duration-200 ${activeSubmenu === item.key ? 'bg-indigo-800' : 'hover:bg-indigo-800/60'}`}
       ref={ref => menuRefs.current[item.key] = ref}
       onMouseEnter={() => handleMenuHover(item.key)}
       onMouseLeave={handleMenuLeave}
@@ -209,25 +206,21 @@ const Sidebar = () => {
   );
 
   return (
-    <>
-      <div className="h-full flex justify-center items-center">
-        <div className="h-[98%] w-16 bg-indigo-900 fixed left-[0.50rem] top-[1%] flex flex-col items-center py-[1.4rem] rounded-2xl">
-          <div className="mb-8">
-            <Link to="/" className="flex items-center justify-center" aria-label="Home">
-              <img src='/static/assets/images/favicon.ico' alt='Logo' className='w-6 h-6' />
-            </Link>
-          </div>
-
-          <nav className="flex flex-col items-center space-y-6 relative">
-            {menuItems.map((menuItem) => (
-              <MenuItem key={menuItem.key} item={menuItem} />
-            ))}
-          </nav>
-        </div>
+    <div className="h-full w-12 bg-indigo-900 fixed left-0 top-0 flex flex-col items-center py-[1.2rem] rounded">
+      <div className="mb-8">
+        <Link to="/" className="flex items-center justify-center" aria-label="Home">
+          <img src='/static/assets/images/favicon.ico' alt='Logo' className='w-6 h-6' />
+        </Link>
       </div>
-      
+
+      <nav className="flex flex-col items-center space-y-6 relative">
+        {menuItems.map((menuItem) => (
+          <MenuItem key={menuItem.key} item={menuItem} />
+        ))}
+      </nav>
+
       {activeSubmenu && renderSubmenu(activeSubmenu)}
-    </>
+    </div>
   );
 };
 
