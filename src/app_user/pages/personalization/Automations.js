@@ -7,7 +7,7 @@ import FlipCard from '../../../app/components/FlipCard';
 
 const Automacoes = () => {
   const navigate = useNavigate();
-  
+
   const [automations, setAutomations] = useState([
     {
       id: 1,
@@ -45,9 +45,9 @@ const Automacoes = () => {
   ]);
 
   const toggleStatus = (id) => {
-    setAutomations(prevAutomations => 
-      prevAutomations.map(automation => 
-        automation.id === id 
+    setAutomations(prevAutomations =>
+      prevAutomations.map(automation =>
+        automation.id === id
           ? { ...automation, status: automation.status === 'active' ? 'inactive' : 'active' }
           : automation
       )
@@ -74,7 +74,7 @@ const Automacoes = () => {
       </div>
 
       <div className="mt-auto">
-        <button 
+        <button
           className="bg-gray-200 text-xs text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition-colors"
           onClick={() => handleNavigation(automation.id)}
         >
@@ -86,19 +86,19 @@ const Automacoes = () => {
 
   const renderAutomationCardBack = (automation) => (
     <div className="flex flex-col h-full bg-white w-full p-2">
-      <div className="flex justify-between items-center w-full mb-1">
+      <div className="flex justify-between items-center w-full">
         <div className="flex items-center gap-2">
-          <FiCalendar className="text-[#0056d6] mr-1" size={14} />
+          <FiCalendar className="text-[#0056d6] mr-[0.1rem]" size={14} />
           <span className="text-gray-700 text-sm font-medium">
             Iniciada em {automation.startDate} às {automation.startTime}
           </span>
         </div>
-        
+
         <button className="hover:bg-gray-100 p-1 rounded">
           <FiMoreVertical size={18} className="text-gray-500" />
         </button>
       </div>
-      
+
       <div className="flex flex-col space-y-1">
         <div className="flex items-center">
           <FiUser className="text-[#0056d6] mr-2" size={14} />
@@ -106,51 +106,51 @@ const Automacoes = () => {
             Criado por: {automation.createdBy}
           </span>
         </div>
-        
+
         <div className="flex items-center">
-          <FiCheckCircle className="text-[#0056d6] mr-2" size={16} />
+          <FiCheckCircle className="text-[#0056d6] mr-2" size={14} />
           <span className="text-gray-600 text-xs mr-1">Sucesso:</span>
-          <span className="text-gray-600 font-medium">{automation.successes}</span>
+          <span className="text-gray-600 text-xs">{automation.successes}</span>
         </div>
-        
+
         <div className="flex items-center">
-          <FiXCircle className="text-[#0056d6] mr-2" size={16} />
+          <FiXCircle className="text-[#0056d6] mr-2" size={14} />
           <span className="text-gray-600 text-xs mr-1">Falha:</span>
-          <span className="text-gray-600 font-medium">{automation.failures}</span>
+          <span className="text-gray-600 text-xs">{automation.failures}</span>
         </div>
       </div>
-      
+
       <div className="flex-grow"></div>
-      
+
       <div className="w-full flex justify-between items-center mt-4">
-        <button 
+        <button
           className="bg-gray-200 text-xs text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition-colors"
           onClick={() => handleNavigation(automation.id)}
         >
           Ver mais
         </button>
-        
-        <div 
+
+        <div
           className="relative inline-flex items-center cursor-pointer"
           onClick={(e) => {
             e.stopPropagation();
             toggleStatus(automation.id);
           }}
         >
-          <input 
-            type="checkbox" 
-            checked={automation.status === 'active'} 
-            onChange={() => {}}
+          <input
+            type="checkbox"
+            checked={automation.status === 'active'}
+            onChange={() => { }}
             className="sr-only peer"
           />
-          <div className="w-10 h-5 bg-gray-200 rounded-full peer peer-checked:bg-blue-500 peer-focus:ring-0">
-            <div className={`absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-all duration-200 ${automation.status === 'active' ? 'translate-x-5' : ''}`}></div>
+          <div className="w-8 h-4 bg-gray-200 rounded-full peer peer-checked:bg-blue-500 peer-focus:ring-0">
+            <div className={`absolute left-0.5 top-0.5 bg-white w-3 h-3 rounded-full transition-all duration-200 ${automation.status === 'active' ? 'translate-x-4' : ''}`}></div>
           </div>
         </div>
       </div>
     </div>
   );
-  
+
   return (
     <BaseLayout title="Automações">
       <div className="min-h-screen">

@@ -6,7 +6,7 @@ import './App.css';
 import MySequences from './app_user/pages/sequences/MySequences';
 import TemplatesSequencia from './app_user/pages/sequences/TemplatesSequence';
 import Lists from '../src/app_user/pages/tasks/Lists';
-import Recurrent from '../src/app_user/pages/tasks/Recurrent';
+import Recurrent from '../src/app_user/pages/tasks/Recurrent/Recurrent';
 import Companies from '../src/app_user/pages/companies/ActiveClients';
 import Automations from '../src/app_user/pages/personalization/Automations';
 import Registrations from '../src/app_user/pages/personalization/Registrations';

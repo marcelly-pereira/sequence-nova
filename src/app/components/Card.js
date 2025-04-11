@@ -7,7 +7,7 @@ const Card = ({
   count = 46
 }) => {
   return (
-    <div className="bg-white rounded-lg border p-6 w-80 h-60 flex flex-col justify-around">
+    <div className="bg-white rounded-lg border p-6 w-80 h-[180px] flex flex-col justify-around">
       <div className="flex items-center gap-3">
         <div className="w-7 h-7 bg-[#F3F4F6] rounded-md flex items-center justify-center">
           <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

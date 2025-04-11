@@ -7,7 +7,9 @@ const Table = ({
   colunas, 
   dados, 
   onAcaoClick, 
-  renderizarStatus 
+  renderizarStatus,
+  renderizarConteudo,
+  onRowClick 
 }) => {
   const navigate = useNavigate();
 
@@ -34,7 +36,11 @@ const Table = ({
       </thead>
       <tbody className="bg-white divide-y divide-gray-100">
         {dados.map((item, itemIndex) => (
-          <tr key={itemIndex} className="hover:bg-gray-50">
+          <tr 
+            key={itemIndex} 
+            className="hover:bg-gray-50 cursor-pointer"
+            onClick={() => onRowClick && onRowClick(item)}
+          >
             {colunas.map((coluna, colunaIndex) => (
               <td 
                 key={colunaIndex}
@@ -44,9 +50,17 @@ const Table = ({
                   ${coluna.centralizado ? 'text-center' : ''}
                   ${coluna.tipo === 'prontuario' && item[coluna.campo] ? 'cursor-pointer' : ''}
                 `}
-                onClick={coluna.tipo === 'prontuario' && item[coluna.campo] ? () => handleProntuarioClick(item) : undefined}
+                onClick={coluna.tipo === 'prontuario' && item[coluna.campo] 
+                  ? (e) => {
+                      e.stopPropagation();
+                      handleProntuarioClick(item);
+                    } 
+                  : undefined
+                }
               >
-                {renderConteudo(coluna, item, onAcaoClick, renderizarStatus)}
+                {renderizarConteudo 
+                  ? renderizarConteudo(coluna, item) 
+                  : renderConteudoPadrao(coluna, item, onAcaoClick, renderizarStatus)}
               </td>
             ))}
           </tr>
@@ -56,7 +70,7 @@ const Table = ({
   );
 };
 
-const renderConteudo = (coluna, item, onAcaoClick, renderizarStatus) => {
+const renderConteudoPadrao = (coluna, item, onAcaoClick, renderizarStatus) => {
   const valor = item[coluna.campo];
 
   if (coluna.tipo === 'status' && renderizarStatus) {
@@ -73,16 +87,29 @@ const renderConteudo = (coluna, item, onAcaoClick, renderizarStatus) => {
     ) : null;
   }
   
-  if (coluna.tipo === 'acao') {
+  if (coluna.tipo === 'acao' || coluna.tipo === 'acoes') {
     return (
       <div className="flex justify-center">
         <button 
           className="text-gray-600 hover:text-gray-900"
-          onClick={() => onAcaoClick && onAcaoClick(item)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onAcaoClick && onAcaoClick(item);
+          }}
         >
           <FiMoreVertical size={18} />
         </button>
       </div>
+    );
+  }
+  
+  if (coluna.tipo === 'checkbox') {
+    return (
+      <input 
+        type="checkbox" 
+        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+        onClick={(e) => e.stopPropagation()}
+      />
     );
   }
   

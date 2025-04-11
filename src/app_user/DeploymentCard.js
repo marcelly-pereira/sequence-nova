@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Table from '../app/components/Table';
 import BaseLayout from '../app/BaseLayout';
-import { AnimatedExpandingButton } from '../app/components/Button'; // Ajuste o caminho de importação conforme necessário
+import { AnimatedExpandingButton } from '../app/components/Button';
 
 const DeploymentCard = () => {
     const [deployments, setDeployments] = useState([
@@ -45,15 +45,12 @@ const DeploymentCard = () => {
 
     const handleEdit = () => {
         console.log('Editar clicado');
-        // Implementar a lógica de edição aqui
     };
 
     const handleStopAutomation = () => {
         console.log('Parar Automação clicado');
-        // Implementar a lógica para parar a automação aqui
     };
 
-    // Ícone de edição SVG
     const editIcon = (
         <svg
             className="w-full h-full fill-white transition-all duration-200 ease-in-out group-hover:fill-[#312e81]"
@@ -64,7 +61,6 @@ const DeploymentCard = () => {
         </svg>
     );
 
-    // Ícone de parar (stop) SVG
     const stopIcon = (
         <svg
             className="w-full h-full fill-white transition-all duration-200 ease-in-out group-hover:bg-[#BC0003]"
@@ -100,8 +96,8 @@ const DeploymentCard = () => {
                     />
                 </div>
             </div>
-            <div className="bg-white shadow rounded-2xl">
-                <div className="overflow-hidden border-b border-gray-200 rounded-2xl p-3 sm:p-6">
+            <div className="bg-white rounded-2xl shadow-sm border-gray-200 p-3 sm:p-6">
+                <div className="overflow-hidden">
                     <Table
                         colunas={colunas}
                         dados={deployments}

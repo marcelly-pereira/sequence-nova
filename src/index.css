@@ -15,3 +15,76 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* SequencedBorderAnimation.css */
+.card-border-container {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.card-border-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px solid transparent;
+  border-radius: inherit;
+  background-image: 
+    linear-gradient(90deg, transparent 50%, #0056d6 50%, transparent 51%, transparent 100%),
+    linear-gradient(90deg, transparent 50%, #0056d6 50%, transparent 51%, transparent 100%),
+    linear-gradient(0deg, transparent 50%, #0056d6 50%, transparent 51%, transparent 100%),
+    linear-gradient(0deg, transparent 50%, #0056d6 50%, transparent 51%, transparent 100%);
+  background-position: 
+    0% 0%,  /* top */
+    0% 100%,  /* bottom */
+    0% 0%,  /* left */
+    100% 0%;  /* right */
+  background-size: 
+    200% 2px,  /* top */
+    200% 2px,  /* bottom */
+    2px 200%,  /* left */
+    2px 200%;  /* right */
+  background-repeat: no-repeat;
+  animation: border-dance 3s infinite linear;
+}
+
+@keyframes border-dance {
+  0% {
+    background-position: 
+      200% 0,  /* top - começa fora */
+      0% 100%,  /* bottom */
+      0% 200%,  /* left - começa fora */
+      100% 0%;  /* right */
+  }
+  25% {
+    background-position: 
+      0% 0,  /* top - termina no início */
+      0% 100%,  /* bottom */
+      0% 0%,  /* left - termina no início */
+      100% 200%;  /* right - começa fora */
+  }
+  50% {
+    background-position: 
+      0% 0,  /* top */
+      200% 100%,  /* bottom - começa fora */
+      0% 0%,  /* left */
+      100% 0%;  /* right - termina no início */
+  }
+  75% {
+    background-position: 
+      0% 0,  /* top */
+      0% 100%,  /* bottom - termina no início */
+      0% 0%,  /* left */
+      100% 0%;  /* right */
+  }
+  100% {
+    background-position: 
+      200% 0,  /* top - começa fora novamente */
+      0% 100%,  /* bottom */
+      0% 200%,  /* left - começa fora novamente */
+      100% 0%;  /* right */
+  }
+}

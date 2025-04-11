@@ -9,13 +9,13 @@ export const AnimatedExpandingButton = ({
   textColor = 'text-[#0056d6]',
 }) => {
   const buttonRef = useRef(null);
-  const [expandedWidth, setExpandedWidth] = useState(200);
+  const [expandedWidth, setExpandedWidth] = useState(150);
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     if (buttonRef.current) {
-      const textWidth = text.length * 8;
-      setExpandedWidth(40 + textWidth + 32);
+      const textWidth = text.length * 6;
+      setExpandedWidth(32 + textWidth + 16);
     }
   }, [text]);
 
@@ -25,7 +25,7 @@ export const AnimatedExpandingButton = ({
 
   const defaultIcon = (
     <svg 
-      className="w-full h-full fill-white transition-all duration-200 ease-in-out group-hover:fill-[#0056d6] group-focus:fill-[#0056d6] group-hover:rotate-180 group-focus:rotate-180"
+      className="w-4 h-4 fill-white transition-all duration-200 ease-in-out group-hover:fill-[#0056d6] group-focus:fill-[#0056d6] group-hover:rotate-180 group-focus:rotate-180"
       xmlns="http://www.w3.org/2000/svg" 
       viewBox="0 0 30 30"
     >
@@ -47,12 +47,12 @@ export const AnimatedExpandingButton = ({
       onFocus={() => setIsHovered(true)}
       onBlur={() => setIsHovered(false)}
       onMouseDown={handleMouseDown}
-      className={`group relative flex items-center ${isHovered ? 'justify-start' : 'justify-center'} bg-[#0056d6] rounded-lg overflow-hidden h-10 transition-all duration-300 
+      className={`group relative flex items-center ${isHovered ? 'justify-start' : 'justify-center'} bg-[#0056d6] rounded-md overflow-hidden h-8 transition-all duration-300 
         ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} 
         ${className}
-        w-10 hover:w-auto hover:px-3 focus:outline-none active:outline-none focus-visible:outline-none`}
+        w-8 hover:w-auto hover:px-2 focus:outline-none active:outline-none focus-visible:outline-none`}
       style={{ 
-        width: isHovered ? `${expandedWidth}px` : '40px',
+        width: isHovered ? `${expandedWidth}px` : '32px',
         outline: 'none !important',
         boxShadow: 'none !important',
         WebkitTapHighlightColor: 'transparent',
@@ -62,16 +62,16 @@ export const AnimatedExpandingButton = ({
       <div 
         className="absolute top-0 right-0 w-0 h-0 border-solid border-r-white border-t-transparent border-l-transparent border-b-transparent transition-all duration-300 ease-in-out"
         style={{
-          borderRightWidth: isHovered ? `${expandedWidth * 2}px` : '14.4px',
-          borderBottomWidth: isHovered ? '80px' : '14.4px'
+          borderRightWidth: isHovered ? `${expandedWidth * 2}px` : '12px',
+          borderBottomWidth: isHovered ? '64px' : '12px'
         }}
       ></div>
       
-      <div className={`flex items-center justify-center w-5 h-5 z-10 transition-all duration-300 ${isHovered ? 'ml-0' : ''}`}>
+      <div className={`flex items-center justify-center w-4 h-4 z-10 transition-all duration-300 ${isHovered ? 'ml-0' : ''}`}>
         {icon || defaultIcon}
       </div>
       
-      <span className={`whitespace-nowrap overflow-hidden max-w-0 group-hover:max-w-xs ml-0 group-hover:ml-3 opacity-0 group-hover:opacity-100 transition-all duration-300 z-10 ${textColor} font-medium text-sm`}>
+      <span className={`whitespace-nowrap overflow-hidden max-w-0 group-hover:max-w-xs ml-0 group-hover:ml-2 opacity-0 group-hover:opacity-100 transition-all duration-300 z-10 ${textColor} font-medium text-xs`}>
         {text}
       </span>
     </button>
