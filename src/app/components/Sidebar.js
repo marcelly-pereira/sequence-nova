@@ -206,7 +206,7 @@ const Sidebar = () => {
   );
 
   return (
-    <div className="h-full w-12 bg-indigo-900 fixed left-0 top-0 flex flex-col items-center py-[1.2rem] rounded z-[9999]">
+    <div className="h-full w-12 bg-[#333381] fixed left-0 top-0 flex flex-col items-center py-[1.2rem] rounded z-[9999]">
       <div className="mb-8">
         <Link to="/" className="flex items-center justify-center" aria-label="Home">
           <img src='/static/assets/images/favicon.ico' alt='Logo' className='w-6 h-6' />
