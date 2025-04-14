@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import BaseLayout from './app/BaseLayout';
 import Login from './app_user/Login';
 import './App.css';
+import Home from '../src/app_user/Home'
 import MySequences from './app_user/pages/sequences/MySequences';
 import TemplatesSequencia from './app_user/pages/sequences/TemplatesSequence';
 import Lists from '../src/app_user/pages/tasks/Lists';
@@ -19,7 +20,7 @@ function App() {
     return (
         <Router>
             <Routes>
-                <Route path="*" element={<Login />} />
+                <Route path="*" element={<Home />} />
                 <Route path="/baseLayout" element={<BaseLayout />}>
                     <Route index element={<Login />} />
                 </Route>
