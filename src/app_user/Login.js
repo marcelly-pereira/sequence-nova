@@ -8,15 +8,66 @@ function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [debugInfo, setDebugInfo] = useState('');
 
-    const handleSubmit = (e) => {
+    // URL do backend (ajuste conforme necessário)
+    const API_URL = 'http://localhost:8000/api/token/';
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setError('');
+        setDebugInfo('');
+
+        try {
+            // Usando fetch em vez de axios para simplificar o troubleshooting
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email,
+                    password
+                })
+            });
+
+            // Mostrar informações de depuração
+            setDebugInfo(`Status: ${response.status} ${response.statusText}`);
+            
+            // Se não for bem-sucedido, mostrar erro
+            if (!response.ok) {
+                const errorData = await response.text();
+                setDebugInfo(prev => prev + `\nResposta: ${errorData}`);
+                throw new Error(`Erro ${response.status}: ${errorData}`);
+            }
+
+            // Processar resposta bem-sucedida
+            const data = await response.json();
+            setDebugInfo(prev => prev + `\nLogin bem-sucedido. Token obtido.`);
+
+            // Armazenar tokens
+            localStorage.setItem('access_token', data.access);
+            localStorage.setItem('refresh_token', data.refresh);
+
+            // Redirecionar (você pode substituir por window.location.href se não usar React Router)
+            // navigate('/dashboard');
+            window.location.href = '/dashboard';
+            
+        } catch (err) {
+            console.error('Erro durante o login:', err);
+            setError(`Falha na autenticação: ${err.message}`);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <div className="min-h-screen w-full flex items-center justify-center py-8 authentication-bg">
             <div className="max-w-4xl mx-auto flex flex-col md:flex-row rounded-lg shadow-lg shadow-gray-300 overflow-hidden">
-                {/* Coluna da esquerda para ficar mais organizado pra mim */}
+                {/* Coluna da esquerda */}
                 <div className="flex-1 p-5 bg-white">
                     <h1 className="text-4xl font-bold text-black mb-2 mt-6">Bem-vindo(a)</h1>
                     <h4 className="text-md font-medium text-black mb-1">Crie sequências para:</h4>
@@ -41,7 +92,7 @@ function Login() {
                     </div>
                 </div>
 
-                {/* Coluna da esquerda para ficar mais organizado pra mim */}
+                {/* Coluna da direita */}
                 <div className="flex-1 p-5 bg-white flex flex-col justify-center">
                     <div className="text-center mb-4">
                         <a href="#" className="block mb-2">
@@ -50,11 +101,23 @@ function Login() {
                     </div>
 
                     <form id="loginForm" onSubmit={handleSubmit}>
-                        {/* <p className="text-sm mb-3 text-gray-700 font-semibold">Informe seu E-mail e senha</p>*/}
+                        {error && (
+                            <div className="mb-4 p-2 bg-red-50 border border-red-200 text-red-600 text-sm rounded">
+                                {error}
+                            </div>
+                        )}
+                        
+                        {debugInfo && (
+                            <div className="mb-4 p-2 bg-gray-100 border border-gray-200 text-gray-800 text-xs rounded font-mono whitespace-pre-wrap">
+                                <div className="font-semibold mb-1">Informações de depuração:</div>
+                                {debugInfo}
+                            </div>
+                        )}
+                        
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email:</label>
                         <Input
                             id="email"
-                            type="text"
+                            type="email"
                             required
                             placeholder="Entre com seu e-mail"
                             value={email}
@@ -104,8 +167,9 @@ function Login() {
                                 variant="primary"
                                 className="w-full text-md py-[0.45rem] px-2 shadow-sm"
                                 icon={<FiChevronRight size={16} color="white" />}
+                                disabled={loading}
                             >
-                                Acessar
+                                {loading ? 'Autenticando...' : 'Acessar'}
                             </Button>
                         </div>
                     </form>
