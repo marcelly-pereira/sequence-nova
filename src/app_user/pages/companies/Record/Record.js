@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import BaseLayout from '../app/BaseLayout';
+import BaseLayout from '../../../../app/BaseLayout';
 import { FaBuilding } from 'react-icons/fa';
 import VisaoGeral from './tabs/VisaoGeral';
 import Relacionamento from './tabs/Relacionamento';

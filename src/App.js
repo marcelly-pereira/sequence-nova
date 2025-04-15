@@ -13,7 +13,7 @@ import Automations from '../src/app_user/pages/personalization/Automations';
 import Registrations from '../src/app_user/pages/personalization/Registrations';
 import User from '../src/app_user/User';
 import Notification from '../src/app_user/Notification';
-import Record from '../src/app_user/Record';
+import Record from '../src/app_user/pages/companies/Record/Record';
 import DeploymentCard from '../src/app_user/DeploymentCard'
 
 function App() {
