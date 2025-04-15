@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import BaseLayout from '../app/BaseLayout';
-import FlipClock from '../app/components/FlipClock';
 import { motion } from 'framer-motion';
 import { FiPlus, FiTrash } from 'react-icons/fi';
 import { FaFire } from 'react-icons/fa';
@@ -58,7 +57,6 @@ const Home = () => {
     return (
         <BaseLayout title='Sequence'>
             <div className="min-h-screen">
-                {/* Cabeçalho */}
                 <div className="mb-8 flex flex-wrap md:flex-nowrap items-start justify-between gap-6">
                     <div className="flex-grow">
                         <p className="text-gray-500 text-sm">Olá,</p>
@@ -72,19 +70,12 @@ const Home = () => {
                             </div>
                         </div>
                     </div>
-
-                    <div className="w-full md:w-auto mt-4 md:mt-0">
-                        <div className="bg-white p-4 rounded-xl shadow-sm">
-                            <FlipClock />
-                        </div>
-                    </div>
                 </div>
 
                 <div className="mb-8">
                     <h2 className="text-xl font-semibold text-gray-700 mb-4">Pontos de atenção</h2>
                     
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {/* Card Base de Clientes */}
                         <div className="bg-white p-6 rounded-xl shadow-sm">
                             <div className="flex items-center mb-4">
                                 <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">

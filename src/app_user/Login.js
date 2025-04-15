@@ -1,64 +1,74 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { TemplateStatic } from '../app/components/Carrossel';
 import { Button } from '../app/components/Button';
 import { Input } from '../app/components/Input';
 import { FiChevronRight, FiEye, FiEyeOff, FiCheckCircle } from 'react-icons/fi';
+import Toast from '../app/components/Toast';
+import authService from '../app/services/authService';
+
+const BENEFITS = [
+  'Aumentar produtividade',
+  'Integrar setores',
+  'Gerenciar informações de maneira fácil'
+];
 
 function Login() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+        rememberMe: false
+    });
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [debugInfo, setDebugInfo] = useState('');
+    const [toast, setToast] = useState({ visible: false, type: '', message: '' });
 
-    // URL do backend (ajuste conforme necessário)
-    const API_URL = 'http://localhost:8000/api/token/';
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value
+        }));
+    };
+
+    const showToast = (type, message) => {
+        setToast({ visible: true, type, message });
+        
+        if (type === 'success') {
+            setTimeout(() => {
+                setToast(prev => ({ ...prev, visible: false }));
+            }, 2000);
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setError('');
-        setDebugInfo('');
 
         try {
-            // Usando fetch em vez de axios para simplificar o troubleshooting
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email,
-                    password
-                })
-            });
-
-            // Mostrar informações de depuração
-            setDebugInfo(`Status: ${response.status} ${response.statusText}`);
+            await authService.login(formData.email, formData.password);
             
-            // Se não for bem-sucedido, mostrar erro
-            if (!response.ok) {
-                const errorData = await response.text();
-                setDebugInfo(prev => prev + `\nResposta: ${errorData}`);
-                throw new Error(`Erro ${response.status}: ${errorData}`);
+            showToast('success', 'Login realizado com sucesso! Redirecionando...');
+            
+            setTimeout(() => {
+                navigate('/home');
+            }, 1500);
+            
+        } catch (error) {
+            let errorMessage = 'Ocorreu um erro durante o login.';
+            
+            if (error.response) {
+                if (error.response.status === 401) {
+                    errorMessage = 'Email ou senha incorretos. Por favor, tente novamente.';
+                } else {
+                    errorMessage = `Erro ${error.response.status}: ${error.response.data?.detail || 'Falha na autenticação'}`;
+                }
+            } else if (error.request) {
+                errorMessage = 'Sem resposta do servidor. Verifique sua conexão.';
             }
-
-            // Processar resposta bem-sucedida
-            const data = await response.json();
-            setDebugInfo(prev => prev + `\nLogin bem-sucedido. Token obtido.`);
-
-            // Armazenar tokens
-            localStorage.setItem('access_token', data.access);
-            localStorage.setItem('refresh_token', data.refresh);
-
-            // Redirecionar (você pode substituir por window.location.href se não usar React Router)
-            // navigate('/dashboard');
-            window.location.href = '/dashboard';
             
-        } catch (err) {
-            console.error('Erro durante o login:', err);
-            setError(`Falha na autenticação: ${err.message}`);
+            showToast('error', errorMessage);
         } finally {
             setLoading(false);
         }
@@ -66,15 +76,25 @@ function Login() {
 
     return (
         <div className="min-h-screen w-full flex items-center justify-center py-8 authentication-bg">
+            {toast.visible && (
+                <div className="fixed top-4 right-4 z-50">
+                    <Toast 
+                        type={toast.type} 
+                        message={toast.message} 
+                        onClose={() => setToast(prev => ({ ...prev, visible: false }))} 
+                    />
+                </div>
+            )}
+            
             <div className="max-w-4xl mx-auto flex flex-col md:flex-row rounded-lg shadow-lg shadow-gray-300 overflow-hidden">
-                {/* Coluna da esquerda */}
+                {/* Lado esquerdo - Informações */}
                 <div className="flex-1 p-5 bg-white">
                     <h1 className="text-4xl font-bold text-black mb-2 mt-6">Bem-vindo(a)</h1>
                     <h4 className="text-md font-medium text-black mb-1">Crie sequências para:</h4>
                     <hr className="h-px border-none w-full bg-gradient-to-r from-blue-600 to-purple-700 rounded mb-3" />
 
                     <ul className="list-none p-0 mb-4 text-sm text-gray-700 space-y-2">
-                        {['Aumentar produtividade', 'Integrar setores', 'Gerenciar informações de maneira fácil'].map((item, index) => (
+                        {BENEFITS.map((item, index) => (
                             <li key={index} className="flex items-center">
                                 <FiCheckCircle className="text-blue-600 mr-2" />
                                 <span>{item}</span>
@@ -92,7 +112,7 @@ function Login() {
                     </div>
                 </div>
 
-                {/* Coluna da direita */}
+                {/* Lado direito - Formulário */}
                 <div className="flex-1 p-5 bg-white flex flex-col justify-center">
                     <div className="text-center mb-4">
                         <a href="#" className="block mb-2">
@@ -101,27 +121,15 @@ function Login() {
                     </div>
 
                     <form id="loginForm" onSubmit={handleSubmit}>
-                        {error && (
-                            <div className="mb-4 p-2 bg-red-50 border border-red-200 text-red-600 text-sm rounded">
-                                {error}
-                            </div>
-                        )}
-                        
-                        {debugInfo && (
-                            <div className="mb-4 p-2 bg-gray-100 border border-gray-200 text-gray-800 text-xs rounded font-mono whitespace-pre-wrap">
-                                <div className="font-semibold mb-1">Informações de depuração:</div>
-                                {debugInfo}
-                            </div>
-                        )}
-                        
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email:</label>
                         <Input
                             id="email"
+                            name="email"
                             type="email"
                             required
                             placeholder="Entre com seu e-mail"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            value={formData.email}
+                            onChange={handleChange}
                         />
 
                         <div className="mb-3">
@@ -129,11 +137,12 @@ function Login() {
                             <div className="relative">
                                 <Input
                                     id="password"
+                                    name="password"
                                     type={showPassword ? 'text' : 'password'}
                                     required
                                     placeholder="Entre com sua senha"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    value={formData.password}
+                                    onChange={handleChange}
                                     className="pr-10"
                                 />
                                 <button
@@ -152,10 +161,12 @@ function Login() {
                                 <input
                                     type="checkbox"
                                     className="h-3 w-3 text-blue-500 focus:ring-blue-400 border-gray-300 rounded"
-                                    id="checkbox-signin"
-                                    name="remember"
+                                    id="rememberMe"
+                                    name="rememberMe"
+                                    checked={formData.rememberMe}
+                                    onChange={handleChange}
                                 />
-                                <label className="ml-2 block text-xs text-gray-700" htmlFor="checkbox-signin">
+                                <label className="ml-2 block text-xs text-gray-700" htmlFor="rememberMe">
                                     Continuar conectado
                                 </label>
                             </div>
@@ -169,7 +180,7 @@ function Login() {
                                 icon={<FiChevronRight size={16} color="white" />}
                                 disabled={loading}
                             >
-                                {loading ? 'Autenticando...' : 'Acessar'}
+                                {loading ? 'Entrando...' : 'Acessar'}
                             </Button>
                         </div>
                     </form>

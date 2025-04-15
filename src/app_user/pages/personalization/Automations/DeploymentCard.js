@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Table from '../app/components/Table';
-import BaseLayout from '../app/BaseLayout';
-import { AnimatedExpandingButton } from '../app/components/Button';
+import Table from '../../../../app/components/Table';
+import BaseLayout from '../../../../app/BaseLayout';
+import { AnimatedExpandingButton } from '../../../../app/components/Button';
 
 const DeploymentCard = () => {
     const [deployments, setDeployments] = useState([
