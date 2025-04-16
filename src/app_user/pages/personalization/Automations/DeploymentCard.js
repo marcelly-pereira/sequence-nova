@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Table from '../../../../app/components/Table';
 import BaseLayout from '../../../../app/BaseLayout';
 import { AnimatedExpandingButton } from '../../../../app/components/Button';
 
 const DeploymentCard = () => {
-    const [deployments, setDeployments] = useState([
+    const navigate = useNavigate();
+    const [deployments] = useState([
         { id: 1, hora: '4 Apr 10:16:09', descricao: 'Card KPTAL CONTABILIDADE E SOLUCOES CORPORATIVAS LTDA criado automaticamente. movido de para por', status: 'Sucesso' },
         { id: 2, hora: '4 Apr 10:16:11', descricao: 'Card MHUB SOLUCOES EMPRESARIAIS LTDA criado automaticamente. movido de para por', status: 'Sucesso' },
         { id: 3, hora: '4 Apr 10:16:11', descricao: 'Card GENIUS CONTABILIDADE criado automaticamente. movido de para por', status: 'Sucesso' },
@@ -44,7 +46,7 @@ const DeploymentCard = () => {
     };
 
     const handleEdit = () => {
-        console.log('Editar clicado');
+        navigate('/draggable-card');
     };
 
     const handleStopAutomation = () => {

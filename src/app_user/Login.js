@@ -87,7 +87,6 @@ function Login() {
             )}
             
             <div className="max-w-4xl mx-auto flex flex-col md:flex-row rounded-lg shadow-lg shadow-gray-300 overflow-hidden">
-                {/* Lado esquerdo - Informações */}
                 <div className="flex-1 p-5 bg-white">
                     <h1 className="text-4xl font-bold text-black mb-2 mt-6">Bem-vindo(a)</h1>
                     <h4 className="text-md font-medium text-black mb-1">Crie sequências para:</h4>
@@ -112,12 +111,15 @@ function Login() {
                     </div>
                 </div>
 
-                {/* Lado direito - Formulário */}
                 <div className="flex-1 p-5 bg-white flex flex-col justify-center">
                     <div className="text-center mb-4">
-                        <a href="#" className="block mb-2">
+                        <button
+                            type="button"
+                            className="block mb-2 bg-transparent border-none p-0 cursor-pointer"
+                            onClick={() => console.log('Logo clicked')}
+                        >
                             <img src="/static/assets/images/logo.png" alt="logo" className="h-10 mx-auto" />
-                        </a>
+                        </button>
                     </div>
 
                     <form id="loginForm" onSubmit={handleSubmit}>

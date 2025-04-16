@@ -15,6 +15,7 @@ import User from './app_user/User';
 import Notification from './app_user/Notification';
 import Record from './app_user/pages/companies/Record/Record';
 import DeploymentCard from './app_user/pages/personalization/Automations/DeploymentCard';
+import DraggableCard from '../src/app_user/DraggableCard';
 
 function App() {
         return (
@@ -74,6 +75,9 @@ function App() {
 
                                 <Route path="/deploymentcard" element={
                                         <DeploymentCard />
+                                } />
+                                <Route path="/draggable-card" element={
+                                        <DraggableCard />
                                 } />
 
                                 <Route path="*" element={<Navigate to="/" replace />} />

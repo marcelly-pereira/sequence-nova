@@ -29,8 +29,6 @@ const Recorrentes = () => {
         { campo: 'acoes', titulo: 'AÇÕES', tipo: 'acoes', centralizado: true },
     ];
 
-    const [paginaAtual, setPaginaAtual] = useState(1);
-    const totalPaginas = 7;
     
     const [isOffCanvasOpen, setIsOffCanvasOpen] = useState(false);
     const [selectedTarefa, setSelectedTarefa] = useState(null);
