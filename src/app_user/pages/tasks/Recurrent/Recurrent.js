@@ -1,65 +1,93 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BaseLayout from '../../../../app/BaseLayout';
-import { FiSearch, FiList, FiFilter, FiCheck, FiX, FiInfo } from 'react-icons/fi';
+import { FiSearch, FiList, FiFilter } from 'react-icons/fi';
 import Table from '../../../../app/components/Table';
-import OffCanvas from '../../../pages/tasks/Recurrent/RecorrentOffCanvas';
+import RecorrentOffCanvas from './RecorrentOffCanvas';
+import obrigacoesService from '../../../../services/listObligations';
+import Pagination from '../../../../app/components/Pagination';
 
 const Recorrentes = () => {
-    const tarefas = [
-        { id: 1, tarefa: 'Folha de Pagamento', empresa: 'N/A', vencimento: '06/04/2025', status: 'Entregue', competencia: '03/2025', responsavel: 'Bruno Nunes', departamento: 'Administrativo' },
-        { id: 2, tarefa: 'Folha de Pagamento', empresa: 'N/A', vencimento: '06/05/2025', status: 'Entregue', competencia: '04/2025', responsavel: 'Bruno Nunes', departamento: 'Administrativo' },
-        { id: 3, tarefa: 'Folha de Pagamento', empresa: 'N/A', vencimento: '05/06/2025', status: 'Entregue', competencia: '05/2025', responsavel: 'Bruno Nunes', departamento: 'Administrativo' },
-        { id: 4, tarefa: 'Folha de Pagamento', empresa: 'N/A', vencimento: '06/07/2025', status: 'Entregue', competencia: '06/2025', responsavel: 'Bruno Nunes', departamento: 'Administrativo' },
-        { id: 5, tarefa: 'Folha de Pagamento', empresa: 'N/A', vencimento: '06/08/2025', status: 'Entregue', competencia: '07/2025', responsavel: 'Bruno Nunes', departamento: 'Administrativo' },
-        { id: 6, tarefa: 'Folha de Pagamento', empresa: 'N/A', vencimento: '04/09/2025', status: 'Entregue', competencia: '08/2025', responsavel: 'Bruno Nunes', departamento: 'Administrativo' },
-        { id: 7, tarefa: 'Folha de Pagamento', empresa: 'N/A', vencimento: '06/10/2025', status: 'Entregue', competencia: '09/2025', responsavel: 'Bruno Nunes', departamento: 'Administrativo' },
-        { id: 8, tarefa: 'Folha de Pagamento', empresa: 'N/A', vencimento: '06/11/2025', status: 'Entregue', competencia: '10/2025', responsavel: 'Bruno Nunes', departamento: 'Administrativo' },
-        { id: 9, tarefa: 'Folha de Pagamento', empresa: 'N/A', vencimento: '04/12/2025', status: 'Entregue', competencia: '11/2025', responsavel: 'Bruno Nunes', departamento: 'Administrativo' },
-        { id: 10, tarefa: 'Folha de Pagamento', empresa: 'N/A', vencimento: '06/04/2025', status: 'Entregue', competencia: '03/2025', responsavel: 'Bruno Nunes', departamento: 'Administrativo' },
-    ];
+    const [tarefas, setTarefas] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const [totalCount, setTotalCount] = useState(0);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const colunas = [
-        { campo: 'tarefa', titulo: 'TAREFA' },
-        { campo: 'empresa', titulo: 'EMPRESA' },
-        { campo: 'vencimento', titulo: 'VENCIMENTO' },
+        { campo: 'obrigacao_nome', titulo: 'TAREFA' },
+        { campo: 'razao_social', titulo: 'EMPRESA' },
+        { campo: 'prazo_legal', titulo: 'VENCIMENTO' },
         { campo: 'status', titulo: 'STATUS', tipo: 'status' },
         { campo: 'competencia', titulo: 'COMPETÊNCIA' },
-        { campo: 'responsavel', titulo: 'RESPONSÁVEL' },
-        { campo: 'departamento', titulo: 'DEPARTAMENTO' },
-        { campo: 'acoes', titulo: 'AÇÕES', tipo: 'acoes', centralizado: true },
+        { campo: 'responsavel_nome', titulo: 'RESPONSÁVEL' },
+        { campo: 'nome_departamento', titulo: 'DEPARTAMENTO' },
     ];
 
-    
     const [isOffCanvasOpen, setIsOffCanvasOpen] = useState(false);
     const [selectedTarefa, setSelectedTarefa] = useState(null);
 
-    const handleAcaoClick = (item) => {
-        console.log('Ação clicada:', item);
+    useEffect(() => {
+        fetchTarefas();
+    }, [currentPage, pageSize, searchTerm]);
+
+    const fetchTarefas = async () => {
+        setLoading(true);
+        try {
+            const response = await obrigacoesService.getObrigacoes({
+                page: currentPage,
+                pageSize,
+                search: searchTerm
+            });
+
+            if (response.status === 'success') {
+                setTarefas(response.results);
+                setTotalCount(response.count);
+                setError(null);
+            } else {
+                setError(response.message || 'Erro ao carregar dados');
+                setTarefas([]);
+            }
+        } catch (err) {
+            setError(`Erro na requisição: ${err.message}`);
+            console.error('Erro ao buscar tarefas:', err);
+            setTarefas([]);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleRowClick = (item) => {
+        console.log('Tarefa selecionada:', item);
         setSelectedTarefa(item);
         setIsOffCanvasOpen(true);
     };
 
     const closeOffCanvas = () => {
         setIsOffCanvasOpen(false);
+        setSelectedTarefa(null);
+        fetchTarefas();
     };
 
-    const renderizarAcoes = (item) => {
-        return (
-            <div className="flex items-center space-x-1">
-                <button className="p-1 rounded-full bg-green-100 text-green-600 hover:bg-green-200">
-                    <FiCheck size={12} />
-                </button>
-                <button className="p-1 rounded-full bg-red-100 text-red-600 hover:bg-red-200">
-                    <FiX size={12} />
-                </button>
-                <button className="p-1 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200">
-                    <FiInfo size={12} />
-                </button>
-            </div>
-        );
+    const handleStatusChange = async (id, newStatus) => {
+        try {
+            const response = await obrigacoesService.updateStatus(id, newStatus);
+            if (response.status === 'success') {
+                const updatedTarefas = tarefas.map(tarefa =>
+                    tarefa.id === id ? { ...tarefa, status: newStatus } : tarefa
+                );
+                setTarefas(updatedTarefas);
+
+                if (selectedTarefa && selectedTarefa.id === id) {
+                    setSelectedTarefa({ ...selectedTarefa, status: newStatus });
+                }
+            } else {
+                console.error('Erro ao atualizar status:', response.message);
+            }
+        } catch (err) {
+            console.error('Erro ao atualizar status:', err);
+        }
     };
 
     const renderizarStatus = (status) => {
@@ -69,28 +97,70 @@ const Recorrentes = () => {
                     Entregue
                 </span>
             );
+        } else if (status === 'Pendente') {
+            return (
+                <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                    Pendente
+                </span>
+            );
         }
         return status;
     };
 
     const renderizarConteudo = (coluna, item) => {
-        if (coluna.campo === 'acoes') {
-            return renderizarAcoes(item);
-        } else if (coluna.campo === 'responsavel') {
+        const getImageUrl = (url) => {
+            if (url && url.startsWith('/')) {
+                return `https://comercial.sequence.app.br${url}`;
+            }
+            return url;
+        };
+        
+        if (coluna.campo === 'responsavel_nome') {
+            const nomeResponsavel = item[coluna.campo] || '';
+            const nomeSemId = nomeResponsavel.split('|')[0].trim();
+            
             return (
                 <div className="flex items-center">
-                    <div className="h-6 w-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs mr-2">
-                        BN
-                    </div>
-                    <span>{item[coluna.campo]}</span>
+                    <img 
+                        src={item.responsavel_foto ? getImageUrl(item.responsavel_foto) : ''}
+                        alt={nomeSemId}
+                        className="h-6 w-6 rounded-full object-cover mr-2"
+                        onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(nomeSemId) + '&background=random';
+                        }}
+                    />
+                    <span>{nomeSemId}</span>
                 </div>
             );
         } else if (coluna.tipo === 'status') {
             return renderizarStatus(item[coluna.campo]);
+        } else if (coluna.campo === 'prazo_legal' || coluna.campo === 'competencia') {
+            if (item[coluna.campo]) {
+                if (coluna.campo === 'competencia') {
+                    const data = new Date(item[coluna.campo]);
+                    const mes = (data.getMonth() + 1).toString().padStart(2, '0');
+                    const ano = data.getFullYear();
+                    return `${mes}/${ano}`;
+                } else {
+                    const [ano, mes, dia] = item[coluna.campo].split('-');
+                    return `${dia}/${mes}/${ano}`;
+                }
+            }
         }
-
+    
         return item[coluna.campo] || '—';
     };
+    const handleSearch = (e) => {
+        setSearchTerm(e.target.value);
+        setCurrentPage(1);
+    };
+
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+    };
+
+    const totalPages = Math.ceil(totalCount / pageSize);
 
     return (
         <BaseLayout title="Tarefas Recorrentes">
@@ -102,6 +172,8 @@ const Recorrentes = () => {
                         className="text-sm px-4 py-2 border border-gray-300 rounded-md 
                                     focus:outline-none focus:ring-1 focus:ring-blue-500/25 focus:border-blue-700
                                     transition-colors"
+                        value={searchTerm}
+                        onChange={handleSearch}
                     />
                     <div className="ml-2 p-2 text-gray-400">
                         <FiSearch size={16} />
@@ -125,23 +197,43 @@ const Recorrentes = () => {
                 </button>
             </div>
             <div className="bg-white rounded-2xl shadow-sm border-gray-200 p-3 sm:p-6">
-                <div className="overflow-x-auto">
-                    <Table
-                        colunas={colunas}
-                        dados={tarefas}
-                        onAcaoClick={handleAcaoClick}
-                        renderizarStatus={renderizarStatus}
-                        renderizarConteudo={renderizarConteudo}
-                        onRowClick={handleRowClick}
-                    />
-                </div>
+                {loading ? (
+                    <div className="flex justify-center items-center py-10">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    </div>
+                ) : error ? (
+                    <div className="text-center text-red-500 py-4">{error}</div>
+                ) : (
+                    <div>
+                        <div className="overflow-x-auto">
+                            <Table
+                                colunas={colunas}
+                                dados={tarefas}
+                                renderizarConteudo={renderizarConteudo}
+                                onRowClick={handleRowClick}
+                                className="cursor-pointer"
+                            />
+                        </div>
+
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                            showPageNumbers={true}
+                            maxPageNumbers={5}
+                        />
+                    </div>
+                )}
             </div>
-            
-            <OffCanvas 
-                isOpen={isOffCanvasOpen} 
-                onClose={closeOffCanvas} 
-                item={selectedTarefa}
-            />
+
+            {selectedTarefa && (
+                <RecorrentOffCanvas
+                    isOpen={isOffCanvasOpen}
+                    onClose={closeOffCanvas}
+                    item={selectedTarefa}
+                    onStatusChange={handleStatusChange}
+                />
+            )}
         </BaseLayout>
     );
 };

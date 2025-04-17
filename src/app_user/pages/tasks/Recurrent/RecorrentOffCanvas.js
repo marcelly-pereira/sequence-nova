@@ -1,16 +1,25 @@
-import React, { useState, useRef } from 'react';
-import { FiFile } from 'react-icons/fi';
+import React, { useState, useRef, useEffect } from 'react';
+import { FiFile, FiCheck, FiClock } from 'react-icons/fi';
 import { IoCloudUploadOutline } from 'react-icons/io5';
 import OffCanvas from '../../../../app/components/OffCanvas';
 import { Button } from '../../../../app/components/Button';
 
-const RecorrentOffCanvas = ({ isOpen, onClose, item }) => {
+const RecorrentOffCanvas = ({ isOpen, onClose, item, onStatusChange }) => {
   const [activeTab, setActiveTab] = useState('obrigacao');
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadComplete, setUploadComplete] = useState(false);
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    if (item) {
+      setActiveTab('obrigacao');
+      setSelectedFile(null);
+      setUploadProgress(0);
+      setUploadComplete(false);
+    }
+  }, [item]);
 
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
@@ -27,23 +36,26 @@ const RecorrentOffCanvas = ({ isOpen, onClose, item }) => {
 
   const handleUpload = () => {
     if (!selectedFile) return;
-    
+
     setIsUploading(true);
     setUploadProgress(0);
-    
+
     const interval = setInterval(() => {
       setUploadProgress(prev => {
         const newProgress = prev + 10;
-        
+
         if (newProgress >= 100) {
           clearInterval(interval);
           setTimeout(() => {
             setIsUploading(false);
             setUploadComplete(true);
+            if (item && onStatusChange) {
+              onStatusChange(item.id, "Entregue");
+            }
           }, 500);
           return 100;
         }
-        
+
         return newProgress;
       });
     }, 300);
@@ -63,6 +75,36 @@ const RecorrentOffCanvas = ({ isOpen, onClose, item }) => {
     { id: 'registro', label: 'Registro' }
   ];
 
+  const formatarData = (dataString) => {
+    if (!dataString) return '';
+    const [ano, mes, dia] = dataString.split('-');
+    return `${dia}/${mes}/${ano}`;
+  };
+
+  const formatarCompetencia = (dataString) => {
+    if (!dataString) return '';
+    const data = new Date(dataString);
+    const mes = (data.getMonth() + 1).toString().padStart(2, '0');
+    const ano = data.getFullYear();
+    return `${mes}/${ano}`;
+  };
+
+  const gerarIniciais = (nome) => {
+    if (!nome) return '';
+    return nome
+      .split('|')[0]
+      .trim()
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .substring(0, 2)
+      .toUpperCase();
+  };
+
+  if (!item) {
+    return null;
+  }
+
   const renderTabContent = () => {
     switch (activeTab) {
       case 'obrigacao':
@@ -72,54 +114,59 @@ const RecorrentOffCanvas = ({ isOpen, onClose, item }) => {
             <div className="bg-white rounded-lg p-4 border border-gray-100 space-y-3">
               <div className="flex">
                 <p className="text-xs text-gray-500 w-32">Id:</p>
-                <p className="text-sm">{item?.id || '3'}</p>
+                <p className="text-sm">{item?.id || '—'}</p>
               </div>
               <div className="flex">
                 <p className="text-xs text-gray-500 w-32">Razão social:</p>
-                <p className="text-sm">{item?.razaoSocial || ''}</p>
+                <p className="text-sm">{item?.razao_social || '—'}</p>
               </div>
               <div className="flex">
                 <p className="text-xs text-gray-500 w-32">Nome departamento:</p>
-                <p className="text-sm">Administrativo</p>
+                <p className="text-sm">{item?.nome_departamento || '—'}</p>
               </div>
               <div className="flex">
                 <p className="text-xs text-gray-500 w-32">Obrigação:</p>
-                <p className="text-sm">{item?.tarefa || 'Folha de Pagamento'}</p>
+                <p className="text-sm">{item?.obrigacao_nome || '—'}</p>
               </div>
               <div className="flex">
                 <p className="text-xs text-gray-500 w-32">Prazo legal:</p>
-                <p className="text-sm">{item?.vencimento || '05/06/2025'}</p>
+                <p className="text-sm">{item?.prazo_legal ? formatarData(item.prazo_legal) : '—'}</p>
               </div>
               <div className="flex">
                 <p className="text-xs text-gray-500 w-32">Prazo tec:</p>
-                <p className="text-sm">24/03/2025</p>
+                <p className="text-sm">{item?.prazo_tec ? formatarData(item.prazo_tec) : '—'}</p>
               </div>
               <div className="flex">
                 <p className="text-xs text-gray-500 w-32">Responsável prazo:</p>
-                <p className="text-sm">2</p>
+                <p className="text-sm">{item?.responsavel_prazo || '—'}</p>
               </div>
               <div className="flex">
                 <p className="text-xs text-gray-500 w-32">Responsável:</p>
                 <div className="flex items-center">
                   <div className="h-6 w-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs mr-2">
-                    BN
+                    {gerarIniciais(item?.responsavel_nome)}
                   </div>
-                  <span className="text-sm">{item?.responsavel || 'Bruno Nunes'}</span>
+                  <span className="text-sm">{item?.responsavel_nome || '—'}</span>
                 </div>
               </div>
               <div className="flex">
                 <p className="text-xs text-gray-500 w-32">Status:</p>
-                <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                  {item?.status || 'Entregue'}
+                <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${item?.status === 'Pendente' ? 'bg-yellow-100 text-yellow-800' :
+                    item?.status === 'Entregue' ? 'bg-green-100 text-green-800' :
+                      'bg-gray-100 text-gray-800'
+                  }`}>
+                  {item?.status || '—'}
                 </span>
               </div>
               <div className="flex">
                 <p className="text-xs text-gray-500 w-32">Competência:</p>
-                <p className="text-sm">{item?.competencia || '05/2025'}</p>
+                <p className="text-sm">{item?.competencia ? formatarCompetencia(item.competencia) : '—'}</p>
               </div>
               <div className="flex">
                 <p className="text-xs text-gray-500 w-32">Atrasada:</p>
-                <p className="text-sm text-green-600">Não</p>
+                <p className={`text-sm ${item?.atrasada ? 'text-red-600' : 'text-green-600'}`}>
+                  {item?.atrasada ? 'Sim' : 'Não'}
+                </p>
               </div>
             </div>
           </div>
@@ -130,10 +177,12 @@ const RecorrentOffCanvas = ({ isOpen, onClose, item }) => {
             <h3 className="text-sm font-medium text-gray-500 mb-4">E-mails enviados à Empresa</h3>
             <div className="bg-white rounded-lg p-4 border border-gray-100">
               <div className="border border-gray-100 rounded-lg p-4">
-                <p className="text-xs text-gray-500 mb-2">Para: Empresa</p>
-                <div className="text-sm font-medium">{item?.tarefa}</div>
-                <div className="text-sm text-gray-600">{item?.tarefa}</div>
-                <div className="text-xs text-gray-400 mt-2">2025-03-24</div>
+                <p className="text-xs text-gray-500 mb-2">Para: {item?.razao_social || 'Empresa'}</p>
+                <div className="text-sm font-medium">{item?.obrigacao_nome || '—'}</div>
+                <div className="text-sm text-gray-600">Lembrete de obrigação fiscal</div>
+                <div className="text-xs text-gray-400 mt-2">
+                  {new Date().toISOString().split('T')[0]}
+                </div>
               </div>
             </div>
           </div>
@@ -149,10 +198,10 @@ const RecorrentOffCanvas = ({ isOpen, onClose, item }) => {
                 onChange={handleFileSelect}
                 className="hidden"
               />
-              
+
               <div className="text-center py-6">
                 <p className="text-sm text-gray-500 mb-2">Clique abaixo para adicionar um arquivo</p>
-                <div 
+                <div
                   className={`border-2 border-dashed ${selectedFile ? 'border-blue-200' : 'border-gray-200'} rounded-lg p-8 mb-4 cursor-pointer hover:bg-gray-50 transition-colors`}
                   onClick={triggerFileInput}
                 >
@@ -167,7 +216,7 @@ const RecorrentOffCanvas = ({ isOpen, onClose, item }) => {
                       </p>
                       {(isUploading || uploadComplete) && (
                         <div className="w-full mt-4 bg-gray-200 rounded-full h-1.5">
-                          <div 
+                          <div
                             className={`h-1.5 rounded-full ${uploadComplete ? 'bg-green-600' : 'bg-blue-600'}`}
                             style={{ width: `${uploadProgress}%` }}
                           ></div>
@@ -216,12 +265,24 @@ const RecorrentOffCanvas = ({ isOpen, onClose, item }) => {
           <div className="p-4">
             <div className="flex mb-4">
               <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white">
-                <span>D</span>
+                <span>{gerarIniciais(item?.responsavel_nome) || 'D'}</span>
               </div>
               <div className="ml-4">
-                <p className="text-sm">Departamento Responsável Canal:</p>
+                <p className="text-sm">Departamento Responsável: {item?.nome_departamento || 'Canal'}</p>
                 <p className="text-sm text-blue-600">Registre aqui...</p>
               </div>
+            </div>
+            <textarea
+              className="text-sm w-full px-4 py-2 border border-gray-300 rounded-md 
+                          focus:outline-none focus:ring-1 focus:ring-blue-500/25 focus:border-blue-700 
+                          transition-colors"
+              rows={4}
+              placeholder="Adicione observações ou registros sobre esta tarefa..."
+            />
+            <div className="mt-2 flex justify-end">
+              <Button variant="primary" size="sm">
+                Salvar registro
+              </Button>
             </div>
           </div>
         );
@@ -231,17 +292,16 @@ const RecorrentOffCanvas = ({ isOpen, onClose, item }) => {
   };
 
   return (
-    <OffCanvas isOpen={isOpen} onClose={onClose} title="Detalhes">
+    <OffCanvas isOpen={isOpen} onClose={onClose} title='Detalhes'>
       <div>
         <div className="flex border-b bg-white">
           {tabs.map(tab => (
             <button
               key={tab.id}
-              className={`px-4 py-2 text-sm flex-1 ${
-                activeTab === tab.id
+              className={`px-4 py-2 text-sm flex-1 ${activeTab === tab.id
                   ? 'text-blue-600 border-b-2 border-blue-600 font-medium'
                   : 'text-gray-600'
-              }`}
+                }`}
               onClick={() => setActiveTab(tab.id)}
             >
               {tab.label}

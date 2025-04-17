@@ -53,7 +53,7 @@ const Pagination = ({
           <button
             onClick={handlePrevious}
             disabled={currentPage === 1}
-            className={`flex items-center justify-center w-10 h-10 rounded-md ${
+            className={`flex items-center justify-center w-8 h-8 rounded-md ${
               currentPage === 1
                 ? 'text-gray-400 cursor-not-allowed'
                 : 'text-gray-700 hover:bg-gray-100'
@@ -71,13 +71,13 @@ const Pagination = ({
                 <li>
                   <button
                     onClick={() => handlePageClick(1)}
-                    className="flex items-center justify-center w-10 h-10 rounded-md text-gray-700 hover:bg-gray-100"
+                    className="flex items-center justify-center w-8 h-8 rounded-md text-gray-700 hover:bg-gray-100"
                   >
                     1
                   </button>
                 </li>
                 {pageNumbers[0] > 2 && (
-                  <li className="flex items-center justify-center w-10 h-10">
+                  <li className="flex items-center justify-center w-8 h-8">
                     <span className="text-gray-500">...</span>
                   </li>
                 )}
@@ -88,7 +88,7 @@ const Pagination = ({
               <li key={page}>
                 <button
                   onClick={() => handlePageClick(page)}
-                  className={`flex items-center justify-center w-10 h-10 rounded-md ${
+                  className={`flex items-center justify-center w-8 h-8 rounded-md ${
                     currentPage === page
                       ? 'bg-[#1526ff] text-white'
                       : 'text-gray-700 hover:bg-blue-100'
@@ -102,14 +102,14 @@ const Pagination = ({
             {pageNumbers[pageNumbers.length - 1] < totalPages && (
               <>
                 {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && (
-                  <li className="flex items-center justify-center w-10 h-10">
+                  <li className="flex items-center justify-center w-8 h-8">
                     <span className="text-gray-500">...</span>
                   </li>
                 )}
                 <li>
                   <button
                     onClick={() => handlePageClick(totalPages)}
-                    className="flex items-center justify-center w-10 h-10 rounded-md text-gray-700 hover:bg-gray-100"
+                    className="flex items-center justify-center w-8 h-8 rounded-md text-gray-700 hover:bg-gray-100"
                   >
                     {totalPages}
                   </button>
@@ -123,7 +123,7 @@ const Pagination = ({
           <button
             onClick={handleNext}
             disabled={currentPage === totalPages}
-            className={`flex items-center justify-center w-10 h-10 rounded-md ${
+            className={`flex items-center justify-center w-8 h-8 rounded-md ${
               currentPage === totalPages
                 ? 'text-gray-400 cursor-not-allowed'
                 : 'text-gray-700 hover:bg-gray-100'
