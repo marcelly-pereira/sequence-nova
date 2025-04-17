@@ -1,10 +1,7 @@
 import axios from 'axios';
+import cookieService from '../utils/cookies';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://admin.sequence.app.br';
-const TOKEN_KEYS = {
-  ACCESS: 'accessToken',
-  REFRESH: 'refreshToken',
-};
 
 const api = axios.create({
   baseURL: API_URL,
@@ -15,7 +12,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem(TOKEN_KEYS.ACCESS);
+    const token = cookieService.getAccessToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -33,7 +30,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       
       try {
-        const refreshToken = localStorage.getItem(TOKEN_KEYS.REFRESH);
+        const refreshToken = cookieService.getRefreshToken();
         if (!refreshToken) {
           logout();
           return Promise.reject(error);
@@ -44,7 +41,7 @@ api.interceptors.response.use(
         });
         
         const { access } = response.data;
-        localStorage.setItem(TOKEN_KEYS.ACCESS, access);
+        cookieService.setTokens({ access, refresh: refreshToken });
         
         originalRequest.headers.Authorization = `Bearer ${access}`;
         return axios(originalRequest);
@@ -58,15 +55,10 @@ api.interceptors.response.use(
   }
 );
 
-const setTokens = (tokens) => {
-  localStorage.setItem(TOKEN_KEYS.ACCESS, tokens.access);
-  localStorage.setItem(TOKEN_KEYS.REFRESH, tokens.refresh);
-};
-
 const login = async (email, password) => {
   try {
     const response = await api.post('/api/token/', { email, password });
-    setTokens(response.data);
+    cookieService.setTokens(response.data);
     return response.data;
   } catch (error) {
     throw error;
@@ -74,13 +66,12 @@ const login = async (email, password) => {
 };
 
 const logout = () => {
-  localStorage.removeItem(TOKEN_KEYS.ACCESS);
-  localStorage.removeItem(TOKEN_KEYS.REFRESH);
+  cookieService.removeTokens();
   window.location.href = '/login';
 };
 
 const isAuthenticated = () => {
-  return !!localStorage.getItem(TOKEN_KEYS.ACCESS);
+  return cookieService.hasAuthTokens();
 };
 
 const authService = {
