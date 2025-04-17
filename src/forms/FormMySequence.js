@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import BaseFormModal from '../components/BaseForm';
+import BaseFormModal from '../app/components/BaseForm';
 
 const FormMySequence = ({ 
   isOpen, 

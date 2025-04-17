@@ -5,7 +5,7 @@ import { Button } from '../app/components/Button';
 import { Input } from '../app/components/Input';
 import { FiChevronRight, FiEye, FiEyeOff, FiCheckCircle } from 'react-icons/fi';
 import Toast from '../app/components/Toast';
-import authService from '../app/services/authService';
+import authService from '../services/authService';
 
 const BENEFITS = [
   'Aumentar produtividade',

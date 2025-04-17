@@ -1,9 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Input } from '../components/Input';
-import { Select } from '../components/Select'; 
-import SelectResponsible from '../components/SelectResponsible';
-import BaseForm from '../components/BaseForm';
+import { Input } from '../app/components/Input';
+import { Select } from '../app/components/Select'; 
+import SelectResponsible from '../app/components/SelectResponsible';
+import BaseForm from '../app/components/BaseForm';
 import useForm from '../hooks/useFormRegister';
 import clienteSchema from '../validation/RegisterClient';
 

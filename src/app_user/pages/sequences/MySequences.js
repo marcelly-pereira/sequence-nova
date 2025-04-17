@@ -5,7 +5,7 @@ import Accordion from '../../../app/components/Accordion';
 import Button from '../../../app/components/Button';
 import { AnimatedExpandingButton } from '../../../app/components/Button';
 import Card from '../../../app/components/Card';
-import FormMySequence from '../../../app/forms/FormMySequence';
+import FormMySequence from '../../../forms/FormMySequence';
 import { IoFlashOutline } from "react-icons/io5";
 import { LuLayoutTemplate } from "react-icons/lu";
 

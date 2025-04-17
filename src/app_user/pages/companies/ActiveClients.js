@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import BaseLayout from '../../../app/BaseLayout';
 import Button from '../../../app/components/Button';
 import Table from '../../../app/components/Table';
-import FormRegisterClient from '../../../app/forms/FormRegisterClient'; 
+import FormRegisterClient from '../../../forms/FormRegisterClient'; 
 
 const ClientesAtivos = () => {
   const navigate = useNavigate();
