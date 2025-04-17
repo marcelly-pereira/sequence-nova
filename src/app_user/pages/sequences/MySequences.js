@@ -223,7 +223,6 @@ const MinhasSequencias = () => {
     setIsModalOpen(false);
   };
 
-  // Ícones personalizados para os botões animados
   const customAutomationIcon = (
     <div className="w-full h-full text-white transition-all duration-200 ease-in-out group-hover:text-[#0056d6] group-focus:text-[#0056d6]">
       <IoFlashOutline className="w-full h-full" />

@@ -1,215 +1,62 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FiX } from 'react-icons/fi';
+import React, { useState, useRef } from 'react';
 import BaseLayout from '../app/BaseLayout';
+import OffCanvas from '../app/components/OffCanvas';
+import BaseForm from '../app/components/BaseForm';
+import Select from '../app/components/Select';
 
-const OffCanvas = ({ isOpen, onClose, title = 'Edição da Ação' }) => {
-  const [sequencia, setSequencia] = useState('Solicitações de Suporte');
-  const [fase, setFase] = useState('Caixa de entrada');
-  const [showSequenciaOptions, setShowSequenciaOptions] = useState(false);
-  const [showFaseOptions, setShowFaseOptions] = useState(false);
+const ConnectionLine = ({ start, end }) => {
+  if (!start || !end) return null;
 
-  const sequenciaOptions = [
-    'Solicitações de Suporte',
-    'Controle de Desenvolvimento',
-    'Gerenciamento de Sucesso do Cliente',
-    'Vendas e Negociações',
-    'Implantação',
-  ];
+  const controlPointOffset = 50;
+  const dx = end.x - start.x;
+  const dy = end.y - start.y;
+  const controlPoint1 = {
+    x: start.x + dx / 2,
+    y: start.y,
+  };
+  const controlPoint2 = {
+    x: end.x - dx / 2,
+    y: end.y,
+  };
 
-  const faseOptions = [
-    'Caixa de entrada',
-    'Sem Prioridade',
-    'Avaliação',
-    'Fazendo',
-    'Concluídas',
-    'Impedidas',
-  ];
-
-  useEffect(() => {
-    if (isOpen) {
-      const scrollY = window.scrollY;
-
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-      document.body.style.overflowY = 'scroll';
-    } else {
-      const scrollY = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      document.body.style.overflowY = '';
-
-      if (scrollY) {
-        window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
-      }
-    }
-
-    return () => {
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      document.body.style.overflowY = '';
-    };
-  }, [isOpen]);
+  const path = `M ${start.x} ${start.y} C ${controlPoint1.x} ${controlPoint1.y}, ${controlPoint2.x} ${controlPoint2.y}, ${end.x} ${end.y}`;
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end">
-          <motion.div
-            className="absolute inset-0 bg-black bg-opacity-25"
-            onClick={onClose}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          />
-          <motion.div
-            className="relative w-full max-w-md bg-gray-100 shadow-xl flex flex-col h-full rounded-l-2xl overflow-hidden"
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{
-              type: 'spring',
-              stiffness: 300,
-              damping: 30,
-            }}
-          >
-            <div className="flex justify-between items-center px-4 py-3 bg-white">
-              <div className="flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-gray-500 mr-2"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                </svg>
-                <h2 className="text-md font-medium">{title}</h2>
-              </div>
-              <button
-                onClick={onClose}
-                className="p-1 rounded-full hover:bg-gray-100 text-gray-500"
-              >
-                <FiX size={20} />
-              </button>
-            </div>
-
-            <div className="flex-1 overflow-y-auto">
-              <div className="p-4">
-                <div className="mb-6">
-                  <h3 className="text-sm font-medium mb-2">Criar Card</h3>
-                </div>
-
-                <div className="mb-6">
-                  <label className="block text-sm mb-2">Sequência</label>
-                  <div className="relative">
-                    <input
-                      className="w-full p-2 border border-gray-300 rounded text-sm"
-                      value={sequencia}
-                      readOnly
-                      onClick={() =>
-                        setShowSequenciaOptions(!showSequenciaOptions)
-                      }
-                    />
-                    {showSequenciaOptions && (
-                      <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg max-h-64 overflow-y-auto">
-                        {sequenciaOptions.map((option, index) => (
-                          <div
-                            key={index}
-                            className={`p-2 text-sm cursor-pointer hover:bg-gray-100 ${
-                              option === sequencia
-                                ? 'bg-blue-600 text-white'
-                                : ''
-                            }`}
-                            onClick={() => {
-                              setSequencia(option);
-                              setShowSequenciaOptions(false);
-                            }}
-                          >
-                            {option}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Selecionar a sequência que será executada para o ação.
-                  </p>
-                </div>
-
-                <div className="mb-6">
-                  <label className="block text-sm mb-2">Fase</label>
-                  <div className="relative">
-                    <input
-                      className="w-full p-2 border border-gray-300 rounded text-sm"
-                      value={fase}
-                      readOnly
-                      onClick={() => setShowFaseOptions(!showFaseOptions)}
-                    />
-                    {showFaseOptions && (
-                      <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg max-h-64 overflow-y-auto">
-                        {faseOptions.map((option, index) => (
-                          <div
-                            key={index}
-                            className={`p-2 text-sm cursor-pointer hover:bg-gray-100 ${
-                              option === fase ? 'bg-blue-600 text-white' : ''
-                            }`}
-                            onClick={() => {
-                              setFase(option);
-                              setShowFaseOptions(false);
-                            }}
-                          >
-                            {option}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Selecionar a fase que será executada para o ação.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-4 bg-white border-t">
-              <button
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-medium transition-colors flex items-center"
-                onClick={onClose}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 mr-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"
-                  />
-                </svg>
-                Salvar
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
+    <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
+      <path
+        d={path}
+        stroke="#94a3b8"
+        strokeWidth="2"
+        strokeDasharray="5,5"
+        fill="none"
+      />
+      <circle cx={end.x} cy={end.y} r="4" fill="#64748b" />
+    </svg>
   );
 };
 
-const DraggableCard = ({ title, subtitle, icon, initialPosition, onDrag }) => {
+const DraggableCard = ({ 
+  id, 
+  title, 
+  subtitle, 
+  icon, 
+  initialPosition, 
+  onDrag, 
+  onClick, 
+  isSelected, 
+  onConnectClick, 
+  connections 
+}) => {
   const [position, setPosition] = useState(initialPosition);
   const [isDragging, setIsDragging] = useState(false);
   const cardRef = useRef(null);
 
   const handleMouseDown = (e) => {
+    if (e.target.closest('.connect-button')) {
+      e.stopPropagation();
+      return;
+    }
+    
     if (e.button !== 0) return;
 
     const startX = e.clientX;
@@ -224,11 +71,14 @@ const DraggableCard = ({ title, subtitle, icon, initialPosition, onDrag }) => {
       const newY = Math.round((startTop + e.clientY - startY) / 10) * 10;
 
       setPosition({ x: newX, y: newY });
-      if (onDrag) onDrag({ x: newX, y: newY });
+      if (onDrag) onDrag(id, { x: newX, y: newY });
     };
 
     const handleMouseUp = () => {
       setIsDragging(false);
+      if (!isDragging) {
+        onClick && onClick(id);
+      }
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
@@ -239,27 +89,57 @@ const DraggableCard = ({ title, subtitle, icon, initialPosition, onDrag }) => {
     e.preventDefault();
   };
 
+  const getCenter = () => {
+    if (!cardRef.current) return { x: position.x, y: position.y };
+    
+    const rect = cardRef.current.getBoundingClientRect();
+    return {
+      x: position.x + rect.width / 2,
+      y: position.y + rect.height / 2
+    };
+  };
+
   return (
-    <div
-      ref={cardRef}
-      className={`absolute cursor-move bg-white rounded-lg shadow-md p-4 w-96 select-none ${
-        isDragging ? 'shadow-lg z-50' : ''
-      }`}
-      style={{
-        left: `${position.x}px`,
-        top: `${position.y}px`,
-        zIndex: isDragging ? 10 : 1,
-      }}
-      onMouseDown={handleMouseDown}
-    >
-      <div className="flex items-start gap-2">
-        <div className="mt-1 text-gray-500">{icon}</div>
-        <div>
-          <h3 className="font-medium text-gray-800">{title}</h3>
-          <p className="text-sm text-gray-600">{subtitle}</p>
+    <>
+      <div
+        ref={cardRef}
+        className={`absolute cursor-move bg-white rounded-lg shadow-md p-4 w-80 select-none ${
+          isDragging ? 'shadow-lg z-50' : ''
+        } ${isSelected ? 'ring-2 ring-blue-500' : ''}`}
+        style={{
+          left: `${position.x}px`,
+          top: `${position.y}px`,
+          zIndex: isDragging ? 10 : 1,
+        }}
+        onMouseDown={handleMouseDown}
+        onClick={(e) => {
+          if (!isDragging && !e.target.closest('.connect-button')) {
+            onClick && onClick(id);
+          }
+        }}
+      >
+        <div className="flex items-start gap-2">
+          <div className="mt-1 text-gray-500">{icon}</div>
+          <div className="flex-1">
+            <h3 className="font-medium text-gray-800">{title}</h3>
+            <p className="text-sm text-gray-600">{subtitle}</p>
+          </div>
+          <button 
+            className="connect-button flex-shrink-0 w-8 h-8 bg-gray-100 rounded-full hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-700 focus:outline-none"
+            onClick={(e) => {
+              e.stopPropagation();
+              onConnectClick && onConnectClick(id);
+            }}
+            title="Conectar a outro card"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+            </svg>
+          </button>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
@@ -313,9 +193,8 @@ const AddButton = ({ initialPosition, onClick }) => {
       onMouseDown={handleMouseDown}
     >
       <div className="flex flex-col items-center">
-        <div className="w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-gray-400"></div>
         <button
-          className="w-10 h-10 border-2 border-gray-400 border-dashed flex items-center justify-center rounded hover:bg-gray-100"
+          className="w-12 h-12 border-2 border-gray-400 border-dashed flex items-center justify-center rounded-full hover:bg-gray-100"
           onClick={onClick}
         >
           <span className="text-gray-400 text-xl">+</span>
@@ -342,6 +221,267 @@ const TimeIcon = () => (
   </svg>
 );
 
+const OffCanvasAcao = ({ isOpen, onClose, onSave, title = 'Edição da Ação' }) => {
+  const [sequencia, setSequencia] = useState('solicitacoes-suporte');
+  const [fase, setFase] = useState('caixa-entrada');
+
+  const sequenciaOptions = [
+    { value: 'solicitacoes-suporte', label: 'Solicitações de Suporte' },
+    { value: 'controle-desenvolvimento', label: 'Controle de Desenvolvimento' },
+    { value: 'gerenciamento-sucesso', label: 'Gerenciamento de Sucesso do Cliente' },
+    { value: 'vendas-negociacoes', label: 'Vendas e Negociações' },
+    { value: 'implantacao', label: 'Implantação' },
+  ];
+
+  const faseOptions = [
+    { value: 'caixa-entrada', label: 'Caixa de entrada' },
+    { value: 'sem-prioridade', label: 'Sem Prioridade' },
+    { value: 'avaliacao', label: 'Avaliação' },
+    { value: 'fazendo', label: 'Fazendo' },
+    { value: 'concluidas', label: 'Concluídas' },
+    { value: 'impedidas', label: 'Impedidas' },
+  ];
+
+  const handleSequenciaChange = (e) => {
+    setSequencia(e.target.value);
+  };
+
+  const handleFaseChange = (e) => {
+    setFase(e.target.value);
+  };
+
+  const handleSave = () => {
+    const sequenciaLabel = sequenciaOptions.find(option => option.value === sequencia)?.label;
+    const faseLabel = faseOptions.find(option => option.value === fase)?.label;
+    
+    onSave && onSave({
+      title: `Novo Card: ${sequenciaLabel}`,
+      subtitle: `Fase: ${faseLabel}`,
+      icon: <TimeIcon />,
+      position: { x: 320, y: 140 },
+    });
+    onClose();
+  };
+
+  const headerIcon = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-5 w-5 text-gray-500 mr-2"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+    >
+      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+    </svg>
+  );
+
+  return (
+    <OffCanvas 
+      isOpen={isOpen} 
+      onClose={onClose} 
+      title={title}
+      headerIcon={headerIcon}
+    >
+      <div className="p-4">
+        <div className="mb-6">
+          <h3 className="text-sm font-medium mb-2">Criar Card</h3>
+        </div>
+
+        <Select
+          id="sequencia"
+          label="Sequência"
+          value={sequencia}
+          onChange={handleSequenciaChange}
+          options={sequenciaOptions}
+          placeholder="Selecione a sequência"
+        />
+        <p className="text-xs text-gray-500 mb-6">
+          Selecionar a sequência que será executada para o ação.
+        </p>
+
+        <Select
+          id="fase"
+          label="Fase"
+          value={fase}
+          onChange={handleFaseChange}
+          options={faseOptions}
+          placeholder="Selecione a fase"
+        />
+        <p className="text-xs text-gray-500 mb-6">
+          Selecionar a fase que será executada para o ação.
+        </p>
+      </div>
+
+      <div className="p-4 flex justify-end">
+        <button
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-medium transition-colors"
+          onClick={handleSave}
+        >
+          Salvar
+        </button>
+      </div>
+    </OffCanvas>
+  );
+};
+
+const ConnectionsMenuModal = ({ 
+  isOpen, 
+  onClose, 
+  onConnect, 
+  onDeleteConnection, 
+  cards, 
+  selectedCard, 
+  connections 
+}) => {
+  const excludeId = selectedCard ? selectedCard.id : null;
+  const availableCards = cards.filter(card => card.id !== excludeId);
+  const activeConnections = connections ? connections.filter(
+    conn => conn.source === selectedCard?.id || conn.target === selectedCard?.id
+  ) : [];
+  const [activeTab, setActiveTab] = useState(activeConnections.length > 0 ? 'existingConnections' : 'newConnection');
+
+  const modalIcon = (
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      width="20" 
+      height="20" 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    >
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+    </svg>
+  );
+
+  const handleSubmit = () => {
+    onClose();
+  };
+
+  return (
+    <BaseForm 
+      isOpen={isOpen} 
+      onClose={onClose} 
+      onSubmit={handleSubmit} 
+      title="Gerenciar conexões"
+      icon={modalIcon}
+      primaryColor="#1526ff"
+      submitButtonText="Fechar"
+    >
+      <div>
+        <div className="flex border-b bg-white mb-4">
+          <button
+            type="button"
+            className={`px-4 py-2 text-sm font-medium ${
+              activeTab === 'newConnection'
+                ? 'text-blue-600 border-b-2 border-blue-600'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+            onClick={() => setActiveTab('newConnection')}
+          >
+            Nova Conexão
+          </button>
+          <button
+            type="button"
+            className={`px-4 py-2 text-sm font-medium ${
+              activeTab === 'existingConnections'
+                ? 'text-blue-600 border-b-2 border-blue-600'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+            onClick={() => setActiveTab('existingConnections')}
+            disabled={activeConnections.length === 0}
+          >
+            Conexões Existentes {activeConnections.length > 0 && `(${activeConnections.length})`}
+          </button>
+        </div>
+        
+        {activeTab === 'newConnection' && (
+          <>
+            <p className="text-sm text-gray-600 mb-4">
+              Selecione um card para conectar com "{selectedCard?.title}"
+            </p>
+            
+            <div className="max-h-64 overflow-y-auto">
+              {availableCards.length > 0 ? (
+                availableCards.map(card => (
+                  <div 
+                    key={card.id}
+                    className="p-3 border border-gray-200 rounded-lg mb-2 hover:bg-gray-50 cursor-pointer"
+                    onClick={() => onConnect(selectedCard.id, card.id)}
+                  >
+                    <div className="flex items-start gap-2">
+                      <div className="mt-1 text-gray-500"><TimeIcon /></div>
+                      <div>
+                        <h4 className="font-medium text-gray-800">{card.title}</h4>
+                        <p className="text-xs text-gray-500">{card.subtitle}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-center text-gray-500 py-4">
+                  Não há outros cards disponíveis para conectar
+                </p>
+              )}
+            </div>
+          </>
+        )}
+        
+        {activeTab === 'existingConnections' && (
+          <>
+            <p className="text-sm text-gray-600 mb-4">
+              Conexões atuais do card "{selectedCard?.title}"
+            </p>
+            
+            <div className="max-h-64 overflow-y-auto">
+              {activeConnections.length > 0 ? (
+                activeConnections.map((conn, index) => {
+                  const otherCardId = conn.source === selectedCard.id ? conn.target : conn.source;
+                  const otherCard = cards.find(c => c.id === otherCardId);
+                  
+                  return (
+                    <div 
+                      key={index}
+                      className="p-3 border border-gray-200 rounded-lg mb-2 bg-gray-50"
+                    >
+                      <div className="flex justify-between items-start">
+                        <div className="flex items-start gap-2">
+                          <div className="mt-1 text-gray-500"><TimeIcon /></div>
+                          <div>
+                            <h4 className="font-medium text-gray-800">{otherCard?.title}</h4>
+                            <p className="text-xs text-gray-500">{otherCard?.subtitle}</p>
+                          </div>
+                        </div>
+                        <button 
+                          type="button"
+                          className="text-red-500 hover:text-red-700 p-1"
+                          onClick={() => onDeleteConnection(conn)}
+                          title="Remover conexão"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M3 6h18"></path>
+                            <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <p className="text-center text-gray-500 py-4">
+                  Este card não possui conexões
+                </p>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+    </BaseForm>
+  );
+};
+
 const KanbanBoard = () => {
   const [cards, setCards] = useState([
     {
@@ -361,7 +501,10 @@ const KanbanBoard = () => {
     },
   ]);
 
+  const [connections, setConnections] = useState([]);
+  const [selectedCardId, setSelectedCardId] = useState(null);
   const [offCanvasOpen, setOffCanvasOpen] = useState(false);
+  const [connectMenuOpen, setConnectMenuOpen] = useState(false);
 
   const handleCardDrag = (id, newPosition) => {
     setCards(
@@ -385,10 +528,85 @@ const KanbanBoard = () => {
 
     setOffCanvasOpen(false);
   };
-
+  
+  const handleCardClick = (id) => {
+    setSelectedCardId(id === selectedCardId ? null : id);
+  };
+  
+  const handleConnectButtonClick = (id) => {
+    setSelectedCardId(id);
+    setConnectMenuOpen(true);
+  };
+  
+  const handleConnectCards = (sourceId, targetId) => {
+    setConnections([
+      ...connections, 
+      { 
+        source: sourceId, 
+        target: targetId 
+      }
+    ]);
+    setConnectMenuOpen(false);
+  };
+  
+  const handleDeleteConnection = (connection) => {
+    setConnections(connections.filter(conn => 
+      !(conn.source === connection.source && conn.target === connection.target)
+    ));
+  };
+  
+  const getConnectionPoints = () => {
+    return connections.map(conn => {
+      const sourceCard = cards.find(card => card.id === conn.source);
+      const targetCard = cards.find(card => card.id === conn.target);
+      
+      if (!sourceCard || !targetCard) return null;
+      
+      const sourceRect = { 
+        x: sourceCard.position.x, 
+        y: sourceCard.position.y,
+        width: 320, 
+        height: 80 
+      };
+      
+      const targetRect = { 
+        x: targetCard.position.x, 
+        y: targetCard.position.y,
+        width: 320,
+        height: 80
+      };
+      
+      const sourceCenter = {
+        x: sourceRect.x + sourceRect.width / 2,
+        y: sourceRect.y + sourceRect.height / 2
+      };
+      
+      const targetCenter = {
+        x: targetRect.x + targetRect.width / 2,
+        y: targetRect.y + targetRect.height / 2
+      };
+      
+      return {
+        start: sourceCenter,
+        end: targetCenter
+      };
+    }).filter(conn => conn !== null);
+  };
+  
+  const handleBoardClick = (e) => {
+    if (e.target === e.currentTarget) {
+      setSelectedCardId(null);
+    }
+  };
+  
+  const selectedCard = cards.find(card => card.id === selectedCardId);
+  
   return (
     <BaseLayout>
-      <div className="relative w-full h-screen bg-gray-100 overflow-hidden rounded-2xl">
+      <div 
+        className="relative w-full h-screen bg-gray-100 overflow-hidden rounded-2xl"
+        onClick={handleBoardClick}
+      >
         <div
           className="absolute inset-0 w-full h-full"
           style={{
@@ -397,15 +615,30 @@ const KanbanBoard = () => {
             backgroundSize: '20px 20px',
           }}
         />
+        
+        {getConnectionPoints().map((conn, idx) => (
+          <ConnectionLine 
+            key={idx} 
+            start={conn.start} 
+            end={conn.end} 
+          />
+        ))}
 
         {cards.map((card) => (
           <DraggableCard
             key={card.id}
+            id={card.id}
             title={card.title}
             subtitle={card.subtitle}
             icon={card.icon}
             initialPosition={card.position}
-            onDrag={(newPos) => handleCardDrag(card.id, newPos)}
+            onDrag={handleCardDrag}
+            onClick={handleCardClick}
+            onConnectClick={handleConnectButtonClick}
+            isSelected={selectedCardId === card.id}
+            connections={connections.filter(
+              conn => conn.source === card.id || conn.target === card.id
+            )}
           />
         ))}
 
@@ -414,28 +647,21 @@ const KanbanBoard = () => {
           onClick={() => setOffCanvasOpen(true)}
         />
 
-        <div className="absolute" style={{ left: '235px', top: '140px' }}>
-          <div className="h-28 w-2 bg-gray-400 mx-auto"></div>
-        </div>
-
-        <div
-          className="absolute text-gray-700 font-semibold"
-          style={{ left: '30px', top: '145px' }}
-        >
-          Ação:
-        </div>
-
-        <OffCanvas
+        <OffCanvasAcao
           isOpen={offCanvasOpen}
-          onClose={() => {
-            handleAddCard({
-              title: 'Novo Card',
-              subtitle: 'Descrição do novo card',
-              icon: <TimeIcon />,
-              position: { x: 100, y: 100 },
-            });
-          }}
+          onClose={() => setOffCanvasOpen(false)}
           title="Edição da Ação"
+          onSave={handleAddCard}
+        />
+        
+        <ConnectionsMenuModal
+          isOpen={connectMenuOpen}
+          onClose={() => setConnectMenuOpen(false)}
+          onConnect={handleConnectCards}
+          onDeleteConnection={handleDeleteConnection}
+          cards={cards}
+          selectedCard={selectedCard}
+          connections={connections}
         />
       </div>
     </BaseLayout>

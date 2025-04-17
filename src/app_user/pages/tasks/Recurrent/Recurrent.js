@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import BaseLayout from '../../../../app/BaseLayout';
 import { FiSearch, FiList, FiFilter, FiCheck, FiX, FiInfo } from 'react-icons/fi';
 import Table from '../../../../app/components/Table';
-import OffCanvas from '../../../pages/tasks/Recurrent/OffCanvas';
+import OffCanvas from '../../../pages/tasks/Recurrent/RecorrentOffCanvas';
 
 const Recorrentes = () => {
     const tarefas = [
