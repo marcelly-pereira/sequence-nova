@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BaseLayout from '../../../app/BaseLayout';
 import Accordion from '../../../app/components/Accordion';
+import TaskCard from '../../../app/components/TaskCard';
+import { fetchCardsTarefasAVencer } from '../../../services/winningCardsTasks';
 
 const Listas = () => {
     const [sections, setSections] = useState([
         { 
             id: 'hoje', 
             title: 'Hoje', 
-            count: 2, 
+            count: 0, 
             expanded: false, 
             items: [],
             icon: (
@@ -35,7 +37,7 @@ const Listas = () => {
         { 
             id: 'avencer', 
             title: 'A Vencer', 
-            count: 2, 
+            count: 0, 
             expanded: false, 
             items: [],
             icon: (
@@ -48,6 +50,40 @@ const Listas = () => {
         }
     ]);
 
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const loadTarefasAVencer = async () => {
+            setIsLoading(true);
+            try {
+                const data = await fetchCardsTarefasAVencer();
+                
+                const tarefasComponents = data.results.map(tarefa => (
+                    <TaskCard key={tarefa.id} task={tarefa} />
+                ));
+                
+                setSections(prevSections => 
+                    prevSections.map(section => 
+                        section.id === 'avencer' 
+                            ? { 
+                                ...section, 
+                                count: data.results.length,
+                                items: tarefasComponents,
+                                expanded: data.results.length > 0
+                              } 
+                            : section
+                    )
+                );
+            } catch (error) {
+                console.error('Erro ao carregar tarefas:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadTarefasAVencer();
+    }, []);
+
     const toggleSection = (id) => {
         setSections(sections.map(section => 
             section.id === id 
@@ -58,12 +94,18 @@ const Listas = () => {
 
     return (
         <BaseLayout title="Listas">
-            <Accordion 
-                sections={sections} 
-                onToggleSection={toggleSection} 
-                emptyStateMessage="Nenhuma tarefa encontrada." 
-                emptyStateSubMessage="Altere as datas de vencimento ou crie novas tarefas." 
-            />
+            {isLoading ? (
+                <div className="flex justify-center items-center h-64">
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+                </div>
+            ) : (
+                <Accordion 
+                    sections={sections} 
+                    onToggleSection={toggleSection} 
+                    emptyStateMessage="Nenhuma tarefa encontrada." 
+                    emptyStateSubMessage="Altere as datas de vencimento ou crie novas tarefas." 
+                />
+            )}
         </BaseLayout>
     );
 };
