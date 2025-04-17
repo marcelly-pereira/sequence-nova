@@ -12,3 +12,29 @@ export const fetchCardsTarefasAVencer = async () => {
     return { results: [] };
   }
 };
+
+export const fetchCardsTarefasVencendoHoje = async () => {
+  try {
+    const response = await fetch(`${API_URL}/cards_tarefas_vencendo_hoje/`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Erro ao buscar tarefas vencendo hoje:', error);
+    return { results: [] };
+  }
+};
+
+export const fetchCardsTarefasVencidas = async () => {
+  try {
+    const response = await fetch(`${API_URL}/cards_tarefas_vencidos/`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Erro ao buscar tarefas vencidas:', error);
+    return { results: [] };
+  }
+};

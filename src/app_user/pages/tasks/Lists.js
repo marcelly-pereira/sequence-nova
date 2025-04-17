@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import BaseLayout from '../../../app/BaseLayout';
 import Accordion from '../../../app/components/Accordion';
 import TaskCard from '../../../app/components/TaskCard';
-import { fetchCardsTarefasAVencer } from '../../../services/winningCardsTasks';
+import { 
+    fetchCardsTarefasAVencer, 
+    fetchCardsTarefasVencendoHoje,
+    fetchCardsTarefasVencidas 
+} from '../../../services/winningCardsTasks';
 
 const Listas = () => {
     const [sections, setSections] = useState([
@@ -50,37 +54,77 @@ const Listas = () => {
         }
     ]);
 
-    const [isLoading, setIsLoading] = useState(true);
+    const [loadingStates, setLoadingStates] = useState({
+        hoje: true,
+        vencidas: true,
+        avencer: true
+    });
+
+    const isAllLoaded = () => {
+        return !Object.values(loadingStates).some(state => state === true);
+    };
+
+    const mapTasksToComponents = (tasks, taskType) => {
+        return tasks.map(tarefa => (
+            <TaskCard key={tarefa.id} task={tarefa} taskType={taskType} />
+        ));
+    };
+
+    const updateSection = (sectionId, count, items, expand = true) => {
+        setSections(prevSections => 
+            prevSections.map(section => 
+                section.id === sectionId 
+                    ? { 
+                        ...section, 
+                        count,
+                        items,
+                        expanded: expand && count > 0
+                      } 
+                    : section
+            )
+        );
+
+        setLoadingStates(prev => ({
+            ...prev,
+            [sectionId]: false
+        }));
+    };
 
     useEffect(() => {
-        const loadTarefasAVencer = async () => {
-            setIsLoading(true);
+        const loadTarefasHoje = async () => {
             try {
-                const data = await fetchCardsTarefasAVencer();
-                
-                const tarefasComponents = data.results.map(tarefa => (
-                    <TaskCard key={tarefa.id} task={tarefa} />
-                ));
-                
-                setSections(prevSections => 
-                    prevSections.map(section => 
-                        section.id === 'avencer' 
-                            ? { 
-                                ...section, 
-                                count: data.results.length,
-                                items: tarefasComponents,
-                                expanded: data.results.length > 0
-                              } 
-                            : section
-                    )
-                );
+                const data = await fetchCardsTarefasVencendoHoje();
+                const tarefasComponents = mapTasksToComponents(data.results, 'hoje');
+                updateSection('hoje', data.results.length, tarefasComponents);
             } catch (error) {
-                console.error('Erro ao carregar tarefas:', error);
-            } finally {
-                setIsLoading(false);
+                console.error('Erro ao carregar tarefas de hoje:', error);
+                updateSection('hoje', 0, []);
             }
         };
 
+        const loadTarefasVencidas = async () => {
+            try {
+                const data = await fetchCardsTarefasVencidas();
+                const tarefasComponents = mapTasksToComponents(data.results, 'vencidas');
+                updateSection('vencidas', data.results.length, tarefasComponents);
+            } catch (error) {
+                console.error('Erro ao carregar tarefas vencidas:', error);
+                updateSection('vencidas', 0, []);
+            }
+        };
+
+        const loadTarefasAVencer = async () => {
+            try {
+                const data = await fetchCardsTarefasAVencer();
+                const tarefasComponents = mapTasksToComponents(data.results, 'avencer');
+                updateSection('avencer', data.results.length, tarefasComponents);
+            } catch (error) {
+                console.error('Erro ao carregar tarefas a vencer:', error);
+                updateSection('avencer', 0, []);
+            }
+        };
+        loadTarefasHoje();
+        loadTarefasVencidas();
         loadTarefasAVencer();
     }, []);
 
@@ -94,7 +138,7 @@ const Listas = () => {
 
     return (
         <BaseLayout title="Listas">
-            {isLoading ? (
+            {!isAllLoaded() ? (
                 <div className="flex justify-center items-center h-64">
                     <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
                 </div>
