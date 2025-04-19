@@ -56,7 +56,7 @@ const Accordion = ({ sections, onToggleSection, emptyStateMessage, emptyStateSub
                 className="bg-gray-100 border-t"
               >
                 {section.items && section.items.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 p-4">
                     {section.items}
                   </div>
                 ) : (
