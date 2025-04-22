@@ -70,12 +70,13 @@ const BaseForm = ({
           className="bg-slate-900/20 backdrop-blur fixed inset-0 z-50 grid place-items-center overflow-y-scroll cursor-pointer p-8"
         >
           <motion.div
-            className="bg-white rounded-lg w-full max-w-2xl shadow-xl relative z-10 cursor-default overflow-hidden"
+            className="bg-white rounded-lg w-full max-w-2xl shadow-xl relative z-10 cursor-default max-h-[90vh] overflow-y-auto"
             initial={{ scale: 0, rotate: '12.5deg' }}
             animate={{ scale: 1, rotate: '0deg' }}
             exit={{ scale: 0, rotate: '0deg' }}
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Cabeçalho */}
             <div className="p-6 flex items-center gap-4 relative z-10">
               {icon && <span style={{ color: primaryColor }}>{icon}</span>}
               <h2 className="text-lg font-medium">{title}</h2>
@@ -102,11 +103,13 @@ const BaseForm = ({
               </motion.button>
             </div>
 
+            {/* Formulário */}
             <form onSubmit={handleSubmit}>
               <div className="px-6 pb-6 space-y-4 relative z-10">
                 {children}
               </div>
 
+              {/* Botões */}
               <motion.div
                 className="p-4 flex justify-end space-x-2 relative z-10"
                 initial={{ opacity: 0 }}

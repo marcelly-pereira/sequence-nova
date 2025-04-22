@@ -199,7 +199,7 @@ const Recorrentes = () => {
             <div className="bg-white rounded-2xl shadow-sm border-gray-200 p-3 sm:p-6">
                 {loading ? (
                     <div className="flex justify-center items-center py-10">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
                     </div>
                 ) : error ? (
                     <div className="text-center text-red-500 py-4">{error}</div>

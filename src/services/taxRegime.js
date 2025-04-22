@@ -1,4 +1,3 @@
-// Base URLs para as APIs
 const API_BASE_URL = 'https://comercial.sequence.app.br';
 const API_URL_REGIMES = `${API_BASE_URL}/api/v1/regime_tributario/`;
 const API_URL_OBRIGACOES = `${API_BASE_URL}/api/v1/obrigacoes/`;
@@ -28,7 +27,6 @@ export const fetchAllPages = async (url) => {
         allResults = [...allResults, ...data.results];
         nextUrl = data.next;
         
-        // Armazenar a contagem total apenas na primeira página
         if (url === nextUrl || totalCount === 0) {
           totalCount = data.count || 0;
         }

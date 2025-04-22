@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import BaseLayout from '../../../../app/BaseLayout';
 import Accordion from '../../../../app/components/Accordion';
 import RegimesTributarios from './TaxRegime';
+import Obrigacoes from './Obligations'
 
 const Cadastros = () => {
     const [sections, setSections] = useState([
@@ -38,7 +39,7 @@ const Cadastros = () => {
         {
             id: 'regimes',
             title: 'Regimes Tributários',
-            count: '0',
+            count: '34',
             expanded: false,
             icon: (
                 <div className="w-6 h-6 bg-blue-500 rounded-md flex items-center justify-center text-white">
@@ -63,7 +64,7 @@ const Cadastros = () => {
                 </div>
             ),
             items: [],
-            content: null
+            content: <Obrigacoes />
         }
     ]);
 

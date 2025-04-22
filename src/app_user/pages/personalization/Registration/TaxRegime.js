@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { FiPlus, FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -28,21 +29,18 @@ const RegimesTributarios = () => {
     setError(null);
 
     try {
-      // Buscar dados simultaneamente usando os serviços
       const [obrigacoes, departamentos, regimesData] = await Promise.all([
         TaxRegime.fetchObrigacoes(),
         TaxRegime.fetchDepartamentos(),
         TaxRegime.fetchRegimesTributarios()
       ]);
 
-      // Processar os regimes usando o utilitário
       const regimesProcessados = processarRegimes(
         regimesData.results, 
         obrigacoes, 
         departamentos
       );
       
-      // Atualizar o estado
       setObrigacoesMap(obrigacoes);
       setDepartamentosMap(departamentos);
       setRegimesTributarios(regimesProcessados);
@@ -100,7 +98,6 @@ const RegimesTributarios = () => {
     return item[coluna.campo] || '—';
   };
 
-  // Handlers para o formulário
   const handleAbrirFormulario = () => {
     setRegimeAtual(null);
     setIsFormOpen(true);
@@ -116,7 +113,6 @@ const RegimesTributarios = () => {
     setIsFormOpen(true);
   };
 
-  // Handlers para o modal de exclusão
   const handleAbrirExcluirForm = (regime) => {
     setRegimeParaExcluir(regime);
     setIsExcluirFormOpen(true);
@@ -127,7 +123,6 @@ const RegimesTributarios = () => {
     setRegimeParaExcluir(null);
   };
 
-  // Operações com API usando os serviços
   const handleExcluirRegime = async (regimeId) => {
     try {
       await TaxRegime.excluirRegimeTributario(regimeId);
@@ -150,7 +145,6 @@ const RegimesTributarios = () => {
     }
   };
 
-  // Renderização do componente de loading
   if (isLoading) {
     return (
       <motion.div 
@@ -159,7 +153,7 @@ const RegimesTributarios = () => {
         animate={{ opacity: 1 }}
       >
         <motion.div 
-          className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"
+          className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-500"
           animate={{ rotate: 360 }}
           transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
         />
@@ -167,7 +161,6 @@ const RegimesTributarios = () => {
     );
   }
 
-  // Renderização do componente de erro
   if (error) {
     return (
       <motion.div 
@@ -188,7 +181,6 @@ const RegimesTributarios = () => {
     );
   }
 
-  // Renderização principal
   return (
     <div className="p-4">
       <motion.div 
@@ -239,7 +231,6 @@ const RegimesTributarios = () => {
         )}
       </motion.div>
       
-      {/* Formulários em modais */}
       <AnimatePresence>
         {isFormOpen && (
           <RegimeTributarioForm 

@@ -10,7 +10,6 @@ const ExcluirRegimeForm = ({ isOpen, onClose, onConfirm, regime }) => {
     onConfirm(regime.id);
   };
 
-  // Campos para o formulário de exclusão
   const fields = [
     {
       id: 'confirmacao',
@@ -26,7 +25,6 @@ const ExcluirRegimeForm = ({ isOpen, onClose, onConfirm, regime }) => {
     }
   ];
 
-  // Função para renderizar os campos do formulário
   const renderFormFields = () => {
     return (
       <div className="max-h-[calc(80vh-120px)] overflow-y-auto px-1">
@@ -38,7 +36,6 @@ const ExcluirRegimeForm = ({ isOpen, onClose, onConfirm, regime }) => {
     );
   };
 
-  // Função para renderizar uma seção do formulário
   const renderFormSection = (sectionFields) => {
     return (
       <div className="space-y-4">
@@ -47,7 +44,6 @@ const ExcluirRegimeForm = ({ isOpen, onClose, onConfirm, regime }) => {
     );
   };
 
-  // Função para renderizar um campo do formulário
   const renderField = (field, index) => {
     return (
       <motion.div 
@@ -75,7 +71,6 @@ const ExcluirRegimeForm = ({ isOpen, onClose, onConfirm, regime }) => {
     );
   };
 
-  // Se o regime tiver obrigações associadas, mostrar um aviso adicional
   const hasObrigacoes = regime.obrigacoes && regime.obrigacoes.length > 0;
 
   return (
