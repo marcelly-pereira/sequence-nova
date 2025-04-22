@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
-import BaseLayout from '../../../app/BaseLayout';
-import Accordion from '../../../app/components/Accordion';
+import BaseLayout from '../../../../app/BaseLayout';
+import Accordion from '../../../../app/components/Accordion';
+import RegimesTributarios from './TaxRegime';
 
 const Cadastros = () => {
     const [sections, setSections] = useState([
@@ -16,7 +17,8 @@ const Cadastros = () => {
                     </svg>
                 </div>
             ),
-            items: []
+            items: [],
+            content: null
         },
         {
             id: 'colaboradores',
@@ -30,12 +32,13 @@ const Cadastros = () => {
                     </svg>
                 </div>
             ),
-            items: []
+            items: [],
+            content: null
         },
         {
             id: 'regimes',
             title: 'Regimes Tributários',
-            count: '1',
+            count: '0',
             expanded: false,
             icon: (
                 <div className="w-6 h-6 bg-blue-500 rounded-md flex items-center justify-center text-white">
@@ -44,7 +47,8 @@ const Cadastros = () => {
                     </svg>
                 </div>
             ),
-            items: []
+            items: [],
+            content: <RegimesTributarios />
         },
         {
             id: 'obrigacoes',
@@ -58,7 +62,8 @@ const Cadastros = () => {
                     </svg>
                 </div>
             ),
-            items: []
+            items: [],
+            content: null
         }
     ]);
 
@@ -71,6 +76,7 @@ const Cadastros = () => {
             )
         );
     };
+    
     return (
         <BaseLayout title="Cadastros">
             <div className="mx-auto">
@@ -79,6 +85,7 @@ const Cadastros = () => {
                     onToggleSection={handleToggleSection}
                     emptyStateMessage="Nenhum item cadastrado"
                     emptyStateSubMessage="Clique no botão + para adicionar"
+                    renderCustomContent={true} 
                 />
             </div>
         </BaseLayout>

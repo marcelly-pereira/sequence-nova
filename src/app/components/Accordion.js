@@ -1,4 +1,4 @@
-import React, { useRef  } from 'react';
+import React, { useRef } from 'react';
 
 const Accordion = ({ sections, onToggleSection, emptyStateMessage, emptyStateSubMessage }) => {
   const contentRefs = useRef({});
@@ -55,7 +55,9 @@ const Accordion = ({ sections, onToggleSection, emptyStateMessage, emptyStateSub
                 ref={contentRefs.current[section.id]} 
                 className="bg-gray-100 border-t"
               >
-                {section.items && section.items.length > 0 ? (
+                {section.content ? (
+                  section.content
+                ) : section.items && section.items.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 p-4">
                     {section.items}
                   </div>

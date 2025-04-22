@@ -15,7 +15,7 @@ import Lists from './app_user/pages/tasks/Lists';
 import Recurrent from './app_user/pages/tasks/Recurrent/Recurrent';
 import Companies from './app_user/pages/companies/ActiveClients';
 import Automations from './app_user/pages/personalization/Automations/Automations';
-import Registrations from './app_user/pages/personalization/Registrations';
+import Registrations from './app_user/pages/personalization/Registration/Registrations';
 import User from './app_user/User';
 import Notification from './app_user/notification/Notification';
 import Record from './app_user/pages/companies/Record/Record';
