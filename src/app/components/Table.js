@@ -27,6 +27,7 @@ const Table = ({
               className={`
                 ${coluna.apenasDesktop ? 'hidden sm:table-cell' : ''} 
                 px-2 sm:px-4 py-2 sm:py-3 border-b
+                ${coluna.align === 'center' ? 'text-center' : ''}
               `}
             >
               {coluna.titulo}
@@ -47,6 +48,7 @@ const Table = ({
                 className={`
                   ${coluna.apenasDesktop ? 'hidden sm:table-cell' : ''} 
                   px-2 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm text-gray-700
+                  ${coluna.align === 'center' ? 'text-center' : ''}
                   ${coluna.centralizado ? 'text-center' : ''}
                   ${coluna.tipo === 'prontuario' && item[coluna.campo] ? 'cursor-pointer' : ''}
                 `}

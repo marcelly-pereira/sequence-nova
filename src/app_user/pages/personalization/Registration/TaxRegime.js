@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { FiPlus, FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import Table from '../../../../app/components/Table';
@@ -13,26 +12,28 @@ const RegimesTributarios = () => {
   const [obrigacoesMap, setObrigacoesMap] = useState({});
   const [departamentosMap, setDepartamentosMap] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState(null);
   const [totalRegistros, setTotalRegistros] = useState(0);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isExcluirFormOpen, setIsExcluirFormOpen] = useState(false);
   const [regimeAtual, setRegimeAtual] = useState(null);
   const [regimeParaExcluir, setRegimeParaExcluir] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const loadMoreTriggerRef = useRef(null);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    setIsLoading(true);
-    setError(null);
-
+  const fetchData = useCallback(async (pageNumber, append = false) => {
     try {
+      if (append) {
+        setIsLoadingMore(true);
+      } else {
+        setIsLoading(true);
+      }
+
       const [obrigacoes, departamentos, regimesData] = await Promise.all([
         TaxRegime.fetchObrigacoes(),
         TaxRegime.fetchDepartamentos(),
-        TaxRegime.fetchRegimesTributarios()
+        TaxRegime.fetchRegimesTributarios(pageNumber)
       ]);
 
       const regimesProcessados = processarRegimes(
@@ -43,27 +44,82 @@ const RegimesTributarios = () => {
       
       setObrigacoesMap(obrigacoes);
       setDepartamentosMap(departamentos);
-      setRegimesTributarios(regimesProcessados);
+      
+      setRegimesTributarios(prevRegimes => 
+        append 
+          ? [...prevRegimes, ...regimesProcessados] 
+          : regimesProcessados
+      );
+      
       setTotalRegistros(regimesData.count || 0);
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
       setError('Não foi possível carregar os regimes tributários. Por favor, tente novamente.');
     } finally {
       setTimeout(() => {
-        setIsLoading(false);
+        if (append) {
+          setIsLoadingMore(false);
+        } else {
+          setIsLoading(false);
+        }
       }, 300);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchData(currentPage);
+  }, [fetchData]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (
+          entries[0].isIntersecting && 
+          !isLoading && 
+          !isLoadingMore && 
+          regimesTributarios.length < totalRegistros
+        ) {
+          const nextPage = currentPage + 1;
+          setCurrentPage(nextPage);
+          fetchData(nextPage, true);
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (loadMoreTriggerRef.current) {
+      observer.observe(loadMoreTriggerRef.current);
+    }
+
+    return () => {
+      if (loadMoreTriggerRef.current) {
+        observer.unobserve(loadMoreTriggerRef.current);
+      }
+    };
+  }, [currentPage, isLoading, isLoadingMore, regimesTributarios.length, totalRegistros, fetchData]);
 
   const colunas = [
     { titulo: 'NOME', campo: 'nome' },
     { titulo: 'OBRIGAÇÕES', campo: 'obrigacoesTags' },
+    { titulo: 'DEPARTAMENTOS', campo: 'departamentosTags' },
     { titulo: 'AÇÕES', campo: 'acoes', align: 'right' }
   ];
 
   const renderizarConteudo = (coluna, item) => {
+    if (coluna.campo === 'nome') {
+      return item.nome;
+    }
+
     if (coluna.campo === 'obrigacoesTags') {
       return item.obrigacoesTags;
+    }
+
+    if (coluna.campo === 'departamentosTags') {
+      if (!item.departamentosDetalhes || item.departamentosDetalhes.length === 0) {
+        return '—';
+      }
+
+      return item.departamentosDetalhes.map(departamento => departamento.nome).join(', ');
     }
 
     if (coluna.campo === 'acoes') {
@@ -127,7 +183,8 @@ const RegimesTributarios = () => {
     try {
       await TaxRegime.excluirRegimeTributario(regimeId);
       handleFecharExcluirForm();
-      fetchData();
+      setCurrentPage(1);
+      fetchData(1);
     } catch (error) {
       console.error('Erro ao excluir regime:', error);
       alert('Erro ao excluir regime. Por favor, tente novamente.');
@@ -138,7 +195,8 @@ const RegimesTributarios = () => {
     try {
       await TaxRegime.salvarRegimeTributario(regimeData);
       handleFecharFormulario();
-      fetchData();
+      setCurrentPage(1);
+      fetchData(1);
     } catch (error) {
       console.error('Erro ao salvar regime:', error);
       alert(`Erro ao ${regimeData.id ? 'atualizar' : 'criar'} regime tributário. Por favor, tente novamente.`);
@@ -172,7 +230,7 @@ const RegimesTributarios = () => {
         <div className="mt-4">
           <button 
             className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-            onClick={fetchData}
+            onClick={() => fetchData(currentPage)}
           >
             Tentar novamente
           </button>
@@ -211,12 +269,27 @@ const RegimesTributarios = () => {
         transition={{ delay: 0.2 }}
       >
         {regimesTributarios.length > 0 ? (
-          <div className="overflow-x-auto">
+          <div className="max-h-[600px] overflow-y-auto">
             <Table
               colunas={colunas}
               dados={regimesTributarios}
               renderizarConteudo={renderizarConteudo}
             />
+            
+            {regimesTributarios.length < totalRegistros && (
+              <div 
+                ref={loadMoreTriggerRef} 
+                className="h-20 flex items-center justify-center"
+              >
+                {isLoadingMore && (
+                  <motion.div 
+                    className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-500"
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                  />
+                )}
+              </div>
+            )}
           </div>
         ) : (
           <motion.div 

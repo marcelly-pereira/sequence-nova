@@ -43,7 +43,7 @@ export const fetchAllPages = async (url) => {
 };
 
 /**
- * Serviço para buscar todos os departamentos
+ * Serviço para buscar departamentos com paginação
  * @returns {Promise<Object>} - Mapa de departamentos indexado por ID
  */
 export const fetchDepartamentos = async () => {
@@ -74,7 +74,7 @@ export const fetchDepartamentos = async () => {
 };
 
 /**
- * Serviço para buscar todas as obrigações
+ * Serviço para buscar obrigações
  * @returns {Promise<Object>} - Mapa de obrigações indexado por ID
  */
 export const fetchObrigacoes = async () => {
@@ -98,23 +98,30 @@ export const fetchObrigacoes = async () => {
 };
 
 /**
- * Serviço para buscar todos os regimes tributários
+ * Serviço para buscar regimes tributários com paginação
+ * @param {number} page - Número da página (padrão: 1)
+ * @param {number} pageSize - Quantidade de itens por página (padrão: 10)
  * @returns {Promise<Object>} - Objeto com resultados e contagem total
  */
-export const fetchRegimesTributarios = async () => {
+export const fetchRegimesTributarios = async (page = 1, pageSize = 10) => {
   try {
-    return await fetchAllPages(API_URL_REGIMES);
+    const url = new URL(API_URL_REGIMES);
+    url.searchParams.append('page', page);
+    url.searchParams.append('page_size', pageSize);
+
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      throw new Error(`Erro ao buscar regimes tributários: ${response.status}`);
+    }
+
+    return await response.json();
   } catch (error) {
     console.error('Erro ao buscar regimes tributários:', error);
     throw error;
   }
 };
 
-/**
- * Serviço para excluir um regime tributário
- * @param {number} regimeId - ID do regime a ser excluído
- * @returns {Promise<Response>} - Objeto de resposta da requisição
- */
 export const excluirRegimeTributario = async (regimeId) => {
   const response = await fetch(`${API_URL_REGIMES}${regimeId}/`, {
     method: 'DELETE',
@@ -127,11 +134,6 @@ export const excluirRegimeTributario = async (regimeId) => {
   return response;
 };
 
-/**
- * Serviço para salvar um regime tributário (criar ou atualizar)
- * @param {Object} regimeData - Dados do regime
- * @returns {Promise<Response>} - Objeto de resposta da requisição
- */
 export const salvarRegimeTributario = async (regimeData) => {
   const url = regimeData.id 
     ? `${API_URL_REGIMES}${regimeData.id}/` 
