@@ -2,6 +2,38 @@ const API_URL = 'https://comercial.sequence.app.br/api/v1';
 
 class ObrigacaoService {
   /**
+   * Método interno para registrar ações de rastreamento
+   * @param {string} acao - Tipo de ação (criar, editar, excluir)
+   * @param {Object} dados - Dados da obrigação
+   * @returns {Promise} - Promise com o resultado do rastreamento
+   */
+  static async _registrarAcao(acao, dados) {
+    try {
+      const response = await fetch(`${API_URL}/rastreamento/obrigacoes/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          acao: acao,
+          dados: dados,
+          timestamp: new Date().toISOString()
+        })
+      });
+      
+      if (!response.ok) {
+        console.warn(`Aviso: Falha ao registrar ${acao} de obrigação`, response.statusText);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error(`Erro ao registrar ${acao} de obrigação:`, error);
+      // Não lança erro para não bloquear a ação principal
+      return null;
+    }
+  }
+
+  /**
    * Busca obrigações com paginação
    * @param {number} page - Número da página a ser carregada (padrão: 1)
    * @param {number} pageSize - Quantidade de itens por página (opcional)
@@ -49,7 +81,12 @@ class ObrigacaoService {
         throw new Error(`Erro na requisição: ${response.status} ${response.statusText}`);
       }
       
-      return await response.json();
+      const obrigacaoCadastrada = await response.json();
+      
+      // Registra a ação de criação
+      this._registrarAcao('criar', obrigacaoCadastrada);
+      
+      return obrigacaoCadastrada;
     } catch (error) {
       console.error('Erro ao cadastrar obrigação:', error);
       throw error;
@@ -76,7 +113,12 @@ class ObrigacaoService {
         throw new Error(`Erro na requisição: ${response.status} ${response.statusText}`);
       }
       
-      return await response.json();
+      const obrigacaoAtualizada = await response.json();
+      
+      // Registra a ação de edição
+      this._registrarAcao('editar', obrigacaoAtualizada);
+      
+      return obrigacaoAtualizada;
     } catch (error) {
       console.error(`Erro ao atualizar obrigação ${id}:`, error);
       throw error;
@@ -90,6 +132,9 @@ class ObrigacaoService {
    */
   static async excluirObrigacao(id) {
     try {
+      // Primeiro, obtemos os dados da obrigação antes de excluir
+      const obrigacaoAntes = await this.obterObrigacao(id);
+      
       const response = await fetch(`${API_URL}/obrigacoes/${id}/`, {
         method: 'DELETE',
       });
@@ -97,6 +142,9 @@ class ObrigacaoService {
       if (!response.ok) {
         throw new Error(`Erro na requisição: ${response.status} ${response.statusText}`);
       }
+      
+      // Registra a ação de exclusão
+      this._registrarAcao('excluir', obrigacaoAntes);
       
       if (response.status === 204) {
         return { success: true };

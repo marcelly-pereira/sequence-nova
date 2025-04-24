@@ -1,21 +1,60 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiAlertTriangle } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import BaseForm from '../app/components/BaseForm';
+import ObrigacaoService from '../services/obligations';
 
 const ExcluirObrigacaoForm = ({ isOpen, onClose, onConfirm, obrigacao }) => {
-  if (!obrigacao) return null;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
+  const [obrigacaoCompleta, setObrigacaoCompleta] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleSubmit = () => {
-    onConfirm(obrigacao.id || obrigacao.obrigacao_id);
+  useEffect(() => {
+    if (obrigacao && obrigacao.id && isOpen) {
+      fetchObrigacaoDetalhes(obrigacao.id);
+    }
+  }, [obrigacao, isOpen]);
+
+  const fetchObrigacaoDetalhes = async (id) => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const detalhes = await ObrigacaoService.obterObrigacao(id);
+      setObrigacaoCompleta(detalhes);
+    } catch (error) {
+      console.error(`Erro ao obter detalhes da obrigação ${id}:`, error);
+      setError('Não foi possível carregar os detalhes da obrigação. Por favor, tente novamente.');
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  const handleSubmit = async () => {
+    if (!obrigacao || !obrigacao.id) return;
+    
+    setIsSubmitting(true);
+    setError(null);
+    
+    try {
+      await ObrigacaoService.excluirObrigacao(obrigacao.id);
+      onConfirm(obrigacao.id);
+    } catch (error) {
+      console.error('Erro ao excluir obrigação:', error);
+      setError(`Erro ao excluir: ${error.message}`);
+      setIsSubmitting(false);
+    }
+  };
+
+  if (!obrigacao) return null;
 
   const fields = [
     {
       id: 'confirmacao',
       label: 'Confirmação',
       type: 'info',
-      content: `Você está prestes a excluir a obrigação "${obrigacao.nome || obrigacao.obrigacao_nome}".`
+      content: `Você está prestes a excluir a obrigação "${obrigacao.nome}".`
     },
     {
       id: 'aviso',
@@ -71,7 +110,20 @@ const ExcluirObrigacaoForm = ({ isOpen, onClose, onConfirm, obrigacao }) => {
     );
   };
 
-  const passiveMulta = obrigacao.passivel_multa || obrigacao.passivelMulta;
+  const renderLoadingIndicator = () => (
+    <div className="flex flex-col items-center justify-center py-8">
+      <div 
+        className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-red-500"
+      />
+      <p className="mt-4 text-sm text-gray-500">Verificando dependências...</p>
+    </div>
+  );
+
+  // Verificar se a obrigação está vinculada a outros registros
+  // Isso poderia ser expandido conforme necessário para verificar outras relações
+  const hasRelacoes = obrigacaoCompleta && 
+                     obrigacaoCompleta.regimes_tributarios && 
+                     obrigacaoCompleta.regimes_tributarios.length > 0;
 
   return (
     <BaseForm
@@ -81,26 +133,44 @@ const ExcluirObrigacaoForm = ({ isOpen, onClose, onConfirm, obrigacao }) => {
       title="Excluir Obrigação"
       icon={<FiAlertTriangle className="w-6 h-6" />}
       primaryColor="#EF4444"
-      isValid={true}
-      submitButtonText="Excluir"
+      isValid={!isSubmitting}
+      submitButtonText={isSubmitting ? "Excluindo..." : "Excluir"}
       cancelButtonText="Cancelar"
+      isSubmitting={isSubmitting}
     >
-      {renderFormFields()}
-      
-      {passiveMulta && (
-        <motion.div 
-          className="mt-4 bg-yellow-50 p-4 rounded-md border border-yellow-200"
-          initial={{ opacity: 0, y: 10 }}
+      {error && (
+        <motion.div
+          className="bg-red-50 text-red-600 p-3 rounded-md mb-4"
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ duration: 0.3 }}
         >
-          <div className="flex items-start">
-            <FiAlertTriangle className="text-yellow-500 mt-0.5 mr-2 flex-shrink-0" />
-            <p className="text-yellow-700 text-sm">
-              Esta obrigação está marcada como passível de multa. Sua exclusão pode afetar o controle de prazos legais.
-            </p>
-          </div>
+          {error}
         </motion.div>
+      )}
+      
+      {isLoading ? (
+        renderLoadingIndicator()
+      ) : (
+        <>
+          {renderFormFields()}
+          
+          {hasRelacoes && (
+            <motion.div 
+              className="mt-4 bg-yellow-50 p-4 rounded-md border border-yellow-200"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <div className="flex items-start">
+                <FiAlertTriangle className="text-yellow-500 mt-0.5 mr-2 flex-shrink-0" />
+                <p className="text-yellow-700 text-sm">
+                  Esta obrigação está associada a {obrigacaoCompleta.regimes_tributarios.length} regimes tributários que serão afetados por esta exclusão.
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </>
       )}
     </BaseForm>
   );

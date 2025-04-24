@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { FiPlus, FiEdit2, FiTrash2 } from 'react-icons/fi';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Table from '../../../../app/components/Table';
 import ObrigacaoService from '../../../../services/obligations';
+import ObrigacaoForm from '../../../../forms/FormObrigacao';
+import ExcluirObrigacaoForm from '../../../../forms/FormExcluirObrigacao';
 
 const Obrigacoes = () => {
   const [obrigacoes, setObrigacoes] = useState([]);
@@ -10,11 +12,20 @@ const Obrigacoes = () => {
   const [error, setError] = useState(null);
   const [totalRegistros, setTotalRegistros] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isExcluirFormOpen, setIsExcluirFormOpen] = useState(false);
+  const [obrigacaoAtual, setObrigacaoAtual] = useState(null);
+  const [obrigacaoParaExcluir, setObrigacaoParaExcluir] = useState(null);
   const listContainerRef = useRef(null);
 
-  const fetchData = useCallback(async (pageNumber, append = false) => {
+  const fetchData = useCallback(async (pageNumber) => {
     try {
-      setIsLoading(true);
+      if (pageNumber === 1) {
+        setIsLoading(true);
+      } else {
+        setIsLoadingMore(true);
+      }
       
       const response = await ObrigacaoService.fetchObrigacoes(pageNumber);
       
@@ -22,9 +33,9 @@ const Obrigacoes = () => {
         id: item.id,
         nome: item.nome,
         mininome: item.mininome,
-        departamento_id: item.departamento,
+        departamento: item.departamento,
         departamento_nome: getDepartamentoNome(item.departamento),
-        responsavel_id: item.responsavel,
+        responsavel: item.responsavel,
         responsavel_nome: getResponsavelNome(item.responsavel),
         passivel_multa: item.passivel_multa,
         lembrar_dias_antes: item.lembrar_responsavel_dias_antes,
@@ -32,11 +43,11 @@ const Obrigacoes = () => {
         ativa: item.ativa
       }));
       
-      setObrigacoes(prevObrigacoes => 
-        append 
-          ? [...prevObrigacoes, ...obrigacoesProcessadas] 
-          : obrigacoesProcessadas
-      );
+      if (pageNumber === 1) {
+        setObrigacoes(obrigacoesProcessadas);
+      } else {
+        setObrigacoes(prevObrigacoes => [...prevObrigacoes, ...obrigacoesProcessadas]);
+      }
       
       setTotalRegistros(response.count || 0);
     } catch (error) {
@@ -44,12 +55,14 @@ const Obrigacoes = () => {
       setError('Não foi possível carregar as obrigações. Por favor, tente novamente.');
     } finally {
       setIsLoading(false);
+      setIsLoadingMore(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchData(currentPage);
-  }, [fetchData, currentPage]);
+    // Carregar a primeira página quando o componente montar
+    fetchData(1);
+  }, [fetchData]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,13 +70,15 @@ const Obrigacoes = () => {
 
       const { scrollTop, clientHeight, scrollHeight } = listContainerRef.current;
       
+      // Carregar mais dados quando chegar perto do final da tabela
       if (scrollHeight - scrollTop - clientHeight < 200 && 
           obrigacoes.length < totalRegistros && 
-          !isLoading) {
+          !isLoading && 
+          !isLoadingMore) {
         
-        const nextPage = currentPage + 1;
-        setCurrentPage(nextPage);
-        fetchData(nextPage, true);
+        setIsLoadingMore(true);
+        const nextPage = Math.floor(obrigacoes.length / 10) + 1;
+        fetchData(nextPage);
       }
     };
 
@@ -72,7 +87,7 @@ const Obrigacoes = () => {
       containerRef.addEventListener('scroll', handleScroll);
       return () => containerRef.removeEventListener('scroll', handleScroll);
     }
-  }, [currentPage, obrigacoes.length, totalRegistros, isLoading, fetchData]);
+  }, [obrigacoes.length, totalRegistros, isLoading, isLoadingMore, fetchData]);
 
   // Funções auxiliares para mapear IDs para nomes
   // Numa aplicação real, você provavelmente teria essa informação disponível
@@ -86,6 +101,7 @@ const Obrigacoes = () => {
       26: 'Recursos Humanos',
       27: 'Tributos',
       28: 'Departamento Pessoal',
+      29: 'Comercial',
       30: 'Folha de Pagamento'
     };
     return departamentos[id] || 'Departamento não identificado';
@@ -98,58 +114,114 @@ const Obrigacoes = () => {
     return responsaveis[id] || 'Responsável não identificado';
   };
 
-  const handleEditarObrigacao = (obrigacao) => {
-    console.log('Editar obrigação:', obrigacao);
-    alert(`Editando obrigação: ${obrigacao.nome}`);
+  const handleAbrirFormulario = () => {
+    setObrigacaoAtual(null);
+    setIsFormOpen(true);
   };
 
-  const handleExcluirObrigacao = async (obrigacao) => {
-    const confirmar = window.confirm(`Deseja realmente excluir a obrigação "${obrigacao.nome}"?`);
+  const handleFecharFormulario = () => {
+    setIsFormOpen(false);
+    setObrigacaoAtual(null);
+  };
+
+const handleEditarObrigacao = async (obrigacao) => {
+  try {
+    setIsLoading(true);
+    // Obtemos os dados completos da obrigação para edição
+    const obrigacaoCompleta = await ObrigacaoService.obterObrigacao(obrigacao.id);
     
-    if (confirmar) {
-      try {
-        await ObrigacaoService.excluirObrigacao(obrigacao.id);
-        setObrigacoes(obrigacoes.filter(o => o.id !== obrigacao.id));
-        alert(`Obrigação excluída com sucesso: ${obrigacao.nome}`);
-      } catch (error) {
-        alert(`Erro ao excluir obrigação: ${error.message}`);
+    console.log('Dados completos da obrigação:', obrigacaoCompleta);
+    
+    // Mapeamento detalhado para garantir que todos os campos sejam preenchidos
+    const obrigacaoParaEdicao = {
+      id: obrigacaoCompleta.id,
+      nome: obrigacaoCompleta.nome,
+      mininome: obrigacaoCompleta.mininome,
+      tempo_previsto_min: obrigacaoCompleta.tempo_previsto_min,
+      
+      // Mapeamento explícito para cada mês de entrega
+      entrega_janeiro: obrigacaoCompleta.entrega_janeiro || null,
+      entrega_fevereiro: obrigacaoCompleta.entrega_fevereiro || null,
+      entrega_marco: obrigacaoCompleta.entrega_marco || null,
+      entrega_abril: obrigacaoCompleta.entrega_abril || null,
+      entrega_maio: obrigacaoCompleta.entrega_maio || null,
+      entrega_junho: obrigacaoCompleta.entrega_junho || null,
+      entrega_julho: obrigacaoCompleta.entrega_julho || null,
+      entrega_agosto: obrigacaoCompleta.entrega_agosto || null,
+      entrega_setembro: obrigacaoCompleta.entrega_setembro || null,
+      entrega_outubro: obrigacaoCompleta.entrega_outubro || null,
+      entrega_novembro: obrigacaoCompleta.entrega_novembro || null,
+      entrega_dezembro: obrigacaoCompleta.entrega_dezembro || null,
+      
+      // Configurações de lembrete
+      lembrar_responsavel_dias_antes: obrigacaoCompleta.lembrar_responsavel_dias_antes,
+      tipo_dias_antes: obrigacaoCompleta.tipo_dias_antes,
+      prazos_fixos_dias_nao_uteis: obrigacaoCompleta.prazos_fixos_dias_nao_uteis,
+      competencias_referentes: obrigacaoCompleta.competencias_referentes,
+      
+      // Flags
+      exigir_robo: obrigacaoCompleta.exigir_robo,
+      passivel_multa: obrigacaoCompleta.passivel_multa,
+      alerta_guia_nao_lida: obrigacaoCompleta.alerta_guia_nao_lida,
+      ativa: obrigacaoCompleta.ativa,
+      
+      // Outros campos
+      quantidade_arquivos_necessarios: obrigacaoCompleta.quantidade_arquivos_necessarios,
+      departamento: obrigacaoCompleta.departamento,
+      responsavel: obrigacaoCompleta.responsavel
+    };
+    
+    console.log('Obrigação para edição:', obrigacaoParaEdicao);
+    
+    setObrigacaoAtual(obrigacaoParaEdicao);
+    setIsFormOpen(true);
+  } catch (error) {
+    console.error('Erro ao obter detalhes da obrigação:', error);
+    alert('Não foi possível carregar os detalhes da obrigação. Por favor, tente novamente.');
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+  const handleAbrirExcluirForm = (obrigacao) => {
+    setObrigacaoParaExcluir(obrigacao);
+    setIsExcluirFormOpen(true);
+  };
+
+  const handleFecharExcluirForm = () => {
+    setIsExcluirFormOpen(false);
+    setObrigacaoParaExcluir(null);
+  };
+
+  const handleSalvarObrigacao = async (obrigacaoData) => {
+    try {
+      if (obrigacaoData.id) {
+        await ObrigacaoService.atualizarObrigacao(obrigacaoData.id, obrigacaoData);
+      } else {
+        await ObrigacaoService.cadastrarObrigacao(obrigacaoData);
       }
+      
+      handleFecharFormulario();
+      // Recarregar a primeira página após salvar
+      setCurrentPage(1);
+      fetchData(1);
+    } catch (error) {
+      console.error('Erro ao salvar obrigação:', error);
+      alert(`Erro ao ${obrigacaoData.id ? 'atualizar' : 'criar'} obrigação. Por favor, tente novamente.`);
     }
   };
 
-  const handleCadastrarObrigacao = () => {
-    // Dados padrão para nova obrigação
-    const novaObrigacao = {
-      nome: "",
-      mininome: "",
-      tempo_previsto_min: null,
-      entrega_janeiro: null,
-      entrega_fevereiro: null,
-      entrega_marco: null,
-      entrega_abril: null,
-      entrega_maio: null,
-      entrega_junho: null,
-      entrega_julho: null,
-      entrega_agosto: null,
-      entrega_setembro: null,
-      entrega_outubro: null,
-      entrega_novembro: null,
-      entrega_dezembro: null,
-      lembrar_responsavel_dias_antes: null,
-      tipo_dias_antes: null,
-      prazos_fixos_dias_nao_uteis: null,
-      competencias_referentes: null,
-      exigir_robo: false,
-      passivel_multa: false,
-      alerta_guia_nao_lida: false,
-      ativa: false,
-      quantidade_arquivos_necessarios: null,
-      departamento: null,
-      responsavel: null
-    };
-    
-    alert('Abrindo formulário para cadastrar nova obrigação');
-    // Aqui você abriria um modal ou redirecionaria para um formulário
+  const handleExcluirObrigacao = async (obrigacaoId) => {
+    try {
+      await ObrigacaoService.excluirObrigacao(obrigacaoId);
+      handleFecharExcluirForm();
+      // Recarregar a primeira página após excluir
+      setCurrentPage(1);
+      fetchData(1);
+    } catch (error) {
+      console.error('Erro ao excluir obrigação:', error);
+      alert('Erro ao excluir obrigação. Por favor, tente novamente.');
+    }
   };
 
   const colunas = [
@@ -189,7 +261,7 @@ const Obrigacoes = () => {
             className="p-1 text-gray-500 hover:text-red-500"
             onClick={(e) => {
               e.stopPropagation();
-              handleExcluirObrigacao(item);
+              handleAbrirExcluirForm(item);
             }}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
@@ -231,7 +303,7 @@ const Obrigacoes = () => {
         <div className="mt-4">
           <button 
             className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-            onClick={() => fetchData(currentPage)}
+            onClick={() => fetchData(1)}
           >
             Tentar novamente
           </button>
@@ -250,12 +322,12 @@ const Obrigacoes = () => {
       >
         <span className="text-sm text-gray-500">
           {totalRegistros > 0 
-            ? `Total: ${totalRegistros} obrigações`
+            ? `Total: ${totalRegistros} obrigações (mostrando ${obrigacoes.length})`
             : 'Nenhuma obrigação cadastrada'}
         </span>
         <motion.button
           className="flex items-center justify-center px-4 py-2 text-sm bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50"
-          onClick={handleCadastrarObrigacao}
+          onClick={handleAbrirFormulario}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
@@ -281,7 +353,7 @@ const Obrigacoes = () => {
               renderizarConteudo={renderizarConteudo}
             />
             
-            {isLoading && (
+            {isLoadingMore && (
               <div className="flex justify-center py-4">
                 <motion.div 
                   className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-500"
@@ -303,6 +375,28 @@ const Obrigacoes = () => {
           </motion.div>
         )}
       </motion.div>
+      
+      {/* Modais de Formulários */}
+      <AnimatePresence>
+        {isFormOpen && (
+          <ObrigacaoForm 
+            isOpen={isFormOpen}
+            onClose={handleFecharFormulario}
+            onSubmit={handleSalvarObrigacao}
+            obrigacaoAtual={obrigacaoAtual}
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {isExcluirFormOpen && (
+          <ExcluirObrigacaoForm
+            isOpen={isExcluirFormOpen}
+            onClose={handleFecharExcluirForm}
+            onConfirm={handleExcluirObrigacao}
+            obrigacao={obrigacaoParaExcluir}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
