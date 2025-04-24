@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import Table from '../../../../app/components/Table';
 import ObrigacaoService from '../../../../services/obligations';
 
-const ObrigacoesResponsavel = () => {
+const Obrigacoes = () => {
   const [obrigacoes, setObrigacoes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,20 +16,20 @@ const ObrigacoesResponsavel = () => {
     try {
       setIsLoading(true);
       
-      const response = await ObrigacaoService.fetchObrigacoesResponsavel(pageNumber);
+      const response = await ObrigacaoService.fetchObrigacoes(pageNumber);
       
       const obrigacoesProcessadas = response.results.map(item => ({
         id: item.id,
-        obrigacao_id: item.obrigacao,
-        obrigacao_nome: item.obrigacao_nome,
-        nome_departamento: item.nome_departamento,
-        responsavel_nome: item.responsavel_nome,
-        passivelMulta: verificarPassivelMulta(item.prazo_legal, item.prazo_tec),
-        prazo_legal: formatarData(item.prazo_legal),
-        prazo_tec: formatarData(item.prazo_tec),
-        status: item.status,
-        atrasada: item.atrasada,
-        competencia: formatarData(item.competencia)
+        nome: item.nome,
+        mininome: item.mininome,
+        departamento_id: item.departamento,
+        departamento_nome: getDepartamentoNome(item.departamento),
+        responsavel_id: item.responsavel,
+        responsavel_nome: getResponsavelNome(item.responsavel),
+        passivel_multa: item.passivel_multa,
+        lembrar_dias_antes: item.lembrar_responsavel_dias_antes,
+        tipo_dias_antes: item.tipo_dias_antes,
+        ativa: item.ativa
       }));
       
       setObrigacoes(prevObrigacoes => 
@@ -49,7 +49,7 @@ const ObrigacoesResponsavel = () => {
 
   useEffect(() => {
     fetchData(currentPage);
-  }, [fetchData]);
+  }, [fetchData, currentPage]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -74,55 +74,98 @@ const ObrigacoesResponsavel = () => {
     }
   }, [currentPage, obrigacoes.length, totalRegistros, isLoading, fetchData]);
 
-  const formatarData = (dataString) => {
-    if (!dataString) return '—';
-    const data = new Date(dataString);
-    return data.toLocaleDateString('pt-BR');
+  // Funções auxiliares para mapear IDs para nomes
+  // Numa aplicação real, você provavelmente teria essa informação disponível
+  // através do contexto ou de outra API
+  const getDepartamentoNome = (id) => {
+    const departamentos = {
+      21: 'Fiscal',
+      23: 'Consultoria',
+      24: 'Financeiro',
+      25: 'Contábil',
+      26: 'Recursos Humanos',
+      27: 'Tributos',
+      28: 'Departamento Pessoal',
+      30: 'Folha de Pagamento'
+    };
+    return departamentos[id] || 'Departamento não identificado';
   };
 
-  const verificarPassivelMulta = (prazoLegal, prazoTec) => {
-    if (!prazoLegal || !prazoTec) return false;
-    
-    const dataLegal = new Date(prazoLegal);
-    const dataTec = new Date(prazoTec);
-    
-    const diffTime = Math.abs(dataLegal - dataTec);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    return diffDays >= 2;
+  const getResponsavelNome = (id) => {
+    const responsaveis = {
+      1: 'Miguel Lucas'
+    };
+    return responsaveis[id] || 'Responsável não identificado';
   };
 
   const handleEditarObrigacao = (obrigacao) => {
     console.log('Editar obrigação:', obrigacao);
-    alert(`Editando obrigação: ${obrigacao.obrigacao_nome}`);
+    alert(`Editando obrigação: ${obrigacao.nome}`);
   };
 
-  const handleExcluirObrigacao = (obrigacao) => {
-    console.log('Excluir obrigação:', obrigacao);
-    const confirmar = window.confirm(`Deseja realmente excluir a obrigação "${obrigacao.obrigacao_nome}"?`);
+  const handleExcluirObrigacao = async (obrigacao) => {
+    const confirmar = window.confirm(`Deseja realmente excluir a obrigação "${obrigacao.nome}"?`);
+    
     if (confirmar) {
-      alert(`Obrigação excluída com sucesso: ${obrigacao.obrigacao_nome}`);
+      try {
+        await ObrigacaoService.excluirObrigacao(obrigacao.id);
+        setObrigacoes(obrigacoes.filter(o => o.id !== obrigacao.id));
+        alert(`Obrigação excluída com sucesso: ${obrigacao.nome}`);
+      } catch (error) {
+        alert(`Erro ao excluir obrigação: ${error.message}`);
+      }
     }
   };
 
   const handleCadastrarObrigacao = () => {
+    // Dados padrão para nova obrigação
+    const novaObrigacao = {
+      nome: "",
+      mininome: "",
+      tempo_previsto_min: null,
+      entrega_janeiro: null,
+      entrega_fevereiro: null,
+      entrega_marco: null,
+      entrega_abril: null,
+      entrega_maio: null,
+      entrega_junho: null,
+      entrega_julho: null,
+      entrega_agosto: null,
+      entrega_setembro: null,
+      entrega_outubro: null,
+      entrega_novembro: null,
+      entrega_dezembro: null,
+      lembrar_responsavel_dias_antes: null,
+      tipo_dias_antes: null,
+      prazos_fixos_dias_nao_uteis: null,
+      competencias_referentes: null,
+      exigir_robo: false,
+      passivel_multa: false,
+      alerta_guia_nao_lida: false,
+      ativa: false,
+      quantidade_arquivos_necessarios: null,
+      departamento: null,
+      responsavel: null
+    };
+    
     alert('Abrindo formulário para cadastrar nova obrigação');
+    // Aqui você abriria um modal ou redirecionaria para um formulário
   };
 
   const colunas = [
-    { titulo: 'ID', campo: 'obrigacao_id', width: '80px', align: 'center' },
-    { titulo: 'NOME', campo: 'obrigacao_nome' },
-    { titulo: 'DEPARTAMENTO', campo: 'nome_departamento' },
+    { titulo: 'ID', campo: 'id', width: '80px', align: 'center' },
+    { titulo: 'NOME', campo: 'nome' },
+    { titulo: 'DEPARTAMENTO', campo: 'departamento_nome' },
     { titulo: 'RESPONSÁVEL', campo: 'responsavel_nome' },
-    { titulo: 'PASSÍVEL DE MULTA?', campo: 'passivelMulta', align: 'center' },
+    { titulo: 'PASSÍVEL DE MULTA?', campo: 'passivel_multa', align: 'center' },
     { titulo: 'AÇÕES', campo: 'acoes', align: 'center', width: '100px' }
   ];
 
   const renderizarConteudo = (coluna, item) => {
-    if (coluna.campo === 'passivelMulta') {
+    if (coluna.campo === 'passivel_multa') {
       return (
-        <span className={`px-2 py-1 rounded-full text-xs ${item.passivelMulta ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
-          {item.passivelMulta ? 'Sim' : 'Não'}
+        <span className={`px-2 py-1 rounded-full text-xs ${item.passivel_multa ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
+          {item.passivel_multa ? 'Sim' : 'Não'}
         </span>
       );
     }
@@ -264,4 +307,4 @@ const ObrigacoesResponsavel = () => {
   );
 };
 
-export default ObrigacoesResponsavel;
+export default Obrigacoes;

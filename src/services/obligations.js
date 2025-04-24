@@ -2,14 +2,14 @@ const API_URL = 'https://comercial.sequence.app.br/api/v1';
 
 class ObrigacaoService {
   /**
-   * Busca obrigações do responsável com paginação
+   * Busca obrigações com paginação
    * @param {number} page - Número da página a ser carregada (padrão: 1)
    * @param {number} pageSize - Quantidade de itens por página (opcional)
    * @returns {Promise} - Promise com os dados das obrigações
    */
-  static async fetchObrigacoesResponsavel(page = 1, pageSize = 10) {
+  static async fetchObrigacoes(page = 1, pageSize = 10) {
     try {
-      const url = new URL(`${API_URL}/lista_de_obrigacoes_do_responsavel/`);
+      const url = new URL(`${API_URL}/obrigacoes/`);
       url.searchParams.append('page', page);
       
       if (pageSize) {
@@ -37,7 +37,7 @@ class ObrigacaoService {
    */
   static async cadastrarObrigacao(data) {
     try {
-      const response = await fetch(`${API_URL}/lista_de_obrigacoes_do_responsavel/`, {
+      const response = await fetch(`${API_URL}/obrigacoes/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -64,7 +64,7 @@ class ObrigacaoService {
    */
   static async atualizarObrigacao(id, data) {
     try {
-      const response = await fetch(`${API_URL}/lista_de_obrigacoes_do_responsavel/${id}/`, {
+      const response = await fetch(`${API_URL}/obrigacoes/${id}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -90,7 +90,7 @@ class ObrigacaoService {
    */
   static async excluirObrigacao(id) {
     try {
-      const response = await fetch(`${API_URL}/lista_de_obrigacoes_do_responsavel/${id}/`, {
+      const response = await fetch(`${API_URL}/obrigacoes/${id}/`, {
         method: 'DELETE',
       });
       
@@ -116,7 +116,7 @@ class ObrigacaoService {
    */
   static async obterObrigacao(id) {
     try {
-      const response = await fetch(`${API_URL}/lista_de_obrigacoes_do_responsavel/${id}/`);
+      const response = await fetch(`${API_URL}/obrigacoes/${id}/`);
       
       if (!response.ok) {
         throw new Error(`Erro na requisição: ${response.status} ${response.statusText}`);
@@ -137,7 +137,7 @@ class ObrigacaoService {
    */
   static async filtrarObrigacoes(filtros = {}, page = 1) {
     try {
-      const url = new URL(`${API_URL}/lista_de_obrigacoes_do_responsavel/`);
+      const url = new URL(`${API_URL}/obrigacoes/`);
       
       url.searchParams.append('page', page);
       
