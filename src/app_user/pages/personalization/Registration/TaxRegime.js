@@ -304,7 +304,6 @@ const RegimesTributarios = () => {
         )}
       </motion.div>
       
-      <AnimatePresence>
         {isFormOpen && (
           <RegimeTributarioForm 
             isOpen={isFormOpen}
@@ -313,8 +312,6 @@ const RegimesTributarios = () => {
             regimeAtual={regimeAtual}
           />
         )}
-      </AnimatePresence>
-      <AnimatePresence>
         {isExcluirFormOpen && (
           <ExcluirRegimeForm
             isOpen={isExcluirFormOpen}
@@ -323,7 +320,6 @@ const RegimesTributarios = () => {
             regime={regimeParaExcluir}
           />
         )}
-      </AnimatePresence>
     </div>
   );
 };
