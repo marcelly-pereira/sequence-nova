@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import BaseLayout from '../../../../app/BaseLayout';
 import Accordion from '../../../../app/components/Accordion';
 import RegimesTributarios from './TaxRegime';
-import Obrigacoes from './Obligations';
+import Departamentos from './Department'
+import Obligations from './Obligations';
+import Collaborators from './Collaborators';
 
-const Cadastros = () => {
+const Registrations = () => {
   const [sections, setSections] = useState([
     {
       id: 'departamentos',
@@ -30,7 +32,7 @@ const Cadastros = () => {
         </div>
       ),
       items: [],
-      content: null,
+      content: <Departamentos />,
     },
     {
       id: 'colaboradores',
@@ -56,7 +58,7 @@ const Cadastros = () => {
         </div>
       ),
       items: [],
-      content: null,
+      content: <Collaborators />,
     },
     {
       id: 'regimes',
@@ -108,7 +110,7 @@ const Cadastros = () => {
         </div>
       ),
       items: [],
-      content: null,
+      content: <Obligations />,
     },
   ]);
 
@@ -137,4 +139,4 @@ const Cadastros = () => {
   );
 };
 
-export default Cadastros;
+export default Registrations;

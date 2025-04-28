@@ -1,13 +1,17 @@
 import React from 'react';
 import { FiAlertTriangle } from 'react-icons/fi';
-import { motion } from 'framer-motion';
-import BaseForm from '../app/components/BaseForm';
+import BaseForm from '../../app/components/BaseForm';
 
-const ExcluirRegimeForm = ({ isOpen, onClose, onConfirm, regime }) => {
-  if (!regime) return null;
+const FormDeleteDepartment = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  departamento,
+}) => {
+  if (!departamento) return null;
 
   const handleSubmit = () => {
-    onConfirm(regime.id);
+    onConfirm(departamento.id);
   };
 
   const fields = [
@@ -15,21 +19,24 @@ const ExcluirRegimeForm = ({ isOpen, onClose, onConfirm, regime }) => {
       id: 'confirmacao',
       label: 'Confirmação',
       type: 'info',
-      content: `Você está prestes a excluir o regime tributário "${regime.nome}".`
+      content: `Você está prestes a excluir o departamento "${departamento.nome}".`,
     },
     {
       id: 'aviso',
       label: 'Aviso',
       type: 'warning',
-      content: 'Esta ação não poderá ser desfeita. Todos os dados associados a este regime serão permanentemente removidos.'
-    }
+      content:
+        'Esta ação não poderá ser desfeita. Todos os dados associados a este departamento serão permanentemente removidos.',
+    },
   ];
 
   const renderFormFields = () => {
     return (
       <div className="max-h-[calc(80vh-120px)] overflow-y-auto px-1">
         <div className="mb-4 pb-2">
-          <h3 className="text-md font-medium text-gray-700">Confirmação de Exclusão</h3>
+          <h3 className="text-md font-medium text-gray-700">
+            Confirmação de Exclusão
+          </h3>
         </div>
         {renderFormSection(fields)}
       </div>
@@ -46,8 +53,8 @@ const ExcluirRegimeForm = ({ isOpen, onClose, onConfirm, regime }) => {
 
   const renderField = (field, index) => {
     return (
-      <motion.div 
-        key={field.id} 
+      <div
+        key={field.id}
         className="space-y-2"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -58,7 +65,7 @@ const ExcluirRegimeForm = ({ isOpen, onClose, onConfirm, regime }) => {
             <p className="text-gray-700">{field.content}</p>
           </div>
         )}
-        
+
         {field.type === 'warning' && (
           <div className="bg-red-50 p-4 rounded-md border border-red-200">
             <div className="flex items-start">
@@ -67,18 +74,19 @@ const ExcluirRegimeForm = ({ isOpen, onClose, onConfirm, regime }) => {
             </div>
           </div>
         )}
-      </motion.div>
+      </div>
     );
   };
 
-  const hasObrigacoes = regime.obrigacoes && regime.obrigacoes.length > 0;
+  const temGestores = departamento.gestores && departamento.gestores !== '-';
+  const temSolicitacoesAtivas = departamento.solicitacoes === 'ATIVO';
 
   return (
     <BaseForm
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      title="Excluir Regime Tributário"
+      title="Excluir Departamento"
       icon={<FiAlertTriangle className="w-6 h-6" />}
       primaryColor="#EF4444"
       isValid={true}
@@ -86,9 +94,9 @@ const ExcluirRegimeForm = ({ isOpen, onClose, onConfirm, regime }) => {
       cancelButtonText="Cancelar"
     >
       {renderFormFields()}
-      
-      {hasObrigacoes && (
-        <motion.div 
+
+      {temGestores && (
+        <div
           className="mt-4 bg-yellow-50 p-4 rounded-md border border-yellow-200"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -97,13 +105,31 @@ const ExcluirRegimeForm = ({ isOpen, onClose, onConfirm, regime }) => {
           <div className="flex items-start">
             <FiAlertTriangle className="text-yellow-500 mt-0.5 mr-2 flex-shrink-0" />
             <p className="text-yellow-700 text-sm">
-              Este regime possui {regime.obrigacoes.length} obrigações associadas que também serão desvinculadas.
+              Este departamento possui gestores associados que serão
+              desvinculados.
             </p>
           </div>
-        </motion.div>
+        </div>
+      )}
+
+      {temSolicitacoesAtivas && (
+        <div
+          className="mt-4 bg-yellow-50 p-4 rounded-md border border-yellow-200"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <div className="flex items-start">
+            <FiAlertTriangle className="text-yellow-500 mt-0.5 mr-2 flex-shrink-0" />
+            <p className="text-yellow-700 text-sm">
+              Este departamento está ativo e pode ter solicitações em andamento
+              que serão interrompidas.
+            </p>
+          </div>
+        </div>
       )}
     </BaseForm>
   );
 };
 
-export default ExcluirRegimeForm;
+export default FormDeleteDepartment;

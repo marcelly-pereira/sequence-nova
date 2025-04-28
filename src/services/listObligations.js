@@ -9,7 +9,7 @@ const api = axios.create({
   }
 });
 
-const obrigacoesService = {
+const listObligationsService = {
   /**
    * Busca a lista de obrigações do responsável com paginação e filtragem
    * @param {Object} params - Parâmetros da requisição
@@ -105,4 +105,4 @@ const obrigacoesService = {
   }
 };
 
-export default obrigacoesService;
+export default listObligationsService;

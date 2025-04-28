@@ -4,58 +4,25 @@ import { useNavigate } from 'react-router-dom';
 import BaseLayout from '../../../app/BaseLayout';
 import Button from '../../../app/components/Button';
 import Table from '../../../app/components/Table';
-import FormRegisterClient from '../../../forms/FormRegisterClient'; 
+import Pagination from '../../../app/components/Pagination';
+import FormRegisterClient from '../../../forms/FormRegisterClient';
+import empresasService from '../../../services/companies';
 
-const ClientesAtivos = () => {
+const ActiveClients = () => {
   const navigate = useNavigate();
   
-  const [empresas, setEmpresas] = useState([
-    {
-      id: 1,
-      cnpj: '49.005.187/0001-05',
-      regimeTributario: 'Simples Nacional',
-      nomeFantasia: 'JULIANO CONTABILIDADE',
-      cidade: 'TERESINA',
-      uf: 'PI',
-      status: 'inativo',
-      prontuario: true,
-    },
-    {
-      id: 2,
-      cnpj: '32.220.762/0001-90',
-      regimeTributario: 'Simples Nacional',
-      nomeFantasia: 'MESQUITA E CRUZ',
-      cidade: 'SAO LUIS',
-      uf: 'MA',
-      status: 'inativo',
-      prontuario: true,
-    },
-    {
-      id: 3,
-      cnpj: '27.674.629/0001-73',
-      regimeTributario: 'Simples Nacional',
-      nomeFantasia: 'ABREU CONTABILIDADE',
-      cidade: 'SAO LUIS',
-      uf: 'MA',
-      status: 'inativo',
-      prontuario: true,
-    },
-    {
-      id: 4,
-      cnpj: '21.823.227/0001-07',
-      regimeTributario: 'Simples Nacional',
-      nomeFantasia: 'KAROL DIGITAL BOUTIQUE',
-      cidade: 'ARAGUAINA',
-      uf: 'TO',
-      status: 'ativo',
-      prontuario: true,
-    },
-  ]);
-
+  const [empresas, setEmpresas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [filtro, setFiltro] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [paginaAtual, setPaginaAtual] = useState(1);
-  const [formModalOpen, setFormModalOpen] = useState(false); 
+  const [formModalOpen, setFormModalOpen] = useState(false);
+  const itensPorPagina = 10;
+
+  useEffect(() => {
+    fetchEmpresas();
+  }, []);
 
   useEffect(() => {
     if (formModalOpen) {
@@ -68,6 +35,19 @@ const ClientesAtivos = () => {
       document.body.style.overflow = 'auto';
     };
   }, [formModalOpen]);
+
+  const fetchEmpresas = async () => {
+    setLoading(true);
+    try {
+      const empresasFormatadas = await empresasService.listarEmpresas();
+      setEmpresas(empresasFormatadas);
+    } catch (err) {
+      setError(err.message);
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const colunas = [
     { titulo: 'ID', campo: 'id' },
@@ -89,6 +69,7 @@ const ClientesAtivos = () => {
 
   const handleFiltroChange = (e) => {
     setFiltro(e.target.value);
+    setPaginaAtual(1);
   };
 
   const empresasFiltradas = filtro 
@@ -98,12 +79,20 @@ const ClientesAtivos = () => {
       )
     : empresas;
 
+  const totalPages = Math.ceil(empresasFiltradas.length / itensPorPagina);
+  const indiceInicial = (paginaAtual - 1) * itensPorPagina;
+  const indiceFinal = indiceInicial + itensPorPagina;
+  const empresasPaginadas = empresasFiltradas.slice(indiceInicial, indiceFinal);
+
+  const handlePageChange = (page) => {
+    setPaginaAtual(page);
+  };
+
   const handleAcaoClick = (empresa) => {
     console.log('Ação clicada para empresa:', empresa);
   };
 
   const handleProntuarioClick = (empresa) => {
-    console.log('Prontuário clicado para empresa:', empresa);
     navigate(`/record?id=${empresa.id}`);
   };
 
@@ -115,23 +104,15 @@ const ClientesAtivos = () => {
     setFormModalOpen(false);
   };
 
-  const handleSaveCliente = (formData) => {
-    const novoCliente = {
-      id: empresas.length + 1,
-      cnpj: formData.cnpj,
-      regimeTributario: formData.regimeTributario,
-      nomeFantasia: formData.nomeFantasia,
-      cidade: formData.cidade,
-      uf: formData.uf,
-      status: 'ativo', 
-      prontuario: false
-    };
-
-    setEmpresas([...empresas, novoCliente]);
-    
-    setFormModalOpen(false);
-    
-    console.log('Cliente cadastrado com sucesso:', novoCliente);
+  const handleSaveCliente = async (formData) => {
+    try {
+      const novoCliente = await empresasService.cadastrarEmpresa(formData);
+      setEmpresas([...empresas, novoCliente]);
+      setFormModalOpen(false);
+    } catch (err) {
+      setError(err.message);
+      console.error(err);
+    }
   };
 
   const renderizarStatus = (status) => (
@@ -201,23 +182,37 @@ const ClientesAtivos = () => {
             </span>
           </div>
           
-          <div className="overflow-x-auto -mx-3 sm:mx-0">
-            <Table 
-              colunas={colunas}
-              dados={empresasFiltradas}
-              onAcaoClick={handleAcaoClick}
-              renderizarStatus={renderizarStatus}
-              renderizarProntuario={renderizarProntuario}
-              paginaAtual={paginaAtual}
-              onChangePagina={setPaginaAtual}
-            />
-          </div>
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+          ) : error ? (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              Erro: {error}
+            </div>
+          ) : (
+            <>
+              <div className="overflow-x-auto -mx-3 sm:mx-0">
+                <Table 
+                  colunas={colunas}
+                  dados={empresasPaginadas}
+                  onAcaoClick={handleAcaoClick}
+                  renderizarStatus={renderizarStatus}
+                  renderizarProntuario={renderizarProntuario}
+                />
+              </div>
 
-          <div className="mt-4 flex justify-start">
-            <button className="px-3 sm:px-4 py-1.5 sm:py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 text-sm">
-              1
-            </button>
-          </div>
+              {empresasFiltradas.length > 0 && (
+                <Pagination 
+                  currentPage={paginaAtual} 
+                  totalPages={totalPages} 
+                  onPageChange={handlePageChange}
+                  showPageNumbers={true}
+                  maxPageNumbers={5}
+                />
+              )}
+            </>
+          )}
         </div>
       </div>
 
@@ -231,4 +226,4 @@ const ClientesAtivos = () => {
   );
 };
 
-export default ClientesAtivos;
+export default ActiveClients;

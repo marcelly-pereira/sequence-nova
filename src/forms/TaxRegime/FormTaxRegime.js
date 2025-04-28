@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { FiDollarSign } from 'react-icons/fi';
 import { motion } from 'framer-motion';
-import BaseForm from '../app/components/BaseForm';
-import { Input } from '../app/components/Input';
+import BaseForm from '../../app/components/BaseForm';
+import { Input } from '../../app/components/Input';
+import taxRegimeServices from '../../services/taxRegime';
 
-const RegimeTributarioForm = ({ isOpen, onClose, onSubmit, regimeAtual = null }) => {
+const RegimeTributarioForm = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  regimeAtual = null,
+}) => {
   const [formData, setFormData] = useState({
     nome: '',
     obrigacoes: [],
-    departamentos: []
+    departamentos: [],
   });
 
   const [obrigacoes, setObrigacoes] = useState([]);
   const [departamentos, setDepartamentos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const API_URL_OBRIGACOES = 'https://comercial.sequence.app.br/api/v1/obrigacoes/';
-  const API_URL_DEPARTAMENTOS = 'https://comercial.sequence.app.br/api/departamentos/';
 
   useEffect(() => {
     if (isOpen) {
@@ -31,13 +34,13 @@ const RegimeTributarioForm = ({ isOpen, onClose, onSubmit, regimeAtual = null })
       setFormData({
         nome: regimeAtual.nome || '',
         obrigacoes: regimeAtual.obrigacoes || [],
-        departamentos: regimeAtual.departamentos || []
+        departamentos: regimeAtual.departamentos || [],
       });
     } else {
       setFormData({
         nome: '',
         obrigacoes: [],
-        departamentos: []
+        departamentos: [],
       });
     }
   }, [regimeAtual, isOpen]);
@@ -47,33 +50,20 @@ const RegimeTributarioForm = ({ isOpen, onClose, onSubmit, regimeAtual = null })
     setError(null);
 
     try {
-      const [obrigacoesData, departamentosData] = await Promise.all([
-        fetchAllObrigacoes(),
-        fetchAllDepartamentos()
+      const [obrigacoesMap, departamentosMap] = await Promise.all([
+        taxRegimeServices.fetchObrigacoes(),
+        taxRegimeServices.fetchDepartamentos(),
       ]);
 
-      const obrigacoesProcessadas = obrigacoesData
-        .filter(item => item.ativa)
-        .sort((a, b) => a.nome.localeCompare(b.nome))
-        .map(item => ({
-          id: item.id,
-          nome: item.nome,
-          mininome: item.mininome || item.nome
-        }));
+      const obrigacoesProcessadas = Object.values(obrigacoesMap)
+        .filter((item) => item.ativa !== false)
+        .sort((a, b) => a.nome.localeCompare(b.nome));
       setObrigacoes(obrigacoesProcessadas);
 
-      const depsData = departamentosData.results || departamentosData;
-      const depsArray = Array.isArray(depsData) ? depsData : [];
-
-      const departamentosProcessados = depsArray
-        .filter(item => item.ativo !== false)
-        .sort((a, b) => a.nome.localeCompare(b.nome))
-        .map(item => ({
-          id: item.id,
-          nome: item.nome
-        }));
+      const departamentosProcessados = Object.values(departamentosMap)
+        .filter((item) => item.ativo !== false)
+        .sort((a, b) => a.nome.localeCompare(b.nome));
       setDepartamentos(departamentosProcessados);
-
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
       setError('Erro ao carregar dados. Por favor, tente novamente.');
@@ -84,74 +74,21 @@ const RegimeTributarioForm = ({ isOpen, onClose, onSubmit, regimeAtual = null })
     }
   };
 
-  const fetchAllPages = async (url) => {
-    let allResults = [];
-    let nextUrl = url;
-
-    while (nextUrl) {
-      try {
-        const response = await fetch(nextUrl);
-
-        if (!response.ok) {
-          throw new Error(`Erro ao buscar dados: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (data && data.results) {
-          allResults = [...allResults, ...data.results];
-          nextUrl = data.next;
-        } else {
-          nextUrl = null;
-        }
-      } catch (err) {
-        console.error('Erro ao buscar página:', err);
-        throw err;
-      }
-    }
-
-    return allResults;
-  };
-
-  const fetchAllDepartamentos = async () => {
-    try {
-      const response = await fetch(API_URL_DEPARTAMENTOS);
-      if (!response.ok) {
-        throw new Error(`Erro ao buscar departamentos: ${response.status}`);
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Erro ao buscar departamentos:', error);
-      throw error;
-    }
-  };
-
-  const fetchAllObrigacoes = async () => {
-    try {
-      const obrigacoesData = await fetchAllPages(API_URL_OBRIGACOES);
-      return obrigacoesData;
-    } catch (error) {
-      console.error('Erro ao buscar obrigações:', error);
-      throw error;
-    }
-  };
-
   const handleChange = (fieldId, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [fieldId]: value
+      [fieldId]: value,
     }));
   };
 
   const toggleItem = (fieldId, itemId) => {
-    setFormData(prev => {
+    setFormData((prev) => {
       const currentValues = prev[fieldId] || [];
       return {
         ...prev,
         [fieldId]: currentValues.includes(itemId)
-          ? currentValues.filter(id => id !== itemId)
-          : [...currentValues, itemId]
+          ? currentValues.filter((id) => id !== itemId)
+          : [...currentValues, itemId],
       };
     });
   };
@@ -165,7 +102,7 @@ const RegimeTributarioForm = ({ isOpen, onClose, onSubmit, regimeAtual = null })
       nome: formData.nome.trim(),
       ativo: true,
       obrigacoes: formData.obrigacoes,
-      departamentos: formData.departamentos
+      departamentos: formData.departamentos,
     };
 
     if (regimeAtual && regimeAtual.id) {
@@ -177,9 +114,7 @@ const RegimeTributarioForm = ({ isOpen, onClose, onSubmit, regimeAtual = null })
 
   const renderLoadingIndicator = () => (
     <div className="flex flex-col items-center justify-center py-16">
-      <div 
-        className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-500"
-      />
+      <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-500" />
       <p className="mt-4 text-sm text-gray-500">Carregando dados...</p>
     </div>
   );
@@ -191,28 +126,28 @@ const RegimeTributarioForm = ({ isOpen, onClose, onSubmit, regimeAtual = null })
       type: 'text',
       placeholder: 'Digite o nome do regime tributário',
       required: true,
-      helpText: 'Defina o regime tributário'
+      helpText: 'Defina o regime tributário',
     },
     {
       id: 'obrigacoes',
       label: 'Obrigações Relacionadas',
       type: 'checkbox-group',
-      options: obrigacoes.map(item => ({
+      options: obrigacoes.map((item) => ({
         id: item.id,
-        label: item.nome
+        label: item.nome,
       })),
-      required: false
+      required: false,
     },
     {
       id: 'departamentos',
       label: 'Departamentos Relacionados',
       type: 'checkbox-group',
-      options: departamentos.map(item => ({
+      options: departamentos.map((item) => ({
         id: item.id,
-        label: item.nome
+        label: item.nome,
       })),
-      required: false
-    }
+      required: false,
+    },
   ];
 
   const renderFormFields = () => (
@@ -293,7 +228,9 @@ const RegimeTributarioForm = ({ isOpen, onClose, onSubmit, regimeAtual = null })
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      title={regimeAtual ? "Editar Regime Tributário" : "Criar Regime Tributário"}
+      title={
+        regimeAtual ? 'Editar Regime Tributário' : 'Criar Regime Tributário'
+      }
       icon={<FiDollarSign className="w-6 h-6" />}
       primaryColor="#1526ff"
       isValid={isFormValid()}

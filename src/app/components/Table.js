@@ -14,7 +14,7 @@ const Table = ({
   const navigate = useNavigate();
 
   const handleProntuarioClick = (item) => {
-    navigate(`/d=${item.id}`);
+    navigate(`/record?id=${item.id}`);
   };
 
   return (

@@ -1,21 +1,28 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Table from '../../../../app/components/Table';
 import { FiPlus } from 'react-icons/fi';
-import obrigacoesService from '../../../../services/obligations';
+import colaboradoresService from '../../../../services/collaborators';
+import Button from '../../../../app/components/Button'; 
+import ColaboradorForm from '../../../../forms/Collaborators/FormColaborador';
+import ExcluirColaboradorForm from '../../../../forms/Collaborators/FormDeleteColaborador';
 
-const Obligations = () => {
-  const [obrigacoes, setObrigacoes] = useState([]);
+const Collaborators = () => {
+  const [colaboradores, setColaboradores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
   const [departamentos, setDepartamentos] = useState({});
-  const [responsaveis, setResponsaveis] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [totalRegistros, setTotalRegistros] = useState(0);
   const [hasNextPage, setHasNextPage] = useState(false);
   const loadMoreTriggerRef = useRef(null);
+  
+  // Estados para controle dos modais de formulário
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
+  const [currentColaborador, setCurrentColaborador] = useState(null);
 
-  const fetchObrigacoes = useCallback(async (page = 1, isLoadingMore = false) => {
+  const fetchColaboradores = useCallback(async (page = 1, isLoadingMore = false) => {
     if (isLoadingMore) {
       setLoadingMore(true);
     } else {
@@ -23,23 +30,32 @@ const Obligations = () => {
     }
     
     try {
-      const data = await obrigacoesService.fetchObrigacoes(page);
+      const data = await colaboradoresService.fetchColaboradores(page);
       
       if (data.results && Array.isArray(data.results)) {
         if (isLoadingMore) {
-          setObrigacoes(prev => [...prev, ...data.results]);
+          setColaboradores(prev => [...prev, ...data.results]);
         } else {
-          setObrigacoes(data.results);
+          setColaboradores(data.results);
         }
         
         setHasNextPage(!!data.next);
         setCurrentPage(page);
         setTotalRegistros(data.count || 0);
+      } else if (Array.isArray(data)) {
+        if (isLoadingMore) {
+          setColaboradores(prev => [...prev, ...data]);
+        } else {
+          setColaboradores(data);
+        }
+        setHasNextPage(false);
+        setCurrentPage(page);
+        setTotalRegistros(data.length || 0);
       } else {
         throw new Error('Formato de resposta inválido');
       }
     } catch (err) {
-      setError(`Falha ao carregar as obrigações: ${err.message}`);
+      setError(`Falha ao carregar os colaboradores: ${err.message}`);
     } finally {
       setTimeout(() => {
         if (isLoadingMore) {
@@ -47,22 +63,17 @@ const Obligations = () => {
         } else {
           setLoading(false);
         }
-      }, 300); 
+      }, 300);
     }
   }, []);
 
   useEffect(() => {
     const loadInitialData = async () => {
       try {
-        await fetchObrigacoes();
+        await fetchColaboradores();
         
-        const [depData, respData] = await Promise.all([
-          obrigacoesService.fetchDepartamentos(),
-          obrigacoesService.fetchResponsaveis()
-        ]);
-        
+        const depData = await colaboradoresService.fetchDepartamentos();
         setDepartamentos(depData);
-        setResponsaveis(respData);
       } catch (err) {
         console.error("Erro ao carregar dados iniciais:", err);
         setError("Falha ao carregar dados iniciais. Tente novamente mais tarde.");
@@ -70,7 +81,7 @@ const Obligations = () => {
     };
     
     loadInitialData();
-  }, [fetchObrigacoes]);
+  }, [fetchColaboradores]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -80,10 +91,10 @@ const Obligations = () => {
           !loading && 
           !loadingMore && 
           hasNextPage &&
-          obrigacoes.length < totalRegistros
+          colaboradores.length < totalRegistros
         ) {
           const nextPage = currentPage + 1;
-          fetchObrigacoes(nextPage, true);
+          fetchColaboradores(nextPage, true);
         }
       },
       { threshold: 0.5 }
@@ -99,17 +110,17 @@ const Obligations = () => {
         observer.unobserve(currentTarget);
       }
     };
-  }, [currentPage, loading, loadingMore, hasNextPage, obrigacoes.length, totalRegistros, fetchObrigacoes]);
+  }, [currentPage, loading, loadingMore, hasNextPage, colaboradores.length, totalRegistros, fetchColaboradores]);
 
   const handleRetry = () => {
     setError(null);
-    fetchObrigacoes(1);
+    fetchColaboradores(1);
   };
 
   useEffect(() => {
-    if (Object.keys(departamentos).length === 0 && obrigacoes.length > 0) {
+    if (Object.keys(departamentos).length === 0 && colaboradores.length > 0) {
       const depMap = {};
-      obrigacoes.forEach(item => {
+      colaboradores.forEach(item => {
         if (item.departamento && !depMap[item.departamento]) {
           depMap[item.departamento] = {
             id: item.departamento,
@@ -121,36 +132,60 @@ const Obligations = () => {
         setDepartamentos(depMap);
       }
     }
+  }, [colaboradores, departamentos]);
 
-    if (Object.keys(responsaveis).length === 0 && obrigacoes.length > 0) {
-      const respMap = {};
-      obrigacoes.forEach(item => {
-        if (item.responsavel && !respMap[item.responsavel]) {
-          respMap[item.responsavel] = `Responsável ${item.responsavel}`;
-        }
-      });
-      if (Object.keys(respMap).length > 0) {
-        setResponsaveis(respMap);
-      }
+  // Funções para gerenciar os modais de formulário
+  const handleOpenCadastro = () => {
+    setCurrentColaborador(null);
+    setIsFormOpen(true);
+  };
+
+  const handleOpenEdicao = (item) => {
+    setCurrentColaborador(item);
+    setIsFormOpen(true);
+  };
+
+  const handleOpenExclusao = (item) => {
+    setCurrentColaborador(item);
+    setIsDeleteFormOpen(true);
+  };
+
+  const handleCloseForm = () => {
+    setIsFormOpen(false);
+    setCurrentColaborador(null);
+  };
+
+  const handleCloseDeleteForm = () => {
+    setIsDeleteFormOpen(false);
+    setCurrentColaborador(null);
+  };
+
+  const handleFormSubmit = (colaboradorSalvo) => {
+    // Recarrega a lista após a adição/edição
+    setCurrentPage(1);
+    fetchColaboradores(1);
+  };
+
+  const handleConfirmDelete = async (colaboradorId) => {
+    try {
+      await colaboradoresService.deleteColaborador(colaboradorId);
+      fetchColaboradores(1);
+      setIsDeleteFormOpen(false);
+    } catch (error) {
+      console.error('Erro ao excluir colaborador:', error);
     }
-  }, [obrigacoes, departamentos, responsaveis]);
+  };
 
-  const handleAcaoClick = (item) => {
-    console.log("Ação clicada para o item:", item);
+  const handleAcaoClick = (action) => {
+    if (action.type === 'edit') {
+      handleOpenEdicao(action.item);
+    } else if (action.type === 'delete') {
+      handleOpenExclusao(action.item);
+    }
   };
 
   const handleRowClick = (item) => {
     console.log("Linha clicada:", item);
-  };
-
-  const renderizarStatus = (valor) => {
-    let ehPassivel = valor === true;
-    
-    return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${!ehPassivel ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'}`}>
-        {!ehPassivel ? 'NÃO' : 'SIM'}
-      </span>
-    );
   };
 
   const renderizarConteudo = (coluna, item) => {
@@ -211,17 +246,13 @@ const Obligations = () => {
       );
     }
     
-    if (coluna.campo === 'passivel_multa') {
-      return renderizarStatus(item.passivel_multa);
-    }
-    
     if (coluna.campo === 'departamento') {
       const dep = departamentos[item.departamento];
-      return dep ? dep.nome : `Departamento ${item.departamento}`;
+      return dep ? dep.nome : (item.departamento || '-');
     }
     
-    if (coluna.campo === 'responsavel') {
-      return responsaveis[item.responsavel] || `Responsável ${item.responsavel}`;
+    if (coluna.campo === 'telefone' || coluna.campo === 'departamento') {
+      return item[coluna.campo] || '-';
     }
     
     return item[coluna.campo];
@@ -230,9 +261,10 @@ const Obligations = () => {
   const colunas = [
     { campo: 'id', titulo: 'ID', align: 'left' },
     { campo: 'nome', titulo: 'NOME', align: 'left' },
+    { campo: 'email', titulo: 'EMAIL', align: 'left' },
+    { campo: 'nivel', titulo: 'NÍVEL', align: 'left' },
     { campo: 'departamento', titulo: 'DEPARTAMENTO', align: 'left' },
-    { campo: 'responsavel', titulo: 'RESPONSÁVEL', align: 'left' },
-    { campo: 'passivel_multa', titulo: 'PASSÍVEL DE MULTA?', align: 'left', tipo: 'status' },
+    { campo: 'telefone', titulo: 'TELEFONE', align: 'left' },
     { campo: 'acoes', titulo: 'AÇÕES', align: 'center', tipo: 'acoes' }
   ];
 
@@ -263,26 +295,28 @@ const Obligations = () => {
       <div className="mb-4 flex justify-between items-center">
         <span className="text-sm text-gray-500">
           {totalRegistros > 0 
-            ? `${totalRegistros} obrigações encontradas` 
-            : 'Nenhuma obrigação cadastrada'}
+            ? `${totalRegistros} colaboradores encontrados` 
+            : 'Nenhum colaborador cadastrado'}
         </span>
-        <button 
-          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-          onClick={() => {}}
+        
+        <Button 
+          variant="primary"
+          className='text-sm py-[0.45rem] px-2 shadow-sm' 
+          onClick={handleOpenCadastro}
+          icon={<FiPlus className="mr-2" />}
         >
-          <FiPlus className="mr-2" /> Cadastrar
-        </button>
+          Cadastrar
+        </Button>
       </div>
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        {Array.isArray(obrigacoes) && obrigacoes.length > 0 ? (
+        {Array.isArray(colaboradores) && colaboradores.length > 0 ? (
           <>
             <div className="max-h-[600px] overflow-y-auto">
               <Table
                 colunas={colunas}
-                dados={obrigacoes}
+                dados={colaboradores}
                 onAcaoClick={handleAcaoClick}
-                renderizarStatus={renderizarStatus}
                 renderizarConteudo={renderizarConteudo}
                 onRowClick={handleRowClick}
               />
@@ -302,11 +336,29 @@ const Obligations = () => {
             </div>
           </>
         ) : (
-          <p className="text-center py-4">Nenhuma obrigação encontrada.</p>
+          <p className="text-center py-4">Nenhum colaborador encontrado.</p>
         )}
       </div>
+      
+      {isFormOpen && (
+        <ColaboradorForm
+          isOpen={isFormOpen}
+          onClose={handleCloseForm}
+          onSubmit={handleFormSubmit}
+          colaborador={currentColaborador}
+        />
+      )}
+
+      {isDeleteFormOpen && (
+        <ExcluirColaboradorForm
+          isOpen={isDeleteFormOpen}
+          onClose={handleCloseDeleteForm}
+          onConfirm={handleConfirmDelete}
+          colaborador={currentColaborador}
+        />
+      )}
     </div>
   );
 };
 
-export default Obligations;
+export default Collaborators;
