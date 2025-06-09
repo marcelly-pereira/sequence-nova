@@ -344,7 +344,7 @@ const BaseLayout = ({ title = 'Automações', children }) => {
           </div>
         </header>
         
-        <main className="flex-1 p-4 overflow-auto">
+        <main className="flex-1 p-2 overflow-auto">
           {children}
         </main>
       </div>

@@ -4,7 +4,7 @@ const Accordion = ({ sections, onToggleSection, emptyStateMessage, emptyStateSub
   const contentRefs = useRef({});
 
   return (
-    <div className="space-y-0 border border-gray-200 rounded-2xl overflow-hidden bg-white">
+    <div className="space-y-0 overflow-hidden bg-white">
       {sections.map((section, index) => {
         if (!contentRefs.current[section.id]) {
           contentRefs.current[section.id] = React.createRef();

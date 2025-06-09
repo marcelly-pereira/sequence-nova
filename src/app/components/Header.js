@@ -39,10 +39,10 @@ const Header = ({ title = 'Automações' }) => {
   }, []);
 
   return (
-    <div className="bg-white shadow-sm mb-2 rounded">
+    <div className="">
       <div className="flex items-center justify-between px-4 py-2">
         <div className="flex items-center">
-          <h1 className="text-md font-medium text-gray-800">{title}</h1>
+          <h1 className="text-lg font-medium text-gray-800">{title}</h1>
         </div>
 
         <div className="flex items-center space-x-4">
